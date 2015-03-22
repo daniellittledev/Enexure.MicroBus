@@ -1,0 +1,13 @@
+version: '{build}'
+configuration: Release
+before_build:
+- ps: '& ".\build\runner.ps1" Version'
+build:
+  publish_nuget: true
+  publish_nuget_symbols: true
+  verbosity: minimal
+#deploy:
+#- provider: Environment
+#  name: Public Nuget
+#  on:
+#    branch: master
