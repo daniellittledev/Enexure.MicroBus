@@ -40,12 +40,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusBuilder.cs" />
+    <Compile Include="BusRegistrations.cs" />
+    <Compile Include="CommandRegistration.cs" />
     <Compile Include="Dependencies\IEventHandlerFinder.cs" />
     <Compile Include="Dependencies\ICommandHandlerFinder.cs" />
     <Compile Include="Dependencies\IQueryHandlerFinder.cs" />
     <Compile Include="Dependencies\IQueryFinder.cs" />
     <Compile Include="Dependencies\IEventFinder.cs" />
     <Compile Include="Dependencies\ICommandFinder.cs" />
+    <Compile Include="IBusRegistrations.cs" />
     <Compile Include="IPipelineHandler.cs" />
     <Compile Include="Infrastructure\AssemblyTypeFinder.cs" />
     <Compile Include="Infrastructure\DesiredTypeFinder.cs" />
@@ -56,6 +59,8 @@
     <Compile Include="IEventHandler.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="Pipeline.cs" />
+    <Compile Include="PretendToBeCommandHandler.cs" />
+    <Compile Include="PretendToBePipelineHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

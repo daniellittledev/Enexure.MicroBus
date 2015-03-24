@@ -20,6 +20,8 @@ namespace Sample.NoDependancyInjection
 			var bus = builder.BuildBus();
 
 			bus.Send(new TestCommand());
+
+			Console.ReadLine();
 		}
 	}
 
