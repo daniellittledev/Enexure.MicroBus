@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.NoDependancyInjectio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Autofac", "src\Sample.Autofac\Sample.Autofac.csproj", "{6498D969-8664-4738-A062-B57966018AF5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.Autofac", "Enexure.MicroBus.Autofac\Enexure.MicroBus.Autofac.csproj", "{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{6498D969-8664-4738-A062-B57966018AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6498D969-8664-4738-A062-B57966018AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6498D969-8664-4738-A062-B57966018AF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

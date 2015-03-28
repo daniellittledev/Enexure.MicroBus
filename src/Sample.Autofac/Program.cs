@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using Autofac;
 using Enexure.MicroBus;
+using Enexure.MicroBus.Autofac;
 using Enexure.MicroBus.MessageContracts;
 
 namespace Sample.Autofac
@@ -13,21 +13,17 @@ namespace Sample.Autofac
 		{
 			var containerBuilder = new ContainerBuilder();
 
-				var builder = new BusBuilder();
+			containerBuilder.RegisterMicroBus(builder => {
 
-
-				var pipeline = new Pipeline()
+				var pipeline = builder.CreatePipeline()
 					.AddHandler<CrossCuttingHandler>();
 
-				builder.Register<TestCommandHandler>(pipeline);
-
-				var bus = builder.BuildBus();
-
+				builder.RegisterHandler<TestCommandHandler>(pipeline);
+			});
 
 			var container = containerBuilder.Build();
 
-
-			bus.Send(new TestCommand());
+			container.Resolve<IBus>().Send(new TestCommand());
 
 			Console.ReadLine();
 		}

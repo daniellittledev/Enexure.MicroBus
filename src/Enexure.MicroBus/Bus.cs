@@ -6,9 +6,9 @@ namespace Enexure.MicroBus
 {
 	public class MicroBus : IBus
 	{
-		private readonly IBusRegistrations registrations;
+		private readonly IHandlerBuilder registrations;
 
-		public MicroBus(IBusRegistrations registrations)
+		public MicroBus(IHandlerBuilder registrations)
 		{
 			this.registrations = registrations;
 		}
@@ -26,7 +26,7 @@ namespace Enexure.MicroBus
 			throw new NotImplementedException();
 		}
 
-		public Task<TResult> Query<TQuery, TResult>(TQuery query)
+		public Task<TResult> Query<TQuery, TResult>(IQuery<TQuery, TResult> query)
 			where TQuery : IQuery<TQuery, TResult>
 			where TResult : IResult
 		{

@@ -2,7 +2,7 @@
 
 namespace Enexure.MicroBus
 {
-	public interface IBusRegistrations
+	public interface IHandlerBuilder
 	{
 		ICommandHandler<TCommand> GetRunnerForCommand<TCommand>()
 			where TCommand : ICommand;

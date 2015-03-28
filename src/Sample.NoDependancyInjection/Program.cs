@@ -9,7 +9,6 @@ namespace Sample.NoDependancyInjection
 	{
 		static void Main(string[] args)
 		{
-
 			var builder = new BusBuilder();
 
 			var pipeline = new Pipeline()

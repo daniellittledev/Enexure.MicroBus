@@ -39,19 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusBuilder.cs" />
-    <Compile Include="BusRegistrations.cs" />
+    <Compile Include="Infrastructure\BusBuilder.cs" />
+    <Compile Include="Infrastructure\DefaultHandlerActivator.cs" />
+    <Compile Include="Infrastructure\HandlerBuilder.cs" />
     <Compile Include="CommandRegistration.cs" />
-    <Compile Include="Dependencies\IEventHandlerFinder.cs" />
-    <Compile Include="Dependencies\ICommandHandlerFinder.cs" />
-    <Compile Include="Dependencies\IQueryHandlerFinder.cs" />
-    <Compile Include="Dependencies\IQueryFinder.cs" />
-    <Compile Include="Dependencies\IEventFinder.cs" />
-    <Compile Include="Dependencies\ICommandFinder.cs" />
-    <Compile Include="IBusRegistrations.cs" />
+    <Compile Include="IHandlerBuilder.cs" />
+    <Compile Include="Infrastructure\HandlerRegistar.cs" />
+    <Compile Include="Infrastructure\IHandlerActivator.cs" />
+    <Compile Include="Infrastructure\IHandlerRegistar.cs" />
     <Compile Include="IPipelineHandler.cs" />
-    <Compile Include="Infrastructure\AssemblyTypeFinder.cs" />
-    <Compile Include="Infrastructure\DesiredTypeFinder.cs" />
     <Compile Include="Bus.cs" />
     <Compile Include="IBus.cs" />
     <Compile Include="Infrastructure\TypeExtensions.cs" />

@@ -12,7 +12,7 @@ namespace Enexure.MicroBus
 		Task Publish<TEvent>(TEvent @event)
 			where TEvent : IEvent;
 
-		Task<TResult> Query<TQuery, TResult>(TQuery query)
+		Task<TResult> Query<TQuery, TResult>(IQuery<TQuery, TResult> query)
 			where TQuery : IQuery<TQuery, TResult>
 			where TResult : IResult;
 	}

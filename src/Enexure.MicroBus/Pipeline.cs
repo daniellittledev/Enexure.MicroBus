@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Enexure.MicroBus.MessageContracts;
+using System.Data;
 
 namespace Enexure.MicroBus
 {
@@ -23,6 +23,21 @@ namespace Enexure.MicroBus
 			where T : IPipelineHandler
 		{
 			types.Add(typeof(T));
+			return this;
+		}
+
+		public Pipeline AddHandlers(IEnumerable<Type> handlers)
+		{
+			foreach (var handler in handlers) {
+
+				if (typeof(IPipelineHandler).IsAssignableFrom(handler)) {
+
+					types.Add(handler);
+				} else {
+
+					throw new InvalidOperationException("Handlers must implement the IPipelineHandler interface");
+				}
+			}
 			return this;
 		}
 	}

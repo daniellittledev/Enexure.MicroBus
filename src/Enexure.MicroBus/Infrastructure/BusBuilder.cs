@@ -11,11 +11,14 @@ namespace Enexure.MicroBus
 
 		public void Register<TCommandHandler>()
 		{
-		
+			Register<TCommandHandler>(new Pipeline());
 		}
 
 		public void Register<TCommandHandler>(Pipeline pipeline)
 		{
+			if (pipeline == null) throw new ArgumentNullException("pipeline");
+
+			//if (ICommandHandler<> typeof(TCommandHandler))
 			// Check type matches ICommandHandler
 
 			var commandType = typeof(TCommandHandler)
@@ -30,7 +33,7 @@ namespace Enexure.MicroBus
 
 		public IBus BuildBus()
 		{
-			return new MicroBus(new BusRegistrations(commandRegistrations));
+			return new MicroBus(new HandlerBuilder(new DefaultHandlerActivator(), new HandlerRegistar(commandRegistrations)));
 		}
 	}
 }
