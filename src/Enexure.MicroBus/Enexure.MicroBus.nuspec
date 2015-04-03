@@ -12,7 +12,7 @@
     <description>$description$</description>
     <tags>MicroBus Bus Mediator</tags>
     <dependencies>
-		<dependency id="Enexure.MicroBus.MessageContracts" version="" />
+		<dependency id="Enexure.MicroBus.MessageContracts" version="1.0.0.1" />
     </dependencies>
   </metadata>
 </package>

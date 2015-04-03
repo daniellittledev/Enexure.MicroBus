@@ -4,34 +4,33 @@ Enexure.MicroBus
 
 MicroBus is a simple in process mediator for .NET
 
-Nuget package not yet building.
-<s>
 > PM> Install-Package [Enexure.MicroBus](https://www.nuget.org/packages/Enexure.MicroBus/)
-</s>
 
-Sample
+I wanted a super simple mediator with as few dependencies as possible. You can register handlers and pipelines without dependency injection, use a dependency injection framework or write your own activator. 
 
-	class Program
+MicroBus supports the three fundamental bus message types, commands, events and queries(request/response). 
+
+	bus.Send(new TestCommand());
+	
+	bus.Query(new TestQuery());
+	
+	bus.Publish(new TestEvent());
+	
+Here's what a command and it's handler look like
+	
+	class TestCommand : ICommand
 	{
-		static void Main(string[] args)
+	}
+	
+	class TestCommandHandler : ICommandHandler<TestCommand>
+	{
+		public async Task Handle(TestCommand command)
 		{
-			var containerBuilder = new ContainerBuilder();
-
-			containerBuilder.RegisterMicroBus(builder => {
-
-				var pipeline = builder.CreatePipeline()
-					.AddHandler<CrossCuttingHandler>();
-
-				builder.RegisterHandler<TestCommandHandler>(pipeline);
-			});
-
-			var container = containerBuilder.Build();
-
-			container.Resolve<IBus>().Send(new TestCommand());
-
-			Console.ReadLine();
+			Console.WriteLine("Test command handler");
 		}
 	}
+
+If you need to handle cross cutting concerns you can use a pipeline handler
 
 	public class CrossCuttingHandler : IPipelineHandler
 	{
@@ -49,15 +48,19 @@ Sample
 			await innerHandler.Handle(message);
 		}
 	}
+	
+[Registration with Autofac](https://www.nuget.org/packages/Enexure.MicroBus.Autofac/) would look like this
+	
+	var containerBuilder = new ContainerBuilder();
 
-	class TestCommandHandler : ICommandHandler<TestCommand>
-	{
-		public async Task Handle(TestCommand command)
-		{
-			Console.WriteLine("Test command handler");
-		}
-	}
+	containerBuilder.RegisterMicroBus(builder => {
 
-	class TestCommand : ICommand
-	{
-	}
+		var pipeline = builder.CreatePipeline()
+			.AddHandler<CrossCuttingHandler>();
+
+		builder.RegisterHandler<TestCommandHandler>(pipeline);
+	});
+
+	var container = containerBuilder.Build();
+
+	
