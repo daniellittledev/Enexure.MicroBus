@@ -8,12 +8,14 @@ namespace Enexure.MicroBus
 	{
 		readonly List<MessageRegistration> registrations = new List<MessageRegistration>();
 
-		public void Register<THandler>()
+		public BusBuilder Register<THandler>()
 		{
 			Register<THandler>(new Pipeline());
+
+			return this;
 		}
 
-		public void Register<THandler>(Pipeline pipeline)
+		public BusBuilder Register<THandler>(Pipeline pipeline)
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
@@ -31,6 +33,8 @@ namespace Enexure.MicroBus
 			var messageType = handlerType.GenericTypeArguments.First();
 
 			registrations.Add(item: new MessageRegistration(messageType, typeof(THandler), pipeline));
+
+			return this;
 		}
 
 

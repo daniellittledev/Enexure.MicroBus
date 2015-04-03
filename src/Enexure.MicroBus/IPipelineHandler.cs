@@ -6,6 +6,6 @@ namespace Enexure.MicroBus
 {
 	public interface IPipelineHandler
 	{
-		Task Handle(IMessage message);
+		Task<object> Handle(IMessage message);
 	}
 }

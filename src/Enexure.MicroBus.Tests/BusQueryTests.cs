@@ -1,0 +1,40 @@
+﻿using System;
+using System.Threading.Tasks;
+using Enexure.MicroBus.MessageContracts;
+using FluentAssertions;
+using NUnit.Framework;
+
+namespace Enexure.MicroBus.Tests
+{
+	class Query : IQuery<Query, Result> {}
+
+	class Result : IResult {}
+
+	class QueryHandler : IQueryHandler<Query, Result>
+	{
+		public Task<Result> Handle(IQuery<Query, Result> query)
+		{
+			return Task.FromResult(new Result());
+		}
+	}
+
+	[TestFixture]
+	public class QueryTests
+	{
+		[Test]
+		public async Task TestQuery()
+		{
+			var pipline = new Pipeline()
+				.AddHandler<PipelineHandler>();
+
+			var bus = new BusBuilder()
+				.Register<QueryHandler>(pipline)
+				.BuildBus();
+
+			var result = await bus.Query(new Query());
+
+			result.Should().NotBeNull();
+
+		}
+	}
+}

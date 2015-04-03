@@ -13,9 +13,10 @@ namespace Enexure.MicroBus
 			this.innerHandler = innerHandler;
 		}
 
-		public Task Handle(IMessage message)
+		public async Task<object> Handle(IMessage message)
 		{
-			return innerHandler.Handle((TCommand)message);
+			await innerHandler.Handle((TCommand)message);
+			return null;
 		}
 	}
 
@@ -29,9 +30,10 @@ namespace Enexure.MicroBus
 			this.innerHandler = innerHandler;
 		}
 
-		public Task Handle(IMessage message)
+		public async Task<object> Handle(IMessage message)
 		{
-			return innerHandler.Handle((TEvent)message);
+			await innerHandler.Handle((TEvent)message);
+			return null;
 		}
 	}
 
@@ -46,9 +48,9 @@ namespace Enexure.MicroBus
 			this.innerHandler = innerHandler;
 		}
 
-		public Task Handle(IMessage message)
+		public async Task<object> Handle(IMessage message)
 		{
-			return innerHandler.Handle((TQuery)message);
+			return await innerHandler.Handle((TQuery)message);
 		}
 	}
 }

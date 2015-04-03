@@ -46,9 +46,9 @@ namespace Enexure.MicroBus
 			this.innerHandler = innerHandler;
 		}
 
-		public Task<TResult> Handle(IQuery<TQuery, TResult> query)
+		public async Task<TResult> Handle(IQuery<TQuery, TResult> query)
 		{
-			return (Task<TResult>)innerHandler.Handle(query);
+			return (TResult) await innerHandler.Handle(query);
 		}
 	}
 }

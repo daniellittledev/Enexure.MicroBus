@@ -38,11 +38,11 @@ namespace Sample.Autofac
 			this.innerHandler = innerHandler;
 		}
 
-		public async Task Handle(IMessage message)
+		public async Task<object> Handle(IMessage message)
 		{
 			Console.WriteLine("Cross cutting handler");
 
-			await innerHandler.Handle(message);
+			return await innerHandler.Handle(message);
 		}
 	}
 

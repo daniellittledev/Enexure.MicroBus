@@ -15,8 +15,21 @@ namespace Enexure.MicroBus
 
 		public MessageRegistration GetRegistrationForMessage(Type commandType)
 		{
-			return registrationsLookup[commandType];
+			MessageRegistration value;
+			if (registrationsLookup.TryGetValue(commandType, out value)) {
+				return value;
+			}
+
+			throw new NoRegistrationForMessage(commandType);
 		}
 
+	}
+
+	public class NoRegistrationForMessage : Exception
+	{
+		public NoRegistrationForMessage(Type commandType)
+			: base(string.Format("No registration for message of type {0} was found", commandType.Name))
+		{
+		}
 	}
 }
