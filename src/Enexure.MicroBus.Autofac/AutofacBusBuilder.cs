@@ -11,7 +11,7 @@ namespace Sample.Autofac
 	public class AutofacBusBuilder
 	{
 		private readonly ContainerBuilder containerBuilder;
-		readonly List<CommandRegistration> commandRegistrations = new List<CommandRegistration>();
+		readonly List<MessageRegistration> commandRegistrations = new List<MessageRegistration>();
 
 		public AutofacBusBuilder(ContainerBuilder containerBuilder)
 		{
@@ -29,7 +29,7 @@ namespace Sample.Autofac
 				.GenericTypeArguments
 				.First();
 
-			commandRegistrations.Add(item: new CommandRegistration(commandType, typeof(TCommandHandler), new Pipeline().AddHandlers(pipeline)));
+			commandRegistrations.Add(item: new MessageRegistration(commandType, typeof(TCommandHandler), new Pipeline().AddHandlers(pipeline)));
 
 			containerBuilder.RegisterType<TCommandHandler>().InstancePerLifetimeScope();
 

@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,13 +49,14 @@
     <Compile Include="AutofacHandlerBuilder.cs" />
     <Compile Include="ContainerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyVersion.cs" Condition="exists('Properties\AssemblyVersion.cs')" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.csproj">
+    <ProjectReference Include="..\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.csproj">
       <Project>{df8290a6-7f5c-4b0f-b2e4-35b3e60167fd}</Project>
       <Name>Enexure.MicroBus.MessageContracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Enexure.MicroBus\Enexure.MicroBus.csproj">
+    <ProjectReference Include="..\Enexure.MicroBus\Enexure.MicroBus.csproj">
       <Project>{c9f49eca-a00f-48aa-8a23-a3bcffe40393}</Project>
       <Name>Enexure.MicroBus</Name>
     </ProjectReference>

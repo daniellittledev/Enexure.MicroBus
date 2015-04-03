@@ -1,52 +1,40 @@
 Import-Module "$PSScriptRoot\modules\msbuild\Invoke-MsBuild.psm1"
-
-$nuget = "$PSScriptRoot\nuget\nuget.exe"
+. "$PSScriptRoot\Versioning.ps1"
 
 properties {
+	$solutionName = "Enexure.MicroBus"
+
 	$solutionDir = Resolve-Path "$PSScriptRoot\.."
+	$solutionFile = "$solutionDir\$solutionName.sln"
+	$versions = Get-Versions $solutionDir $buildNumber
+	$artifactsDir = "$solutionDir\artifacts"
+	$nuget = "$PSScriptRoot\nuget.exe"
 }
 
 task default -depends Package
 
-task Package -depends Compile, Clean { 
-	#& $nuget pack 
+task Package -depends Compile { 
+	
+	if (!(Test-Path $artifactsDir)) {
+		New-Item -Type Directory $artifactsDir
+	}
+	
+	foreach($version in $versions) {
+		
+		$project = (ls -Path $version.Project -Filter "*.csproj")[0]
+		& $nuget pack $project.FullName -OutputDirectory "$solutionDir\artifacts" -Properties Configuration=Release
+		& $nuget pack $project.FullName -OutputDirectory "$solutionDir\artifacts" -Properties Configuration=Release -Symbols
+	}
 }
 
-task Compile -depends Version, Clean { 
-	Write-Host "Version: $Version"
-	$solutionPath = "$solutionDir\Enexure.MicroBus.sln"
-	Invoke-MsBuild $solutionPath -MSBuildProperties @{ Configuration = "Release" }
+task Compile -depends Version { 
+	Invoke-MsBuild $solutionFile -MSBuildProperties @{ Configuration = "Release" }
 }
 
 task Version -depends Clean {
 
-	$versionSourceFile = "$solutionDir\src\Enexure.MicroBus\Version.json"
-	$versionSourceFileContents = [string](Get-Content $versionSourceFile)
-	$versionDetail = ConvertFrom-Json $versionSourceFileContents
-	$version = "$($versionDetail.Major).$($versionDetail.Minor).$($versionDetail.Patch).$build"
+	Set-VersionProperties $versions
 
-	Write-Host "Version: $version"
-	
-	$projectDir = "$solutionDir\src\Enexure.MicroBus\Properties"
-	$versionFile = "$projectDir\AssemblyVersion.cs"
-
-	# Version information for an assembly consists of the following four values:
-	# 
-	#      Major Version
-	#      Minor Version 
-	#      Build Number
-	#      Revision
-	# 
-	# You can specify all the values or you can default the Build and Revision Numbers 
-	# by using the '*' as shown below:
-	# [assembly: AssemblyVersion("1.0.*")]
-	
-	$versionFileContents = 
-	"using System.Reflection;" + "`n" +
-	"[assembly: AssemblyVersion(`"$version`")]" + "`n" +
-	"[assembly: AssemblyFileVersion(`"$version`")]"
-
-	Set-Content $versionFile $versionFileContents
 }
 
 task Clean { 

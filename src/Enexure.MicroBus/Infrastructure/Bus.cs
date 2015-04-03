@@ -23,14 +23,16 @@ namespace Enexure.MicroBus
 		public Task Publish<TEvent>(TEvent @event)
 			where TEvent : IEvent 
 		{
-			throw new NotImplementedException();
+			var handler = registrations.GetRunnerForEvent<TEvent>();
+			return handler.Handle(@event);
 		}
 
 		public Task<TResult> Query<TQuery, TResult>(IQuery<TQuery, TResult> query)
 			where TQuery : IQuery<TQuery, TResult>
 			where TResult : IResult
 		{
-			throw new NotImplementedException();
+			var handler = registrations.GetRunnerForQuery<TQuery, TResult>();
+			return handler.Handle(query);
 		}
 	}
 }

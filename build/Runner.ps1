@@ -16,4 +16,4 @@ $ErrorActionPreference = "Stop"
 
 Import-Module "$PSScriptRoot\modules\psake\psake.psm1"
 
-Invoke-Psake "$PSScriptRoot\Build.ps1" -Parameters @{ "target" = $target; "build" = $build }  
+Invoke-Psake "$PSScriptRoot\Build.ps1" -Parameters @{ "target" = $target; "buildNumber" = $build }  

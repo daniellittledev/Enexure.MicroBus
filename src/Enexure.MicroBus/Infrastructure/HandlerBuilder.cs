@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Enexure.MicroBus.MessageContracts;
 
 namespace Enexure.MicroBus
@@ -17,18 +18,40 @@ namespace Enexure.MicroBus
 		public ICommandHandler<TCommand> GetRunnerForCommand<TCommand>()
 			where TCommand : ICommand
 		{
-			var registration = handlerRegistar.GetRegistrationFor(typeof(TCommand));
+			return GetRunnerForMessage<ICommandHandler<TCommand>, TCommand>(
+				handler => new CommandHandlerPretendToBePipelineHandler<TCommand>(handler),
+				handler => new PretendToBeCommandHandler<TCommand>(handler));
+		}
 
-			var pipeline = registration.Pipeline;
-			var leafHandler = registration.CommandHandlerType;
+		public IEventHandler<TEvent> GetRunnerForEvent<TEvent>() 
+			where TEvent : IEvent
+		{
+			return GetRunnerForMessage<IEventHandler<TEvent>, TEvent>(
+				handler => new EventHandlerPretendToBePipelineHandler<TEvent>(handler),
+				handler => new PretendToBeEventHandler<TEvent>(handler));
+		}
 
-			var innerCommandHandler = handlerActivator.ActivateHandler<ICommandHandler<TCommand>>(leafHandler);
+		public IQueryHandler<TQuery, TResult> GetRunnerForQuery<TQuery, TResult>()
+			where TQuery : IQuery<TQuery, TResult>
+			where TResult : IResult
+		{
+			return GetRunnerForMessage<IQueryHandler<TQuery, TResult>, TQuery>(
+				handler => new QueryHandlerPretendToBePipelineHandler<TQuery, TResult>(handler), 
+				handler => new PretendToBeQueryHandler<TQuery, TResult>(handler));
+		}
 
-			var handler = pipeline.Aggregate(
-				(IPipelineHandler)new PretendToBePipelineHandler<TCommand>(innerCommandHandler),
+		private THandler GetRunnerForMessage<THandler, TMessage>(Func<THandler, IPipelineHandler> makePretend, Func<IPipelineHandler, THandler> makeReal)
+			where TMessage : IMessage
+		{
+			var registration = handlerRegistar.GetRegistrationForMessage(typeof(TMessage));
+
+			var innerEventHandler = handlerActivator.ActivateHandler<THandler>(registration.MessageHandlerType);
+
+			var handler = registration.Pipeline.Aggregate(
+				makePretend(innerEventHandler),
 				(current, handlerType) => handlerActivator.ActivateHandler<IPipelineHandler>(handlerType, current));
 
-			return new PretendToBeCommandHandler<TCommand>(handler);
+			return makeReal(handler);
 		}
 	}
 }

@@ -1,39 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Enexure.MicroBus.MessageContracts;
 
 namespace Enexure.MicroBus
 {
 	public class BusBuilder
 	{
-		readonly List<CommandRegistration> commandRegistrations = new List<CommandRegistration>();
+		readonly List<MessageRegistration> registrations = new List<MessageRegistration>();
 
-		public void Register<TCommandHandler>()
+		public void Register<THandler>()
 		{
-			Register<TCommandHandler>(new Pipeline());
+			Register<THandler>(new Pipeline());
 		}
 
-		public void Register<TCommandHandler>(Pipeline pipeline)
+		public void Register<THandler>(Pipeline pipeline)
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			//if (ICommandHandler<> typeof(TCommandHandler))
-			// Check type matches ICommandHandler
-
-			var commandType = typeof(TCommandHandler)
+			var handlerType = typeof(THandler)
 				.GetInterfaces()
-				.First(x => x.IsGenericType
-				         && x.GetGenericTypeDefinition() == typeof(ICommandHandler<>))
-				.GenericTypeArguments
-				.First();
+				.FirstOrDefault(x => x.IsGenericType
+					&& (x.GetGenericTypeDefinition() == typeof(ICommandHandler<>) 
+						|| x.GetGenericTypeDefinition() == typeof(IEventHandler<>)
+						|| x.GetGenericTypeDefinition() == typeof(IQueryHandler<,>)));
 
-			commandRegistrations.Add(item: new CommandRegistration(commandType, typeof(TCommandHandler), pipeline));
+			if (handlerType == null) {
+				throw new TypeIsNotAHandlerException();
+			}
+
+			var messageType = handlerType.GenericTypeArguments.First();
+
+			registrations.Add(item: new MessageRegistration(messageType, typeof(THandler), pipeline));
 		}
+
 
 		public IBus BuildBus()
 		{
-			return new MicroBus(new HandlerBuilder(new DefaultHandlerActivator(), new HandlerRegistar(commandRegistrations)));
+			return new MicroBus(new HandlerBuilder(new DefaultHandlerActivator(), new HandlerRegistar(registrations)));
 		}
+	}
+
+	public class TypeIsNotAHandlerException : Exception
+	{
 	}
 }

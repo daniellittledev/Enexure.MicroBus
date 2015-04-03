@@ -6,16 +6,17 @@ namespace Enexure.MicroBus
 {
 	public class HandlerRegistar : IHandlerRegistar
 	{
-		private readonly IDictionary<Type, CommandRegistration> commandRegistrationsLookup;
+		private readonly IDictionary<Type, MessageRegistration> registrationsLookup;
 
-		public HandlerRegistar(IEnumerable<CommandRegistration> commandRegistrations)
+		public HandlerRegistar(IEnumerable<MessageRegistration> registrations)
 		{
-			commandRegistrationsLookup = commandRegistrations.ToDictionary(x => x.CommandType, x => x);
+			registrationsLookup = registrations.ToDictionary(x => x.MessageType, x => x);
 		}
 
-		public CommandRegistration GetRegistrationFor(Type commandType)
+		public MessageRegistration GetRegistrationForMessage(Type commandType)
 		{
-			return commandRegistrationsLookup[commandType];
+			return registrationsLookup[commandType];
 		}
+
 	}
 }

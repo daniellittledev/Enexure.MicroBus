@@ -54,7 +54,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Enexure.MicroBus.Autofac\Enexure.MicroBus.Autofac.csproj">
+    <ProjectReference Include="..\Enexure.MicroBus.Autofac\Enexure.MicroBus.Autofac.csproj">
       <Project>{3cea3c7c-f9db-43ba-8769-743ad1eeec9a}</Project>
       <Name>Enexure.MicroBus.Autofac</Name>
     </ProjectReference>

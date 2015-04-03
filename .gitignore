@@ -2,6 +2,7 @@
 AssemblyVersion.cs
 
 #NuGet
+artifacts/
 #packages/
 
 #OS junk files

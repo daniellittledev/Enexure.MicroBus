@@ -4,7 +4,7 @@ using Enexure.MicroBus.MessageContracts;
 
 namespace Enexure.MicroBus
 {
-	public interface IQueryHandler<TQuery, TResult>
+	public interface IQueryHandler<out TQuery, TResult>
 		where TQuery : IQuery<TQuery, TResult>
 		where TResult : IResult
 	{
