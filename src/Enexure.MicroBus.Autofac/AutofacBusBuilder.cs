@@ -22,9 +22,9 @@ namespace Enexure.MicroBus.Autofac
 			var commandType = typeof(TCommandHandler)
 				.GetInterfaces()
 				.First(x => x.IsGenericType
-							&& x.GetGenericTypeDefinition() == typeof(ICommandHandler<>)
-                            && x.GetGenericTypeDefinition() == typeof(IEventHandler<>)
-                            && x.GetGenericTypeDefinition() == typeof(IQueryHandler<,>))
+							&& (x.GetGenericTypeDefinition() == typeof(ICommandHandler<>)
+							|| x.GetGenericTypeDefinition() == typeof(IEventHandler<>)
+							|| x.GetGenericTypeDefinition() == typeof(IQueryHandler<,>)))
 				.GenericTypeArguments
 				.First();
 
