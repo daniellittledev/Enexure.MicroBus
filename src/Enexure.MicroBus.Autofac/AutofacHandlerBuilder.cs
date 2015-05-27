@@ -1,7 +1,7 @@
 ﻿using System;
 using Autofac;
 
-namespace Enexure.MicroBus
+namespace Enexure.MicroBus.Autofac
 {
 	public class AutofacHandlerActivator : IHandlerActivator
 	{

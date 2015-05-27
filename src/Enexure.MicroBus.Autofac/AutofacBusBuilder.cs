@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
-using Autofac.Builder;
-using Enexure.MicroBus;
-using Enexure.MicroBus.Autofac;
 
-namespace Sample.Autofac
+namespace Enexure.MicroBus.Autofac
 {
 	public class AutofacBusBuilder
 	{
@@ -25,7 +22,9 @@ namespace Sample.Autofac
 			var commandType = typeof(TCommandHandler)
 				.GetInterfaces()
 				.First(x => x.IsGenericType
-							&& x.GetGenericTypeDefinition() == typeof(ICommandHandler<>))
+							&& x.GetGenericTypeDefinition() == typeof(ICommandHandler<>)
+                            && x.GetGenericTypeDefinition() == typeof(IEventHandler<>)
+                            && x.GetGenericTypeDefinition() == typeof(IQueryHandler<,>))
 				.GenericTypeArguments
 				.First();
 

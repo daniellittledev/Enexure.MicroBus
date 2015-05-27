@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Builder;
 
-namespace Sample.Autofac
+namespace Enexure.MicroBus.Autofac
 {
 	public static class AutofacExtensions
 	{

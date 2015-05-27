@@ -1,6 +1,5 @@
 ﻿using System;
 using Autofac;
-using Sample.Autofac;
 
 namespace Enexure.MicroBus.Autofac
 {
