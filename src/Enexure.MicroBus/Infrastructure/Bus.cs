@@ -32,7 +32,7 @@ namespace Enexure.MicroBus
 			where TResult : IResult
 		{
 			var handler = registrations.GetRunnerForQuery<TQuery, TResult>();
-			return handler.Handle(query);
+			return handler.Handle((TQuery)query);
 		}
 	}
 }

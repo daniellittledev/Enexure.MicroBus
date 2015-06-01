@@ -12,7 +12,7 @@ namespace Enexure.MicroBus.Tests
 
 	class QueryHandler : IQueryHandler<Query, Result>
 	{
-		public Task<Result> Handle(IQuery<Query, Result> query)
+		public Task<Result> Handle(Query query)
 		{
 			return Task.FromResult(new Result());
 		}
