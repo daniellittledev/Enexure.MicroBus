@@ -15,11 +15,11 @@ namespace Enexure.MicroBus.Autofac
 			this.containerBuilder = containerBuilder;
 		}
 
-		public AutofacBusBuilder RegisterHandler<TCommandHandler>(AutofacPipeline pipeline)
+		public AutofacBusBuilder RegisterHandler<THandler>(AutofacPipeline pipeline)
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			var commandType = typeof(TCommandHandler)
+			var messageType = typeof(THandler)
 				.GetInterfaces()
 				.First(x => x.IsGenericType
 							&& (x.GetGenericTypeDefinition() == typeof(ICommandHandler<>)
@@ -28,9 +28,9 @@ namespace Enexure.MicroBus.Autofac
 				.GenericTypeArguments
 				.First();
 
-			commandRegistrations.Add(item: new MessageRegistration(commandType, typeof(TCommandHandler), new Pipeline().AddHandlers(pipeline)));
+			commandRegistrations.Add(item: new MessageRegistration(messageType, typeof(THandler), new Pipeline().AddHandlers(pipeline)));
 
-			containerBuilder.RegisterType<TCommandHandler>().InstancePerLifetimeScope();
+			containerBuilder.RegisterType<THandler>().InstancePerLifetimeScope();
 
 			return this;
 		}
