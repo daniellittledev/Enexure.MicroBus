@@ -1,4 +1,5 @@
 ﻿using System;
+using Enexure.MicroBus.InfrastructureContracts;
 
 namespace Enexure.MicroBus
 {

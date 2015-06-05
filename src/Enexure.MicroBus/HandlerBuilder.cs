@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Enexure.MicroBus.InfrastructureContracts;
 using Enexure.MicroBus.MessageContracts;
 
 namespace Enexure.MicroBus
@@ -46,6 +47,8 @@ namespace Enexure.MicroBus
 			var registration = handlerRegistar.GetRegistrationForMessage(typeof(TMessage));
 
 			var innerEventHandler = handlerActivator.ActivateHandler<THandler>(registration.MessageHandlerType);
+
+			//var multiHandler = 
 
 			var handler = registration.Pipeline.Aggregate(
 				makePretend(innerEventHandler),

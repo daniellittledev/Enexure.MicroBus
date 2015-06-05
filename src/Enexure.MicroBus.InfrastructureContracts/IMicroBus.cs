@@ -4,7 +4,7 @@ using Enexure.MicroBus.MessageContracts;
 
 namespace Enexure.MicroBus
 {
-	public interface IBus
+	public interface IMicroBus
 	{
 		Task Send<TCommand>(TCommand busCommand)
 			where TCommand : ICommand;

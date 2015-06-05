@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Enexure.MicroBus.InfrastructureContracts;
 using Enexure.MicroBus.MessageContracts;
+using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 

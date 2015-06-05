@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Enexure.MicroBus
+namespace Enexure.MicroBus.InfrastructureContracts
 {
 	public interface IHandlerActivator
 	{

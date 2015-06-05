@@ -39,28 +39,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infrastructure\BusBuilder.cs" />
-    <Compile Include="Infrastructure\DefaultHandlerActivator.cs" />
-    <Compile Include="Infrastructure\HandlerBuilder.cs" />
-    <Compile Include="MessageRegistration.cs" />
-    <Compile Include="IHandlerBuilder.cs" />
-    <Compile Include="Infrastructure\HandlerRegistar.cs" />
-    <Compile Include="IHandlerActivator.cs" />
-    <Compile Include="IHandlerRegistar.cs" />
-    <Compile Include="IPipelineHandler.cs" />
-    <Compile Include="Infrastructure\Bus.cs" />
-    <Compile Include="IBus.cs" />
-    <Compile Include="Infrastructure\TypeExtensions.cs" />
-    <Compile Include="IQueryHandler.cs" />
-    <Compile Include="IEventHandler.cs" />
-    <Compile Include="ICommandHandler.cs" />
-    <Compile Include="Pipeline.cs" />
-    <Compile Include="Infrastructure\PretendToBeMessageHandler.cs" />
-    <Compile Include="Infrastructure\PretendToBePipelineHandler.cs" />
+    <Compile Include="BusBuilder.cs" />
+    <Compile Include="DefaultHandlerActivator.cs" />
+    <Compile Include="HandlerBuilder.cs" />
+    <Compile Include="HandlerRegistar.cs" />
+    <Compile Include="MicroBus.cs" />
+    <Compile Include="TypeExtensions.cs" />
+    <Compile Include="PretendToBeMessageHandler.cs" />
+    <Compile Include="PretendToBePipelineHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" Condition="exists('Properties\AssemblyVersion.cs')" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.csproj">
+      <Project>{4bd15bdd-27e9-47e2-a693-d496e892949f}</Project>
+      <Name>Enexure.MicroBus.InfrastructureContracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.csproj">
       <Project>{df8290a6-7f5c-4b0f-b2e4-35b3e60167fd}</Project>
       <Name>Enexure.MicroBus.MessageContracts</Name>

@@ -67,6 +67,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.csproj">
+      <Project>{4BD15BDD-27E9-47E2-A693-D496E892949F}</Project>
+      <Name>Enexure.MicroBus.InfrastructureContracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.csproj">
       <Project>{df8290a6-7f5c-4b0f-b2e4-35b3e60167fd}</Project>
       <Name>Enexure.MicroBus.MessageContracts</Name>

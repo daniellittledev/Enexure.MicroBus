@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Enexure.MicroBus.InfrastructureContracts;
 using Enexure.MicroBus.MessageContracts;
+using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Enexure.MicroBus.Tests
 {
-	class Event : IEvent {}
-
-	class EventHandler : IEventHandler<Event>
-	{
-		public Task Handle(Event command)
-		{
-			return Task.FromResult(0);
-		}
-	}
-
 	[TestFixture]
 	public class EventTests
 	{
+		class Event : IEvent {}
+
+		class EventHandler : IEventHandler<Event>
+		{
+			public Task Handle(Event command)
+			{
+				return Task.FromResult(0);
+			}
+		}
+
 		[Test]
 		public async Task TestEvent()
 		{
@@ -26,7 +28,10 @@ namespace Enexure.MicroBus.Tests
 				.AddHandler<PipelineHandler>();
 
 			var bus = new BusBuilder()
-				.Register<EventHandler>(pipline)
+				.RegisterEvent<Command>().To(x =>
+					{
+						x.Handler<EventHandler>();
+					})
 				.BuildBus();
 
 			await bus.Publish(new Event());

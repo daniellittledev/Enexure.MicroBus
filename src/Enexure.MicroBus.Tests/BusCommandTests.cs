@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Enexure.MicroBus.MessageContracts;
+using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -26,7 +27,7 @@ namespace Enexure.MicroBus.Tests
 				.AddHandler<PipelineHandler>();
 
 			var bus = new BusBuilder()
-				.Register<CommandHandler>(pipline)
+				.RegisterCommand<Command>().To<CommandHandler>(pipline)
 				.BuildBus();
 
 			await bus.Send(new Command());
