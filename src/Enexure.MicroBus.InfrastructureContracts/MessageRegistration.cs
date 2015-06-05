@@ -28,7 +28,7 @@ namespace Enexure.MicroBus.InfrastructureContracts
 			get { return messageType; }
 		}
 
-		public IEnumerable<Type> Handlerss
+		public IEnumerable<Type> Handlers
 		{
 			get { return handlers; }
 		}

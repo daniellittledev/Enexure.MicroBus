@@ -38,7 +38,9 @@ namespace Enexure.MicroBus.Autofac
 
 		public HandlerRegistar Build()
 		{
-			return new HandlerRegistar(commandRegistrations);
+			//TODO: Update
+			throw new NotImplementedException();
+			//return new HandlerRegistar(commandRegistrations);
 		}
 
 		public AutofacPipeline CreatePipeline()

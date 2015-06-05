@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusBuilder.cs" />
+    <Compile Include="PretendMultipleToBeEventHandler.cs" />
     <Compile Include="DefaultHandlerActivator.cs" />
     <Compile Include="HandlerBuilder.cs" />
     <Compile Include="HandlerRegistar.cs" />

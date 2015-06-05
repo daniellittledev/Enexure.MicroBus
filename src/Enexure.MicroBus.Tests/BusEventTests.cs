@@ -28,10 +28,7 @@ namespace Enexure.MicroBus.Tests
 				.AddHandler<PipelineHandler>();
 
 			var bus = new BusBuilder()
-				.RegisterEvent<Command>().To(x =>
-					{
-						x.Handler<EventHandler>();
-					})
+				.RegisterEvent<Event>().To(x => x.Handler<EventHandler>(), pipline)
 				.BuildBus();
 
 			await bus.Publish(new Event());

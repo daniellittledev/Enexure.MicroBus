@@ -140,12 +140,11 @@ namespace Enexure.MicroBus
 			return busBuilder;
 		}
 
-		public BusBuilder To<TEventHandler>(Action<EventBinder<TEventHandler>> eventBinder, Pipeline pipeline)
-			where TEventHandler : IEventHandler<TEvent>
+		public BusBuilder To(Action<EventBinder<TEvent>> eventBinder, Pipeline pipeline)
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			var binder = new EventBinder<TEventHandler>();
+			var binder = new EventBinder<TEvent>();
 			eventBinder(binder);
 
 			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TEvent), binder.GetHandlerTypes(), pipeline));
@@ -154,12 +153,13 @@ namespace Enexure.MicroBus
 		}
 	}
 
-	public class EventBinder<TEventHandler>
+	public class EventBinder<TEvent>
+		where TEvent : IEvent
 	{
-		private readonly List<Type> eventTypes = new List<Type>(); 
+		private readonly List<Type> eventTypes = new List<Type>();
 
-		public EventBinder<TEventHandler> Handler<THandler>()
-			where THandler : TEventHandler
+		public EventBinder<TEvent> Handler<THandler>()
+			where THandler : IEventHandler<TEvent>
 		{
 			eventTypes.Add(typeof(THandler));
 

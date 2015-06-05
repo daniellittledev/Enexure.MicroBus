@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Enexure.MicroBus.InfrastructureContracts;
 using Enexure.MicroBus.MessageContracts;
@@ -20,6 +21,7 @@ namespace Enexure.MicroBus
 			where TCommand : ICommand
 		{
 			return GetRunnerForMessage<ICommandHandler<TCommand>, TCommand>(
+				handlers => handlers.Single(),
 				handler => new CommandHandlerPretendToBePipelineHandler<TCommand>(handler),
 				handler => new PretendToBeCommandHandler<TCommand>(handler));
 		}
@@ -28,6 +30,7 @@ namespace Enexure.MicroBus
 			where TEvent : IEvent
 		{
 			return GetRunnerForMessage<IEventHandler<TEvent>, TEvent>(
+				handlers => new PretendMultipleToBeEventHandler<TEvent>(handlers),
 				handler => new EventHandlerPretendToBePipelineHandler<TEvent>(handler),
 				handler => new PretendToBeEventHandler<TEvent>(handler));
 		}
@@ -37,18 +40,19 @@ namespace Enexure.MicroBus
 			where TResult : IResult
 		{
 			return GetRunnerForMessage<IQueryHandler<TQuery, TResult>, TQuery>(
+				handlers => handlers.Single(),
 				handler => new QueryHandlerPretendToBePipelineHandler<TQuery, TResult>(handler), 
 				handler => new PretendToBeQueryHandler<TQuery, TResult>(handler));
 		}
 
-		private THandler GetRunnerForMessage<THandler, TMessage>(Func<THandler, IPipelineHandler> makePretend, Func<IPipelineHandler, THandler> makeReal)
+		private THandler GetRunnerForMessage<THandler, TMessage>(Func<IEnumerable<THandler>, THandler> mergeHandlers, Func<THandler, IPipelineHandler> makePretend, Func<IPipelineHandler, THandler> makeReal)
 			where TMessage : IMessage
 		{
 			var registration = handlerRegistar.GetRegistrationForMessage(typeof(TMessage));
 
-			var innerEventHandler = handlerActivator.ActivateHandler<THandler>(registration.MessageHandlerType);
+			var handlers = registration.Handlers.Select(x => handlerActivator.ActivateHandler<THandler>(x));
 
-			//var multiHandler = 
+			var innerEventHandler = mergeHandlers(handlers);
 
 			var handler = registration.Pipeline.Aggregate(
 				makePretend(innerEventHandler),

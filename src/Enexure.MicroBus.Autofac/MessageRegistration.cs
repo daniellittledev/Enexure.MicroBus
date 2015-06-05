@@ -1,6 +1,7 @@
 ﻿using System;
+using Enexure.MicroBus.InfrastructureContracts;
 
-namespace Enexure.MicroBus
+namespace Enexure.MicroBus.Autofac
 {
 	public class MessageRegistration
 	{

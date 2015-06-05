@@ -8,21 +8,21 @@ using NUnit.Framework;
 
 namespace Enexure.MicroBus.Tests
 {
-	class Query : IQuery<Query, Result> {}
-
-	class Result : IResult {}
-
-	class QueryHandler : IQueryHandler<Query, Result>
-	{
-		public Task<Result> Handle(Query query)
-		{
-			return Task.FromResult(new Result());
-		}
-	}
-
 	[TestFixture]
 	public class QueryTests
 	{
+		class Query : IQuery<Query, Result> { }
+
+		class Result : IResult { }
+
+		class QueryHandler : IQueryHandler<Query, Result>
+		{
+			public Task<Result> Handle(Query query)
+			{
+				return Task.FromResult(new Result());
+			}
+		}
+
 		[Test]
 		public async Task TestQuery()
 		{
@@ -30,7 +30,7 @@ namespace Enexure.MicroBus.Tests
 				.AddHandler<PipelineHandler>();
 
 			var bus = new BusBuilder()
-				.Register<QueryHandler>(pipline)
+				.RegisterQuery<Query, Result>().To<QueryHandler>(pipline)
 				.BuildBus();
 
 			var result = await bus.Query(new Query());

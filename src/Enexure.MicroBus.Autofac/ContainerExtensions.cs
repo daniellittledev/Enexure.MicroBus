@@ -15,7 +15,7 @@ namespace Enexure.MicroBus.Autofac
 			containerBuilder.RegisterInstance(registar).As<IHandlerRegistar>().SingleInstance();
 			containerBuilder.RegisterType<HandlerBuilder>().As<IHandlerBuilder>();
 			containerBuilder.RegisterType<AutofacHandlerActivator>().As<IHandlerActivator>();
-			containerBuilder.RegisterType<MicroBus>().As<IBus>();
+			containerBuilder.RegisterType<MicroBus>().As<IMicroBus>();
 		}
 	}
 }
