@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Enexure.MicroBus.InfrastructureContracts
+namespace Enexure.MicroBus
 {
 	//public class HandlerPipeline
 	//{

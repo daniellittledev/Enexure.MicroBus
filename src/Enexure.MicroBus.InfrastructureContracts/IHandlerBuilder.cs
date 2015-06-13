@@ -1,6 +1,6 @@
 ﻿using Enexure.MicroBus.MessageContracts;
 
-namespace Enexure.MicroBus.InfrastructureContracts
+namespace Enexure.MicroBus
 {
 	public interface IHandlerBuilder
 	{

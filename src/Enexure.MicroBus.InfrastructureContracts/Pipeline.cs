@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Enexure.MicroBus.InfrastructureContracts
+namespace Enexure.MicroBus
 {
 	public class Pipeline : IEnumerable<Type>
 	{

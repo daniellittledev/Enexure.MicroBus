@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Enexure.MicroBus.MessageContracts;
 
-namespace Enexure.MicroBus.InfrastructureContracts
+namespace Enexure.MicroBus
 {
 	public interface IEventHandler<in TEvent>
 		where TEvent : IEvent

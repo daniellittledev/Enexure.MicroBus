@@ -1,6 +1,6 @@
 ﻿using System;
 using Autofac;
-using Enexure.MicroBus.InfrastructureContracts;
+using Enexure.MicroBus;
 
 namespace Enexure.MicroBus.Autofac
 {

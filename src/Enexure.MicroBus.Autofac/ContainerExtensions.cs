@@ -1,6 +1,6 @@
 ﻿using System;
 using Autofac;
-using Enexure.MicroBus.InfrastructureContracts;
+using Enexure.MicroBus;
 
 namespace Enexure.MicroBus.Autofac
 {
@@ -10,7 +10,7 @@ namespace Enexure.MicroBus.Autofac
 		{
 			var builder = new AutofacBusBuilder(containerBuilder);
 			registerHandlers(builder);
-			var registar = builder.Build();
+			var registar = builder.BuildBus();
 
 			containerBuilder.RegisterInstance(registar).As<IHandlerRegistar>().SingleInstance();
 			containerBuilder.RegisterType<HandlerBuilder>().As<IHandlerBuilder>();

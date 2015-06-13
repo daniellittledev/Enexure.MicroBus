@@ -1,45 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Enexure.MicroBus.InfrastructureContracts;
 using Enexure.MicroBus.MessageContracts;
 
 namespace Enexure.MicroBus
 {
-	public class BusBuilder
+	public interface IBusBuilder
+	{
+		ICommandBuilder<TCommand> RegisterCommand<TCommand>()
+			where TCommand : ICommand;
+
+		ICommandBuilder RegisterCommand(Type type);
+
+		IEventBuilder<TEvent> RegisterEvent<TEvent>()
+			where TEvent : IEvent;
+
+		IEventBuilder RegisterEvent(Type type);
+
+		IQueryBuilder<TQuery, TResult> RegisterQuery<TQuery, TResult>()
+			where TQuery : IQuery<TQuery, TResult>
+			where TResult : IResult;
+
+		IQueryBuilder RegisterQuery(Type type);
+		IMicroBus BuildBus();
+	}
+
+	public class BusBuilder : IBusBuilder
 	{
 		internal readonly List<MessageRegistration> registrations = new List<MessageRegistration>();
 
-		public CommandBuilder<TCommand> RegisterCommand<TCommand>()
+		public ICommandBuilder<TCommand> RegisterCommand<TCommand>()
 			where TCommand : ICommand
 		{
 			return new CommandBuilder<TCommand>(this);
 		}
 
-		public CommandBuilder RegisterCommand(Type type)
+		public ICommandBuilder RegisterCommand(Type type)
 		{
 			return new CommandBuilder(this, type);
 		}
 
-		public EventBuilder<TEvent> RegisterEvent<TEvent>()
+		public IEventBuilder<TEvent> RegisterEvent<TEvent>()
 			where TEvent : IEvent
 		{
 			return new EventBuilder<TEvent>(this);
 		}
 
-		public EventBuilder RegisterEvent(Type type)
+		public IEventBuilder RegisterEvent(Type type)
 		{
 			return new EventBuilder(this, type);
 		}
 
-		public QueryBuilder<TQuery, TResult> RegisterQuery<TQuery, TResult>()
+		public IQueryBuilder<TQuery, TResult> RegisterQuery<TQuery, TResult>()
 			where TQuery : IQuery<TQuery, TResult>
 			where TResult : IResult
 		{
 			return new QueryBuilder<TQuery, TResult>(this);
 		}
 
-		public QueryBuilder RegisterQuery(Type type)
+		public IQueryBuilder RegisterQuery(Type type)
 		{
 			return new QueryBuilder(this, type);
 		}
@@ -50,7 +68,12 @@ namespace Enexure.MicroBus
 		}
 	}
 
-	public class CommandBuilder
+	public interface ICommandBuilder
+	{
+		IBusBuilder To(Type commandHandlerType, Pipeline pipeline);
+	}
+
+	public class CommandBuilder : ICommandBuilder
 	{
 		private readonly BusBuilder busBuilder;
 		private readonly Type commandType;
@@ -61,7 +84,7 @@ namespace Enexure.MicroBus
 			this.commandType = commandType;
 		}
 
-		public BusBuilder To(Type commandHandlerType, Pipeline pipeline)
+		public IBusBuilder To(Type commandHandlerType, Pipeline pipeline)
 		{
 			busBuilder.registrations.Add(item: new MessageRegistration(commandType, commandHandlerType, pipeline));
 
@@ -69,7 +92,14 @@ namespace Enexure.MicroBus
 		}
 	}
 
-	public class CommandBuilder<TCommand>
+	public interface ICommandBuilder<out TCommand>
+		where TCommand : ICommand
+	{
+		IBusBuilder To<TCommandHandler>(Pipeline pipeline)
+			where TCommandHandler : ICommandHandler<TCommand>;
+	}
+
+	public class CommandBuilder<TCommand> : ICommandBuilder<TCommand>
 		where TCommand : ICommand
 	{
 		private readonly BusBuilder busBuilder;
@@ -79,7 +109,7 @@ namespace Enexure.MicroBus
 			this.busBuilder = busBuilder;
 		}
 
-		public BusBuilder To<TCommandHandler>(Pipeline pipeline)
+		public IBusBuilder To<TCommandHandler>(Pipeline pipeline)
 			where TCommandHandler : ICommandHandler<TCommand>
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
@@ -90,7 +120,13 @@ namespace Enexure.MicroBus
 		}
 	}
 
-	public class EventBuilder
+	public interface IEventBuilder
+	{
+		IBusBuilder To(Type eventHandlerType, Pipeline pipeline);
+		IBusBuilder To(IEnumerable<Type> eventHandlerTypes, Pipeline pipeline);
+	}
+
+	public class EventBuilder : IEventBuilder
 	{
 		private readonly BusBuilder busBuilder;
 		private readonly Type eventType;
@@ -101,7 +137,7 @@ namespace Enexure.MicroBus
 			this.eventType = eventType;
 		}
 
-		public BusBuilder To(Type eventHandlerType, Pipeline pipeline)
+		public IBusBuilder To(Type eventHandlerType, Pipeline pipeline)
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
@@ -110,7 +146,7 @@ namespace Enexure.MicroBus
 			return busBuilder;
 		}
 
-		public BusBuilder To(IEnumerable<Type> eventHandlerTypes, Pipeline pipeline)
+		public IBusBuilder To(IEnumerable<Type> eventHandlerTypes, Pipeline pipeline)
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
@@ -120,7 +156,16 @@ namespace Enexure.MicroBus
 		}
 	}
 
-	public class EventBuilder<TEvent>
+	public interface IEventBuilder<TEvent>
+		where TEvent : IEvent
+	{
+		IBusBuilder To<TEventHandler>(Pipeline pipeline)
+			where TEventHandler : IEventHandler<TEvent>;
+
+		IBusBuilder To(Action<IEventBinder<TEvent>> eventBinder, Pipeline pipeline);
+	}
+
+	public class EventBuilder<TEvent> : IEventBuilder<TEvent>
 		where TEvent : IEvent
 	{
 		private readonly BusBuilder busBuilder;
@@ -130,7 +175,7 @@ namespace Enexure.MicroBus
 			this.busBuilder = busBuilder;
 		}
 
-		public BusBuilder To<TEventHandler>(Pipeline pipeline)
+		public IBusBuilder To<TEventHandler>(Pipeline pipeline)
 			where TEventHandler : IEventHandler<TEvent>
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
@@ -140,7 +185,7 @@ namespace Enexure.MicroBus
 			return busBuilder;
 		}
 
-		public BusBuilder To(Action<EventBinder<TEvent>> eventBinder, Pipeline pipeline)
+		public IBusBuilder To(Action<IEventBinder<TEvent>> eventBinder, Pipeline pipeline)
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
@@ -153,12 +198,18 @@ namespace Enexure.MicroBus
 		}
 	}
 
-	public class EventBinder<TEvent>
+	public interface IEventBinder<TEvent> where TEvent : IEvent
+	{
+		IEventBinder<TEvent> Handler<THandler>()
+			where THandler : IEventHandler<TEvent>;
+	}
+
+	public class EventBinder<TEvent> : IEventBinder<TEvent>
 		where TEvent : IEvent
 	{
 		private readonly List<Type> eventTypes = new List<Type>();
 
-		public EventBinder<TEvent> Handler<THandler>()
+		public IEventBinder<TEvent> Handler<THandler>()
 			where THandler : IEventHandler<TEvent>
 		{
 			eventTypes.Add(typeof(THandler));
@@ -172,7 +223,12 @@ namespace Enexure.MicroBus
 		}
 	}
 
-	public class QueryBuilder
+	public interface IQueryBuilder
+	{
+		IBusBuilder To(Type queryHandlerType, Pipeline pipeline);
+	}
+
+	public class QueryBuilder : IQueryBuilder
 	{
 		private readonly BusBuilder busBuilder;
 		private readonly Type queryType;
@@ -183,7 +239,7 @@ namespace Enexure.MicroBus
 			this.queryType = queryType;
 		}
 
-		public BusBuilder To(Type queryHandlerType, Pipeline pipeline)
+		public IBusBuilder To(Type queryHandlerType, Pipeline pipeline)
 		{
 			busBuilder.registrations.Add(item: new MessageRegistration(queryType, queryHandlerType, pipeline));
 
@@ -191,7 +247,15 @@ namespace Enexure.MicroBus
 		}
 	}
 
-	public class QueryBuilder<TQuery, TResult>
+	public interface IQueryBuilder<out TQuery, TResult>
+		where TQuery : IQuery<TQuery, TResult>
+		where TResult : IResult
+	{
+		IBusBuilder To<TQueryHandler>(Pipeline pipeline)
+			where TQueryHandler : IQueryHandler<TQuery, TResult>;
+	}
+
+	public class QueryBuilder<TQuery, TResult> : IQueryBuilder<TQuery, TResult>
 		where TQuery : IQuery<TQuery, TResult>
 		where TResult : IResult
 	{
@@ -202,7 +266,7 @@ namespace Enexure.MicroBus
 			this.busBuilder = busBuilder;
 		}
 
-		public BusBuilder To<TQueryHandler>(Pipeline pipeline)
+		public IBusBuilder To<TQueryHandler>(Pipeline pipeline)
 			where TQueryHandler : IQueryHandler<TQuery, TResult>
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");

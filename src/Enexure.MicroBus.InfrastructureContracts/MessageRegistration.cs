@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Enexure.MicroBus.InfrastructureContracts
+namespace Enexure.MicroBus
 {
 	public class MessageRegistration
 	{
