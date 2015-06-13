@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="AutofacBusBuilder.cs" />
     <Compile Include="AutofacExtensions.cs" />
-    <Compile Include="AutofacPipeline.cs" />
     <Compile Include="AutofacHandlerBuilder.cs" />
     <Compile Include="ContainerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

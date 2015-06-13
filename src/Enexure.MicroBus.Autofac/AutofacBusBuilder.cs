@@ -51,9 +51,14 @@ namespace Enexure.MicroBus.Autofac
 			return new AutofacQueryBuilder(this, type);
 		}
 
+		public HandlerRegistar GetHandlerRegistar()
+		{
+			return new HandlerRegistar(registrations);
+		}
+
 		public IMicroBus BuildBus()
 		{
-			return new MicroBus(new HandlerBuilder(new DefaultHandlerActivator(), new HandlerRegistar(registrations)));
+			throw new NotImplementedException("The autofac bus builder does not implement BuildBus, use the extension method RegisterMicroBus for the autofac ContainerBuilder instead.");
 		}
 	}
 
@@ -70,8 +75,9 @@ namespace Enexure.MicroBus.Autofac
 
 		public IBusBuilder To(Type commandHandlerType, Pipeline pipeline)
 		{
-			busBuilder.registrations.Add(item: new MessageRegistration(commandType, commandHandlerType, pipeline));
-			busBuilder.containerBuilder.RegisterType(commandHandlerType).As(typeof(ICommandHandler<>).MakeGenericType(commandType)).SingleInstance();
+			var commandHandlerInterfaceType = typeof(ICommandHandler<>).MakeGenericType(commandType);
+			busBuilder.registrations.Add(item: new MessageRegistration(commandType, commandHandlerInterfaceType, pipeline));
+			busBuilder.containerBuilder.RegisterType(commandHandlerType).As(commandHandlerInterfaceType).SingleInstance();
 
 			return busBuilder;
 		}
@@ -92,7 +98,8 @@ namespace Enexure.MicroBus.Autofac
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TCommand), typeof(TCommandHandler), pipeline));
+			var commandHandlerInterfaceType = typeof(ICommandHandler<TCommand>);
+			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TCommand), commandHandlerInterfaceType, pipeline));
 			busBuilder.containerBuilder.RegisterType<TCommandHandler>().As<ICommandHandler<TCommand>>().SingleInstance();
 
 			return busBuilder; 
@@ -114,8 +121,9 @@ namespace Enexure.MicroBus.Autofac
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			busBuilder.registrations.Add(item: new Enexure.MicroBus.MessageRegistration(eventType, eventHandlerType, pipeline));
-			busBuilder.containerBuilder.RegisterType(eventHandlerType).As(typeof(IEventHandler<>).MakeGenericType(eventType)).SingleInstance();
+			var eventHandlerInterfaceType = typeof(IEventHandler<>).MakeGenericType(eventType);
+			busBuilder.registrations.Add(item: new MessageRegistration(eventType, eventHandlerInterfaceType, pipeline));
+			busBuilder.containerBuilder.RegisterType(eventHandlerType).As(eventHandlerInterfaceType).SingleInstance();
 
 			return busBuilder;
 		}
@@ -127,10 +135,11 @@ namespace Enexure.MicroBus.Autofac
 
 			var eventHandlerTypesList = eventHandlerTypes.ToList();
 
-			busBuilder.registrations.Add(item: new MessageRegistration(eventType, eventHandlerTypesList, pipeline));
+			var eventHandlerInterfaceType = typeof(IEventHandler<>).MakeGenericType(eventType);
+			busBuilder.registrations.Add(item: new MessageRegistration(eventType, eventHandlerInterfaceType, pipeline));
 
 			foreach (var eventHandlerType in eventHandlerTypesList) {
-				busBuilder.containerBuilder.RegisterType(eventHandlerType).As(typeof(IEventHandler<>).MakeGenericType(eventType)).SingleInstance();
+				busBuilder.containerBuilder.RegisterType(eventHandlerType).As(eventHandlerInterfaceType).SingleInstance();
 			}
 
 			return busBuilder;
@@ -152,7 +161,8 @@ namespace Enexure.MicroBus.Autofac
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TEvent), typeof(TEventHandler), pipeline));
+			var eventHandlerInterfaceType = typeof(IEventHandler<TEvent>);
+			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TEvent), eventHandlerInterfaceType, pipeline));
 			busBuilder.containerBuilder.RegisterType<TEventHandler>().As<IEventHandler<TEvent>>().SingleInstance();
 
 			return busBuilder;
@@ -167,7 +177,8 @@ namespace Enexure.MicroBus.Autofac
 
 			var eventHandlerTypesList = binder.GetHandlerTypes();
 
-			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TEvent), eventHandlerTypesList, pipeline));
+			var eventHandlerInterfaceType = typeof(IEventHandler<TEvent>);
+			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TEvent), eventHandlerInterfaceType, pipeline));
 
 			foreach (var eventHandlerType in eventHandlerTypesList) {
 				busBuilder.containerBuilder.RegisterType(eventHandlerType).As<IEventHandler<TEvent>>().SingleInstance();
@@ -209,8 +220,9 @@ namespace Enexure.MicroBus.Autofac
 
 		public IBusBuilder To(Type queryHandlerType, Pipeline pipeline)
 		{
-			busBuilder.registrations.Add(item: new MessageRegistration(queryType, queryHandlerType, pipeline));
-			busBuilder.containerBuilder.RegisterType(queryHandlerType).As(typeof(IQueryHandler<,>).MakeGenericType(queryType, queryType.GenericTypeArguments.Last())).SingleInstance();
+			var queryHandlerInterfaceType = typeof(IQueryHandler<,>).MakeGenericType(queryType, queryType.GenericTypeArguments.Last());
+			busBuilder.registrations.Add(item: new MessageRegistration(queryType, queryHandlerInterfaceType, pipeline));
+			busBuilder.containerBuilder.RegisterType(queryHandlerType).As(queryHandlerInterfaceType).SingleInstance();
 
 			return busBuilder;
 		}
@@ -232,7 +244,8 @@ namespace Enexure.MicroBus.Autofac
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TQuery), typeof(TQueryHandler), pipeline));
+			var queryHandlerInterfaceType = typeof(IQueryHandler<TQuery, TResult>);
+			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TQuery), queryHandlerInterfaceType, pipeline));
 			busBuilder.containerBuilder.RegisterType<TQueryHandler>().As<IQueryHandler<TQuery, TResult>>().SingleInstance();
 
 			return busBuilder;

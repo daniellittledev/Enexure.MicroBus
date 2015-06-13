@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enexure.MicroBus;
 using Enexure.MicroBus.MessageContracts;
@@ -11,12 +12,27 @@ namespace Enexure.MicroBus.Tests
 	[TestFixture]
 	public class EventTests
 	{
-		class Event : IEvent {}
+		class Event : IEvent
+		{
+			public int Tally { get; set; }
+		}
 
 		class EventHandler : IEventHandler<Event>
 		{
-			public Task Handle(Event command)
+			public Task Handle(Event @event)
 			{
+				@event.Tally += 1;
+
+				return Task.FromResult(0);
+			}
+		}
+
+		class EventHandler2 : IEventHandler<Event>
+		{
+			public Task Handle(Event @event)
+			{
+				@event.Tally += 1;
+
 				return Task.FromResult(0);
 			}
 		}
@@ -31,8 +47,29 @@ namespace Enexure.MicroBus.Tests
 				.RegisterEvent<Event>().To(x => x.Handler<EventHandler>(), pipline)
 				.BuildBus();
 
-			await bus.Publish(new Event());
+			var @event = new Event();
+			await bus.Publish(@event);
+			
+			@event.Tally.Should().Be(1);
+		}
 
+		[Test]
+		public async Task TestMultipleEvents()
+		{
+			var pipline = new Pipeline()
+				.AddHandler<PipelineHandler>();
+
+			var bus = new BusBuilder()
+				.RegisterEvent<Event>().To(x => {
+					x.Handler<EventHandler>();
+					x.Handler<EventHandler2>();
+				}, pipline)
+				.BuildBus();
+
+			var @event = new Event();
+			await bus.Publish(@event);
+
+			@event.Tally.Should().Be(2);
 		}
 	}
 }
