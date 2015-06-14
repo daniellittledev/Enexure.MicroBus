@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Enexure.MicroBus.MessageContracts;
+using System.Collections.Immutable;
 
 namespace Enexure.MicroBus
 {
@@ -21,12 +21,30 @@ namespace Enexure.MicroBus
 			where TResult : IResult;
 
 		IQueryBuilder RegisterQuery(Type type);
+
+		IReadOnlyCollection<MessageRegistration> GetMessageRegistrations();
+		IHandlerRegistar BuildHandlerRegistar();
 		IMicroBus BuildBus();
 	}
 
 	public class BusBuilder : IBusBuilder
 	{
-		internal readonly List<MessageRegistration> registrations = new List<MessageRegistration>();
+		private readonly ImmutableList<MessageRegistration> registrations;
+
+		public BusBuilder()
+		{
+			registrations = ImmutableList<MessageRegistration>.Empty;
+		}
+
+		public BusBuilder(IEnumerable<MessageRegistration> registrations)
+		{
+			this.registrations = registrations as ImmutableList<MessageRegistration> ?? ImmutableList<MessageRegistration>.Empty.AddRange(registrations);
+		}
+
+		public BusBuilder(BusBuilder busBuilder, MessageRegistration registrations)
+		{
+			this.registrations = busBuilder.registrations.Add(registrations);
+		}
 
 		public ICommandBuilder<TCommand> RegisterCommand<TCommand>()
 			where TCommand : ICommand
@@ -62,9 +80,19 @@ namespace Enexure.MicroBus
 			return new QueryBuilder(this, type);
 		}
 
+		public IReadOnlyCollection<MessageRegistration> GetMessageRegistrations()
+		{
+			return registrations;
+		}
+
+		public IHandlerRegistar BuildHandlerRegistar()
+		{
+			return new HandlerRegistar(registrations);
+		}
+
 		public IMicroBus BuildBus()
 		{
-			return new MicroBus(new HandlerBuilder(new DefaultHandlerActivator(), new HandlerRegistar(registrations)));
+			return new MicroBus(new HandlerBuilder(new DefaultHandlerActivator(), BuildHandlerRegistar()));
 		}
 	}
 
@@ -86,9 +114,7 @@ namespace Enexure.MicroBus
 
 		public IBusBuilder To(Type commandHandlerType, Pipeline pipeline)
 		{
-			busBuilder.registrations.Add(item: new MessageRegistration(commandType, commandHandlerType, pipeline));
-
-			return busBuilder;
+			return new BusBuilder(busBuilder, new MessageRegistration(commandType, commandHandlerType, pipeline));
 		}
 	}
 
@@ -114,9 +140,7 @@ namespace Enexure.MicroBus
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TCommand), typeof(TCommandHandler), pipeline));
-
-			return busBuilder; 
+			return new BusBuilder(busBuilder, new MessageRegistration(typeof(TCommand), typeof(TCommandHandler), pipeline)); 
 		}
 	}
 
@@ -141,18 +165,14 @@ namespace Enexure.MicroBus
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			busBuilder.registrations.Add(item: new MessageRegistration(eventType, eventHandlerType, pipeline));
-
-			return busBuilder;
+			return new BusBuilder(busBuilder, new MessageRegistration(eventType, eventHandlerType, pipeline));
 		}
 
 		public IBusBuilder To(IEnumerable<Type> eventHandlerTypes, Pipeline pipeline)
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			busBuilder.registrations.Add(item: new MessageRegistration(eventType, eventHandlerTypes, pipeline));
-
-			return busBuilder;
+			return new BusBuilder(busBuilder, new MessageRegistration(eventType, eventHandlerTypes, pipeline));
 		}
 	}
 
@@ -180,9 +200,7 @@ namespace Enexure.MicroBus
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TEvent), typeof(TEventHandler), pipeline));
-
-			return busBuilder;
+			return new BusBuilder(busBuilder, new MessageRegistration(typeof(TEvent), typeof(TEventHandler), pipeline));
 		}
 
 		public IBusBuilder To(Action<IEventBinder<TEvent>> eventBinder, Pipeline pipeline)
@@ -192,9 +210,7 @@ namespace Enexure.MicroBus
 			var binder = new EventBinder<TEvent>();
 			eventBinder(binder);
 
-			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TEvent), binder.GetHandlerTypes(), pipeline));
-
-			return busBuilder;
+			return new BusBuilder(busBuilder, new MessageRegistration(typeof(TEvent), binder.GetHandlerTypes(), pipeline));
 		}
 	}
 
@@ -241,9 +257,7 @@ namespace Enexure.MicroBus
 
 		public IBusBuilder To(Type queryHandlerType, Pipeline pipeline)
 		{
-			busBuilder.registrations.Add(item: new MessageRegistration(queryType, queryHandlerType, pipeline));
-
-			return busBuilder;
+			return new BusBuilder(busBuilder, new MessageRegistration(queryType, queryHandlerType, pipeline));
 		}
 	}
 
@@ -271,9 +285,7 @@ namespace Enexure.MicroBus
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			busBuilder.registrations.Add(item: new MessageRegistration(typeof(TQuery), typeof(TQueryHandler), pipeline));
-
-			return busBuilder;
+			return new BusBuilder(busBuilder, new MessageRegistration(typeof(TQuery), typeof(TQueryHandler), pipeline));
 		}
 	}
 }

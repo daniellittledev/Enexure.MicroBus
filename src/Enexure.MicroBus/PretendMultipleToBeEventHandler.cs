@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enexure.MicroBus;
-using Enexure.MicroBus.MessageContracts;
 
 namespace Enexure.MicroBus
 {

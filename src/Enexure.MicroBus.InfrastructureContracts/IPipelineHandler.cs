@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Enexure.MicroBus.MessageContracts;
+﻿using System.Threading.Tasks;
 
 namespace Enexure.MicroBus
 {

@@ -40,17 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HandlerPipeline.cs" />
     <Compile Include="IMicroBus.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="IEventHandler.cs" />
-    <Compile Include="IHandlerActivator.cs" />
-    <Compile Include="IHandlerBuilder.cs" />
-    <Compile Include="IHandlerRegistar.cs" />
     <Compile Include="IPipelineHandler.cs" />
     <Compile Include="IQueryHandler.cs" />
-    <Compile Include="MessageRegistration.cs" />
-    <Compile Include="Pipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

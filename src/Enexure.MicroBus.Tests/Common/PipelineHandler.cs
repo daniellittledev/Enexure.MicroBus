@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Enexure.MicroBus.MessageContracts;
 
 namespace Enexure.MicroBus.Tests.Common
 {

@@ -7,7 +7,7 @@
     <ProjectGuid>{DF8290A6-7F5C-4B0F-B2E4-35B3E60167FD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Enexure.MicroBus.MessageContracts</RootNamespace>
+    <RootNamespace>Enexure.MicroBus</RootNamespace>
     <AssemblyName>Enexure.MicroBus.MessageContracts</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

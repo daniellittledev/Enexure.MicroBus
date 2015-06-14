@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Enexure.MicroBus.MessageContracts;
+using Autofac;
+using Enexure.MicroBus.Autofac;
 using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
@@ -27,9 +28,14 @@ namespace Enexure.MicroBus.Tests.Autofac
 			var pipline = new Pipeline()
 				.AddHandler<PipelineHandler>();
 
-			var bus = new BusBuilder()
-				.RegisterQuery<Query, Result>().To<QueryHandler>(pipline)
-				.BuildBus();
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
+
+				return busBuilder
+					.RegisterQuery<Query, Result>().To<QueryHandler>(pipline);
+
+			}).Build();
+
+			var bus = container.Resolve<IMicroBus>();
 
 			var result = await bus.Query(new Query());
 

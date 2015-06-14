@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Enexure.MicroBus.MessageContracts;
+using Autofac;
+using Enexure.MicroBus.Autofac;
 using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
@@ -40,9 +41,13 @@ namespace Enexure.MicroBus.Tests.Autofac
 			var pipline = new Pipeline()
 				.AddHandler<PipelineHandler>();
 
-			var bus = new BusBuilder()
-				.RegisterEvent<Event>().To(x => x.Handler<EventHandler>(), pipline)
-				.BuildBus();
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
+
+				return busBuilder
+					.RegisterEvent<Event>().To(x => x.Handler<EventHandler>(), pipline);
+			}).Build();
+
+			var bus = container.Resolve<IMicroBus>();
 
 			var @event = new Event();
 			await bus.Publish(@event);
@@ -56,12 +61,17 @@ namespace Enexure.MicroBus.Tests.Autofac
 			var pipline = new Pipeline()
 				.AddHandler<PipelineHandler>();
 
-			var bus = new BusBuilder()
-				.RegisterEvent<Event>().To(x => {
-					x.Handler<EventHandler>();
-					x.Handler<EventHandler2>();
-				}, pipline)
-				.BuildBus();
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
+
+				return busBuilder
+					.RegisterEvent<Event>().To(x => {
+						x.Handler<EventHandler>();
+						x.Handler<EventHandler2>();
+					}, pipline);
+
+			}).Build();
+
+			var bus = container.Resolve<IMicroBus>();
 
 			var @event = new Event();
 			await bus.Publish(@event);

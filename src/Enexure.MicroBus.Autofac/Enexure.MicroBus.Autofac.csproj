@@ -43,8 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutofacBusBuilder.cs" />
-    <Compile Include="AutofacExtensions.cs" />
     <Compile Include="AutofacHandlerBuilder.cs" />
     <Compile Include="ContainerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

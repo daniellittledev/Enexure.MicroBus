@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Enexure.MicroBus;
-using Enexure.MicroBus.MessageContracts;
 
 namespace Enexure.MicroBus
 {
@@ -50,7 +49,7 @@ namespace Enexure.MicroBus
 		{
 			var registration = handlerRegistar.GetRegistrationForMessage(typeof(TMessage));
 
-			var handlers = registration.Handlers.Select(x => handlerActivator.ActivateHandler<THandler>(x));
+			var handlers = handlerActivator.ActivateHandlers<THandler>(registration);
 
 			var innerEventHandler = mergeHandlers(handlers);
 

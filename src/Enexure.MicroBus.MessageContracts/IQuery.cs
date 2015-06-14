@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Enexure.MicroBus.MessageContracts
+﻿namespace Enexure.MicroBus
 {
 	public interface IQuery<in TQuery, out TResult> : IMessage
 		where TQuery : IQuery<TQuery, TResult>
