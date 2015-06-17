@@ -1,6 +1,4 @@
-﻿using Enexure.MicroBus.MessageContracts;
-
-namespace Enexure.MicroBus
+﻿namespace Enexure.MicroBus
 {
 	public interface IHandlerBuilder
 	{

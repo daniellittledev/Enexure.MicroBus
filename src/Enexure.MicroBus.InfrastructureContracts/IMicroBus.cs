@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Enexure.MicroBus.MessageContracts;
+﻿using System.Threading.Tasks;
 
 namespace Enexure.MicroBus
 {
-	public interface IBus
+	public interface IMicroBus
 	{
 		Task Send<TCommand>(TCommand busCommand)
 			where TCommand : ICommand;

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Enexure.MicroBus.MessageContracts
+﻿namespace Enexure.MicroBus
 {
 	public interface IResult
 	{

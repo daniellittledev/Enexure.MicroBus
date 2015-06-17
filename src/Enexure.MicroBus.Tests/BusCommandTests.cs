@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Enexure.MicroBus.MessageContracts;
+using Enexure.MicroBus;
+using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Enexure.MicroBus.Tests
 {
-	class Command : ICommand {}
-
-	class CommandHandler : ICommandHandler<Command>
-	{
-		public Task Handle(Command command)
-		{
-			return Task.FromResult(0);
-		}
-	}
-
 	[TestFixture]
 	public class CommandTests
 	{
+		class Command : ICommand { }
+
+		class CommandHandler : ICommandHandler<Command>
+		{
+			public Task Handle(Command command)
+			{
+				return Task.FromResult(0);
+			}
+		}
+
 		[Test]
 		public async Task TestCommand()
 		{
@@ -26,7 +27,7 @@ namespace Enexure.MicroBus.Tests
 				.AddHandler<PipelineHandler>();
 
 			var bus = new BusBuilder()
-				.Register<CommandHandler>(pipline)
+				.RegisterCommand<Command>().To<CommandHandler>(pipline)
 				.BuildBus();
 
 			await bus.Send(new Command());

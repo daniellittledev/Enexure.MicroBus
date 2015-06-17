@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Enexure.MicroBus.MessageContracts;
+﻿using System.Threading.Tasks;
 
-namespace Enexure.MicroBus.Tests
+namespace Enexure.MicroBus.Tests.Common
 {
 	class PipelineHandler : IPipelineHandler
 	{

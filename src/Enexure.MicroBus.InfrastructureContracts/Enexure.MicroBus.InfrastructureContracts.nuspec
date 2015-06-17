@@ -10,10 +10,9 @@
     <iconUrl>https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <tags>MicroBus Bus Mediator</tags>
+    <tags>MicroBus Bus Mediator Contracts</tags>
     <dependencies>
-      <dependency id="Enexure.MicroBus.MessageContracts" version="1.0.0.1" />
-      <dependency id="Enexure.MicroBus.InfrastructureContracts" version="1.0.0.20" />
+		<dependency id="Enexure.MicroBus.MessageContracts" version="1.0.0.1" />
     </dependencies>
   </metadata>
 </package>

@@ -58,9 +58,13 @@ If you need to handle cross cutting concerns you can use a pipeline handler
 		var pipeline = builder.CreatePipeline()
 			.AddHandler<CrossCuttingHandler>();
 
-		builder.RegisterHandler<TestCommandHandler>(pipeline);
+		builder.RegisterCommand<TestCommand>().To<TestCommandHandler>(pipline);
+
+		return builder;
 	});
 
 	var container = containerBuilder.Build();
+
+For more examples check out the [Enexure.MicroBus.Tests](https://github.com/Lavinski/Enexure.MicroBus/tree/master/src/Enexure.MicroBus.Tests) project.
 
 	

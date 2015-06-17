@@ -1,13 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace Enexure.MicroBus
 {
-	public class Pipeline : IEnumerable<Type>
+	public sealed class Pipeline : IEnumerable<Type>
 	{
-		readonly List<Type> types = new List<Type>();
+		readonly ImmutableList<Type> types = ImmutableList<Type>.Empty;
+
+		public Pipeline()
+		{
+		}
+
+		private Pipeline(ImmutableList<Type> types)
+		{
+			this.types = types;
+		}
 
 		public IEnumerator<Type> GetEnumerator()
 		{
@@ -22,23 +32,18 @@ namespace Enexure.MicroBus
 		public Pipeline AddHandler<T>()
 			where T : IPipelineHandler
 		{
-			types.Add(typeof(T));
-			return this;
+			return new Pipeline(types.Add(typeof(T)));
 		}
 
 		public Pipeline AddHandlers(IEnumerable<Type> handlers)
 		{
-			foreach (var handler in handlers) {
+			var collection = handlers as IReadOnlyCollection<Type> ?? handlers.ToList();
 
-				if (typeof(IPipelineHandler).IsAssignableFrom(handler)) {
-
-					types.Add(handler);
-				} else {
-
-					throw new InvalidOperationException("Handlers must implement the IPipelineHandler interface");
-				}
+			if (collection.Any(handler => !typeof(IPipelineHandler).IsAssignableFrom(handler))) {
+				throw new InvalidOperationException("Handlers must implement the IPipelineHandler interface");
 			}
-			return this;
+
+			return new Pipeline(types.AddRange(collection));
 		}
 	}
 }
