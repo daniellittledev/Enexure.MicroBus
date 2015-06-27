@@ -23,6 +23,18 @@ namespace Enexure.MicroBus.Tests
 		}
 
 		[Test]
+		public void NoHandlerShouldThrow()
+		{
+			var bus = new BusBuilder()
+				.BuildBus();
+
+			var func = (Func<Task>)(() => bus.Query(new Query()));
+
+			func.ShouldThrowExactly<NoRegistrationForMessage>();
+		}
+
+
+		[Test]
 		public async Task TestQuery()
 		{
 			var pipline = new Pipeline()

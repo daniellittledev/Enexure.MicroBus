@@ -22,7 +22,9 @@ namespace Enexure.MicroBus
 			return GetRunnerForMessage<ICommandHandler<TCommand>, TCommand>(
 				handlers => handlers.Single(),
 				handler => new CommandHandlerPretendToBePipelineHandler<TCommand>(handler),
-				handler => new PretendToBeCommandHandler<TCommand>(handler));
+				handler => new PretendToBeCommandHandler<TCommand>(handler),
+				handler => new EventPretendToBeCommandHandler<TCommand>(handler)
+				);
 		}
 
 		public IEventHandler<TEvent> GetRunnerForEvent<TEvent>() 
@@ -31,7 +33,9 @@ namespace Enexure.MicroBus
 			return GetRunnerForMessage<IEventHandler<TEvent>, TEvent>(
 				handlers => new PretendMultipleToBeEventHandler<TEvent>(handlers),
 				handler => new EventHandlerPretendToBePipelineHandler<TEvent>(handler),
-				handler => new PretendToBeEventHandler<TEvent>(handler));
+				handler => new PretendToBeEventHandler<TEvent>(handler),
+				handler => new EventPretendToBeEventHandler<TEvent>(handler)
+				);
 		}
 
 		public IQueryHandler<TQuery, TResult> GetRunnerForQuery<TQuery, TResult>()
@@ -41,13 +45,29 @@ namespace Enexure.MicroBus
 			return GetRunnerForMessage<IQueryHandler<TQuery, TResult>, TQuery>(
 				handlers => handlers.Single(),
 				handler => new QueryHandlerPretendToBePipelineHandler<TQuery, TResult>(handler), 
-				handler => new PretendToBeQueryHandler<TQuery, TResult>(handler));
+				handler => new PretendToBeQueryHandler<TQuery, TResult>(handler),
+				handler => new EventPretendToBeQueryHandler<TQuery, TResult>(handler)
+				);
 		}
 
-		private THandler GetRunnerForMessage<THandler, TMessage>(Func<IEnumerable<THandler>, THandler> mergeHandlers, Func<THandler, IPipelineHandler> makePretend, Func<IPipelineHandler, THandler> makeReal)
+		private THandler GetRunnerForMessage<THandler, TMessage>(
+			Func<IEnumerable<THandler>, 
+			THandler> mergeHandlers, 
+			Func<THandler, IPipelineHandler> makePretend, 
+			Func<IPipelineHandler, THandler> makeReal,
+			Func<IEventHandler<NoMatchingRegistrationEvent>, THandler> convertNoRegistrationHandler 
+			)
 			where TMessage : IMessage
 		{
-			var registration = handlerRegistar.GetRegistrationForMessage(typeof(TMessage));
+			var messageType = typeof(TMessage);
+			var registration = handlerRegistar.GetRegistrationForMessage(messageType);
+
+			if (registration == null) {
+				if (typeof(TMessage) == typeof(NoMatchingRegistrationEvent)) {
+					throw new NoRegistrationForMessage(messageType);
+				}
+				return convertNoRegistrationHandler(GetRunnerForEvent<NoMatchingRegistrationEvent>());
+			}
 
 			var handlers = handlerActivator.ActivateHandlers<THandler>(registration);
 
@@ -58,6 +78,14 @@ namespace Enexure.MicroBus
 				(current, handlerType) => handlerActivator.ActivateHandler<IPipelineHandler>(handlerType, current));
 
 			return makeReal(handler);
+		}
+	}
+
+	public class NoRegistrationForMessage : Exception
+	{
+		public NoRegistrationForMessage(Type commandType)
+			: base(string.Format("No registration for message of type {0} was found", commandType.Name))
+		{
 		}
 	}
 }

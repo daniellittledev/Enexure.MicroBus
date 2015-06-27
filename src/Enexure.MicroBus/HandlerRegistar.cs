@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Enexure.MicroBus;
 
 namespace Enexure.MicroBus
 {
@@ -17,20 +16,8 @@ namespace Enexure.MicroBus
 		public MessageRegistration GetRegistrationForMessage(Type commandType)
 		{
 			MessageRegistration value;
-			if (registrationsLookup.TryGetValue(commandType, out value)) {
-				return value;
-			}
-
-			throw new NoRegistrationForMessage(commandType);
+			return registrationsLookup.TryGetValue(commandType, out value) ? value : null;
 		}
 
-	}
-
-	public class NoRegistrationForMessage : Exception
-	{
-		public NoRegistrationForMessage(Type commandType)
-			: base(string.Format("No registration for message of type {0} was found", commandType.Name))
-		{
-		}
 	}
 }

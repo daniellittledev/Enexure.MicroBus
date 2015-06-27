@@ -47,12 +47,14 @@
     <Compile Include="IHandlerBuilder.cs" />
     <Compile Include="IHandlerRegistar.cs" />
     <Compile Include="MessageRegistration.cs" />
+    <Compile Include="NoMatchingRegistrationEvent.cs" />
     <Compile Include="Pipeline.cs" />
     <Compile Include="PretendMultipleToBeEventHandler.cs" />
     <Compile Include="DefaultHandlerActivator.cs" />
     <Compile Include="HandlerBuilder.cs" />
     <Compile Include="HandlerRegistar.cs" />
     <Compile Include="MicroBus.cs" />
+    <Compile Include="EventPretendToBeMessageHandler.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="PretendToBeMessageHandler.cs" />
     <Compile Include="PretendToBePipelineHandler.cs" />
