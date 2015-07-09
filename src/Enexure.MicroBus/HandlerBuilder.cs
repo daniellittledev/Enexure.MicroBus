@@ -67,10 +67,12 @@ namespace Enexure.MicroBus
 					return default(THandler);
 				}
 
-				var fallbackHandler = convertNoRegistrationHandler(GetRunnerForEvent<NoMatchingRegistrationEvent>());
+				var fallbackHandler = GetRunnerForEvent<NoMatchingRegistrationEvent>();
 				if (fallbackHandler == null) {
 					throw new NoRegistrationForMessage(messageType);
 				}
+
+				return convertNoRegistrationHandler(fallbackHandler);
 			}
 
 			var handlers = handlerActivator.ActivateHandlers<THandler>(registration);
