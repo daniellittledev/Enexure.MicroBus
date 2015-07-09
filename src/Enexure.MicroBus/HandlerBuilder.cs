@@ -64,9 +64,13 @@ namespace Enexure.MicroBus
 
 			if (registration == null) {
 				if (typeof(TMessage) == typeof(NoMatchingRegistrationEvent)) {
+					return default(THandler);
+				}
+
+				var fallbackHandler = convertNoRegistrationHandler(GetRunnerForEvent<NoMatchingRegistrationEvent>());
+				if (fallbackHandler == null) {
 					throw new NoRegistrationForMessage(messageType);
 				}
-				return convertNoRegistrationHandler(GetRunnerForEvent<NoMatchingRegistrationEvent>());
 			}
 
 			var handlers = handlerActivator.ActivateHandlers<THandler>(registration);
