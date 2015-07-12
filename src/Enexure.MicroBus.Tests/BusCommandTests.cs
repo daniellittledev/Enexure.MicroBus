@@ -28,7 +28,7 @@ namespace Enexure.MicroBus.Tests
 
 			var func = (Func<Task>)(() => bus.Send(new Command()));
 
-			func.ShouldThrowExactly<NoRegistrationForMessage>();
+			func.ShouldThrowExactly<NoRegistrationForMessage>().WithMessage("No registration for message of type Command was found");
 		}
 
 		[Test]
