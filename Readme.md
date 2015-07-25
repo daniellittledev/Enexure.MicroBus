@@ -45,15 +45,13 @@ If you need to handle cross cutting concerns you can use a pipeline handler
 	
 	var containerBuilder = new ContainerBuilder();
 
-	containerBuilder.RegisterMicroBus(builder => {
+	var pipline = new Pipeline()
+		.AddHandler<CrossCuttingHandler>();
 
-		var pipeline = builder.CreatePipeline()
-			.AddHandler<CrossCuttingHandler>();
-
-		builder.RegisterCommand<TestCommand>().To<TestCommandHandler>(pipline);
-
-		return builder;
-	});
+	containerBuilder.RegisterMicroBus(busBuilder => busBuilder
+		.RegisterCommand<TestCommand>().To<TestCommandHandler>(pipline)
+		.RegisterCommand<TestEvent>().To<TestEventHandler>(pipline)
+	).Build();
 
 	var container = containerBuilder.Build();
 
