@@ -1,38 +1,41 @@
-﻿using System;
-using System.Threading.Tasks;
-using Enexure.MicroBus;
+﻿using System.Threading.Tasks;
 
 namespace Enexure.MicroBus
 {
 	public class MicroBus : IMicroBus
 	{
 		private readonly IHandlerBuilder registrations;
+		private readonly IDependencyResolver dependencyResolver;
 
-		public MicroBus(IHandlerBuilder registrations)
+		public MicroBus(IHandlerBuilder registrations, IDependencyResolver dependencyResolver)
 		{
 			this.registrations = registrations;
+			this.dependencyResolver = dependencyResolver;
 		}
 
 		public Task Send<TCommand>(TCommand busCommand)
 			where TCommand : ICommand
 		{
-			var handler = registrations.GetRunnerForCommand<TCommand>();
-			return handler.Handle(busCommand);
+			using (var scope = dependencyResolver.BeginScope()) {
+				return registrations.GetRunnerForCommand<TCommand>(scope)(busCommand);
+			}
 		}
 
-		public Task Publish<TEvent>(TEvent @event)
+		public Task Publish<TEvent>(TEvent busEvent)
 			where TEvent : IEvent 
 		{
-			var handler = registrations.GetRunnerForEvent<TEvent>();
-			return handler.Handle(@event);
+			using (var scope = dependencyResolver.BeginScope()) {
+				return registrations.GetRunnerForEvent<TEvent>(scope)(busEvent);
+			}
 		}
 
-		public Task<TResult> Query<TQuery, TResult>(IQuery<TQuery, TResult> query)
+		public Task<TResult> Query<TQuery, TResult>(IQuery<TQuery, TResult> busQuery)
 			where TQuery : IQuery<TQuery, TResult>
 			where TResult : IResult
 		{
-			var handler = registrations.GetRunnerForQuery<TQuery, TResult>();
-			return handler.Handle((TQuery)query);
+			using (var scope = dependencyResolver.BeginScope()) {
+				return registrations.GetRunnerForQuery<TQuery, TResult>(scope)((TQuery)busQuery);
+			}
 		}
 	}
 }

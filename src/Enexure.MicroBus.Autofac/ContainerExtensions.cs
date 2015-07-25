@@ -15,7 +15,8 @@ namespace Enexure.MicroBus.Autofac
 
 			containerBuilder.RegisterInstance(builder.BuildHandlerRegistar()).As<IHandlerRegistar>().SingleInstance();
 			containerBuilder.RegisterType<HandlerBuilder>().As<IHandlerBuilder>();
-			containerBuilder.RegisterType<AutofacHandlerActivator>().As<IHandlerActivator>();
+			containerBuilder.RegisterType<AutofacDependencyResolver>().As<IDependencyResolver>();
+			containerBuilder.RegisterType<AutofacDependencyScope>().As<IDependencyScope>();
 			containerBuilder.RegisterType<MicroBus>().As<IMicroBus>();
 
 			return containerBuilder;
@@ -31,24 +32,8 @@ namespace Enexure.MicroBus.Autofac
 					pipelines.Add(registration.Pipeline);
 				}
 
-				Type handlerInterface;
-				switch (registration.Type) {
-					case MessageType.Command:
-						handlerInterface = typeof(ICommandHandler<>).MakeGenericType(registration.MessageType);
-						break;
-					case MessageType.Event:
-						handlerInterface = typeof(IEventHandler<>).MakeGenericType(registration.MessageType);
-						break;
-					case MessageType.Query:
-						var genericTypes = registration.MessageType.GetInterfaces().Single(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IQuery<,>)).GenericTypeArguments;
-						handlerInterface = typeof(IQueryHandler<,>).MakeGenericType(genericTypes);
-						break;
-					default:
-						throw new NotImplementedException(string.Format("Could not build generic interface for message type {0}", registration.MessageType));
-				}
-
 				foreach (var handlerType in registration.Handlers) {
-					containerBuilder.RegisterType(handlerType).As(handlerInterface).InstancePerLifetimeScope();
+					containerBuilder.RegisterType(handlerType).As(handlerType).InstancePerLifetimeScope();
 				}
 			}
 

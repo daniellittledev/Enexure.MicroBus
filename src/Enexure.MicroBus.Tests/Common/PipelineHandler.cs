@@ -1,19 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Enexure.MicroBus.Tests.Common
 {
 	class PipelineHandler : IPipelineHandler
 	{
-		private readonly IPipelineHandler innerHandler;
-
-		public PipelineHandler(IPipelineHandler innerHandler)
+		public Task<object> Handle(Func<IMessage, Task<object>> next, IMessage message)
 		{
-			this.innerHandler = innerHandler;
-		}
-
-		public Task<object> Handle(IMessage message)
-		{
-			return innerHandler.Handle(message);
+			return next(message);
 		}
 	}
 }

@@ -60,6 +60,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Autofac\NestedBusCallsTest.cs" />
     <Compile Include="Autofac\BusCommandTests.cs" />
     <Compile Include="Autofac\BusEventTests.cs" />
     <Compile Include="Autofac\BusQueryTests.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Common\PipelineHandler.cs" />
     <Compile Include="BusQueryTests.cs" />
     <Compile Include="BusCommandTests.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

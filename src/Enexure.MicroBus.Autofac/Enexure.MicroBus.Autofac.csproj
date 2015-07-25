@@ -43,8 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutofacHandlerBuilder.cs" />
     <Compile Include="ContainerExtensions.cs" />
+    <Compile Include="AutofacDependencyResolver.cs" />
+    <Compile Include="AutofacDependencyScope.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" Condition="exists('Properties\AssemblyVersion.cs')" />
   </ItemGroup>

@@ -47,7 +47,7 @@ namespace Enexure.MicroBus.Tests.Autofac
 			var bus = container.Resolve<IMicroBus>();
 
 			new Func<Task>(() => bus.Send(new Command()))
-				.ShouldThrow<NoRegistrationForMessage>();
+				.ShouldThrow<NoRegistrationForMessageException>();
 
 		}
 	}

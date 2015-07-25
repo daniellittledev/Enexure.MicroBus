@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Func.cs" />
     <Compile Include="IMicroBus.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="IEventHandler.cs" />

@@ -44,7 +44,7 @@ namespace Enexure.MicroBus.Tests
 
 			var func = (Func<Task>)(() => bus.Publish(new Event()));
 
-            func.ShouldThrowExactly<NoRegistrationForMessage>().WithMessage("No registration for message of type Event was found");
+            func.ShouldThrowExactly<NoRegistrationForMessageException>().WithMessage("No registration for message of type Event was found");
 		}
 
 		[Test]

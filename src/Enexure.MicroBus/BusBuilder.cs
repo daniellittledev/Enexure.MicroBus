@@ -1,32 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 
 namespace Enexure.MicroBus
 {
-	public interface IBusBuilder
-	{
-		ICommandBuilder<TCommand> RegisterCommand<TCommand>()
-			where TCommand : ICommand;
-
-		ICommandBuilder RegisterCommand(Type type);
-
-		IEventBuilder<TEvent> RegisterEvent<TEvent>()
-			where TEvent : IEvent;
-
-		IEventBuilder RegisterEvent(Type type);
-
-		IQueryBuilder<TQuery, TResult> RegisterQuery<TQuery, TResult>()
-			where TQuery : IQuery<TQuery, TResult>
-			where TResult : IResult;
-
-		IQueryBuilder RegisterQuery(Type type);
-
-		IReadOnlyCollection<MessageRegistration> GetMessageRegistrations();
-		IHandlerRegistar BuildHandlerRegistar();
-		IMicroBus BuildBus();
-	}
-
 	public class BusBuilder : IBusBuilder
 	{
 		private readonly ImmutableList<MessageRegistration> registrations;
@@ -92,7 +68,7 @@ namespace Enexure.MicroBus
 
 		public IMicroBus BuildBus()
 		{
-			return new MicroBus(new HandlerBuilder(new DefaultHandlerActivator(), BuildHandlerRegistar()));
+			return new MicroBus(new HandlerBuilder(BuildHandlerRegistar()), new DefaultDependencyResolver());
 		}
 	}
 

@@ -1,61 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Enexure.MicroBus;
+using System.Threading.Tasks;
+using Enexure.MicroBus.BuiltInEvents;
 
 namespace Enexure.MicroBus
 {
 	public class HandlerBuilder : IHandlerBuilder
 	{
-		private readonly IHandlerActivator handlerActivator;
 		private readonly IHandlerRegistar handlerRegistar;
 
-		public HandlerBuilder(IHandlerActivator handlerActivator, IHandlerRegistar handlerRegistar)
+		public HandlerBuilder(IHandlerRegistar handlerRegistar)
 		{
-			this.handlerActivator = handlerActivator;
 			this.handlerRegistar = handlerRegistar;
 		}
 
-		public ICommandHandler<TCommand> GetRunnerForCommand<TCommand>()
+		public Func<TCommand, Task> GetRunnerForCommand<TCommand>(IDependencyScope scope)
 			where TCommand : ICommand
 		{
-			return GetRunnerForMessage<ICommandHandler<TCommand>, TCommand>(
-				handlers => handlers.Single(),
-				handler => new CommandHandlerPretendToBePipelineHandler<TCommand>(handler),
-				handler => new PretendToBeCommandHandler<TCommand>(handler),
-				handler => new EventPretendToBeCommandHandler<TCommand>(handler)
-				);
+			return GetRunnerForMessage<ICommandHandler<TCommand>, TCommand>(scope,
+				async (message, handlers) => {
+					await Task.WhenAll(handlers.Select(x => x.Handle(message)));
+					return null;
+				});
 		}
 
-		public IEventHandler<TEvent> GetRunnerForEvent<TEvent>() 
+		public Func<TEvent, Task> GetRunnerForEvent<TEvent>(IDependencyScope scope) 
 			where TEvent : IEvent
 		{
-			return GetRunnerForMessage<IEventHandler<TEvent>, TEvent>(
-				handlers => new PretendMultipleToBeEventHandler<TEvent>(handlers),
-				handler => new EventHandlerPretendToBePipelineHandler<TEvent>(handler),
-				handler => new PretendToBeEventHandler<TEvent>(handler),
-				handler => new EventPretendToBeEventHandler<TEvent>(handler)
-				);
+			return GetRunnerForMessage<IEventHandler<TEvent>, TEvent>(scope,
+				async (message, handlers) => {
+					await Task.WhenAll(handlers.Select(x => x.Handle(message))); 
+					return null;
+				});
 		}
 
-		public IQueryHandler<TQuery, TResult> GetRunnerForQuery<TQuery, TResult>()
+		public Func<TQuery, Task<TResult>> GetRunnerForQuery<TQuery, TResult>(IDependencyScope scope)
 			where TQuery : IQuery<TQuery, TResult>
 			where TResult : IResult
 		{
-			return GetRunnerForMessage<IQueryHandler<TQuery, TResult>, TQuery>(
-				handlers => handlers.Single(),
-				handler => new QueryHandlerPretendToBePipelineHandler<TQuery, TResult>(handler), 
-				handler => new PretendToBeQueryHandler<TQuery, TResult>(handler),
-				handler => new EventPretendToBeQueryHandler<TQuery, TResult>(handler)
-				);
+			return async message => (TResult) await GetRunnerForMessage<IQueryHandler<TQuery, TResult>, TQuery>(scope,
+				async (msg, handlers) => await handlers.Select(x => x.Handle(msg)).Single())(message);
 		}
 
-		private THandler GetRunnerForMessage<THandler, TMessage>(
-			Func<IEnumerable<THandler>, 
-			THandler> mergeHandlers, 
-			Func<THandler, IPipelineHandler> makePretend, 
-			Func<IPipelineHandler, THandler> makeReal,
-			Func<IEventHandler<NoMatchingRegistrationEvent>, THandler> convertNoRegistrationHandler 
+		private Func<TMessage, Task<object>> GetRunnerForMessage<THandler, TMessage>(
+			IDependencyScope scope,
+			Func<TMessage, IEnumerable<THandler>, Task<object>> runHandlers
 			)
 			where TMessage : IMessage
 		{
@@ -64,32 +54,76 @@ namespace Enexure.MicroBus
 
 			if (registration == null) {
 				if (typeof(TMessage) == typeof(NoMatchingRegistrationEvent)) {
-					return default(THandler);
+					throw new NoRegistrationForMessageException(messageType);
 				}
 
-				var fallbackHandler = GetRunnerForEvent<NoMatchingRegistrationEvent>();
-				if (fallbackHandler == null) {
-					throw new NoRegistrationForMessage(messageType);
+				Func<NoMatchingRegistrationEvent, Task> runner;
+				try {
+					runner = GetRunnerForEvent<NoMatchingRegistrationEvent>(scope);
+
+				} catch (NoRegistrationForMessageException) {
+					throw new NoRegistrationForMessageException(messageType);
 				}
 
-				return convertNoRegistrationHandler(fallbackHandler);
+				return message => {
+					runner(new NoMatchingRegistrationEvent(message));
+					throw new NoRegistrationForMessageException(messageType);
+				};
 			}
 
-			var handlers = handlerActivator.ActivateHandlers<THandler>(registration);
+			return message => GenerateNext(scope, registration.Pipeline.ToList(), registration.Handlers, runHandlers)(message);
+		}
 
-			var innerEventHandler = mergeHandlers(handlers);
+		Func<IMessage, Task<object>> GenerateNext<THandler, TMessage>(
+			IDependencyScope scope, 
+			IReadOnlyCollection<Type> pipelineHandlerTypes, 
+			IEnumerable<Type> handlerTypes,
+			Func<TMessage, IEnumerable<THandler>, Task<object>> runHandlers)
+			where TMessage : IMessage
+		{
+			return (message => {
 
-			var handler = registration.Pipeline.Aggregate(
-				makePretend(innerEventHandler),
-				(current, handlerType) => handlerActivator.ActivateHandler<IPipelineHandler>(handlerType, current));
+				if (message == null) {
+					throw new NullMessageTypeException(typeof(TMessage));
 
-			return makeReal(handler);
+				} else if (!(message is TMessage)) {
+					throw new InvalidMessageTypeException(message.GetType(), typeof(TMessage));
+				}
+
+				if (!pipelineHandlerTypes.Any()) {
+					return runHandlers((TMessage)message, handlerTypes.Select(scope.GetService).Cast<THandler>());
+				}
+
+				var head = (IPipelineHandler)scope.GetService(pipelineHandlerTypes.First());
+				var next = GenerateNext(scope, pipelineHandlerTypes.Skip(1).ToList(), handlerTypes, runHandlers);
+
+				return head.Handle(next, message);
+
+			});
+
+		}
+
+	}
+
+	public class NullMessageTypeException : Exception
+	{
+		public NullMessageTypeException(Type type)
+			: base(string.Format("Message was null but an instance of type '{0}' was expected", type.Name))
+		{
 		}
 	}
 
-	public class NoRegistrationForMessage : Exception
+	public class InvalidMessageTypeException : Exception
 	{
-		public NoRegistrationForMessage(Type commandType)
+		public InvalidMessageTypeException(Type getType, Type type)
+			: base(string.Format("Message was of type '{0}' but an instance of type '{1}' was expected", getType.Name, type.Name))
+		{
+		}
+	}
+
+	public class NoRegistrationForMessageException : Exception
+	{
+		public NoRegistrationForMessageException(Type commandType)
 			: base(string.Format("No registration for message of type {0} was found", commandType.Name))
 		{
 		}

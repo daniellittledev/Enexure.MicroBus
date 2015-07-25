@@ -1,14 +1,17 @@
-﻿namespace Enexure.MicroBus
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Enexure.MicroBus
 {
 	public interface IHandlerBuilder
 	{
-		ICommandHandler<TCommand> GetRunnerForCommand<TCommand>()
+		Func<TCommand, Task> GetRunnerForCommand<TCommand>(IDependencyScope scope)
 			where TCommand : ICommand;
 
-		IEventHandler<TEvent> GetRunnerForEvent<TEvent>()
+		Func<TEvent, Task> GetRunnerForEvent<TEvent>(IDependencyScope scope)
 			where TEvent : IEvent;
 
-		IQueryHandler<TQuery, TResult> GetRunnerForQuery<TQuery, TResult>()
+		Func<TQuery, Task<TResult>> GetRunnerForQuery<TQuery, TResult>(IDependencyScope scope)
 			where TQuery : IQuery<TQuery, TResult>
 			where TResult : IResult;
 	}

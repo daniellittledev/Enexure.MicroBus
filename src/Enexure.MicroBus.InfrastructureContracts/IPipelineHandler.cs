@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Enexure.MicroBus
 {
 	public interface IPipelineHandler
 	{
-		Task<object> Handle(IMessage message);
+		Task<object> Handle(Func<IMessage, Task<object>> next, IMessage message);
 	}
 }

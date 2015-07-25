@@ -65,11 +65,4 @@ namespace Enexure.MicroBus
 			get { return type; }
 		}
 	}
-
-	public enum MessageType
-	{
-		Command,
-		Event,
-		Query
-	}
 }

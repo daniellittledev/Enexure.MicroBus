@@ -34,18 +34,10 @@ If you need to handle cross cutting concerns you can use a pipeline handler
 
 	public class CrossCuttingHandler : IPipelineHandler
 	{
-		private readonly IPipelineHandler innerHandler;
-
-		public CrossCuttingHandler(IPipelineHandler innerHandler)
-		{
-			this.innerHandler = innerHandler;
-		}
-
-		public async Task Handle(IMessage message)
+		public async Task<object> Handle(Func<IMessage, Task<object>> next, IMessage message)
 		{
 			Console.WriteLine("Cross cutting handler");
-
-			await innerHandler.Handle(message);
+			return await next(message);
 		}
 	}
 	
