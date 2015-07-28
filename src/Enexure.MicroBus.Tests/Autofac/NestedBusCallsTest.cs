@@ -113,7 +113,7 @@ namespace Enexure.MicroBus.Tests.Autofac
 
 			command.Run.Should().Be(true);
 
-			command.HandlerIds.Distinct().Should().HaveCount(2, "There should have been two instances of the pipeline handler");
+			command.HandlerIds.Distinct().Should().HaveCount(1, "There should have been only one instance of the pipeline handler");
 		}
 	}
 }

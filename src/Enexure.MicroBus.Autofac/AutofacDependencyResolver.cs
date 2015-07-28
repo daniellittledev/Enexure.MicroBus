@@ -13,7 +13,9 @@ namespace Enexure.MicroBus.Autofac
 
 		public IDependencyScope BeginScope()
 		{
-			return new AutofacDependencyScope(lifetimeScope.BeginLifetimeScope());
+			var scope = (lifetimeScope.Tag == "MicroBus") ? lifetimeScope : lifetimeScope.BeginLifetimeScope("MicroBus");
+
+			return new AutofacDependencyScope(scope);
 		}
 	}
 }
