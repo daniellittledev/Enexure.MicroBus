@@ -7,7 +7,13 @@ namespace Enexure.MicroBus.Autofac
 {
 	public static class ContainerExtensions
 	{
-		public static ContainerBuilder RegisterMicroBus(this ContainerBuilder containerBuilder, Func<IBusBuilder, IBusBuilder> registerHandlers)
+		public static ContainerBuilder RegisterMicroBus(this ContainerBuilder containerBuilder,
+			Func<IBusBuilder, IBusBuilder> registerHandlers)
+		{
+			return RegisterMicroBus(containerBuilder, registerHandlers, new BusSettings());
+		}
+
+		public static ContainerBuilder RegisterMicroBus(this ContainerBuilder containerBuilder, Func<IBusBuilder, IBusBuilder> registerHandlers, BusSettings busSettings)
 		{
 			var builder = registerHandlers(new BusBuilder());
 
@@ -18,6 +24,7 @@ namespace Enexure.MicroBus.Autofac
 			containerBuilder.RegisterType<AutofacDependencyResolver>().As<IDependencyResolver>();
 			containerBuilder.RegisterType<AutofacDependencyScope>().As<IDependencyScope>();
 			containerBuilder.RegisterType<MicroBus>().As<IMicroBus>();
+			containerBuilder.RegisterInstance(busSettings).AsSelf();
 
 			return containerBuilder;
 		}

@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusBuilder.cs" />
+    <Compile Include="BusSettings.cs" />
     <Compile Include="IBusBuilder.cs" />
     <Compile Include="IDependencyResolver.cs" />
     <Compile Include="IDependencyScope.cs" />

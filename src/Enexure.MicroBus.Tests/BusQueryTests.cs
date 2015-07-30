@@ -30,7 +30,7 @@ namespace Enexure.MicroBus.Tests
 
 			var func = (Func<Task>)(() => bus.Query(new Query()));
 
-            func.ShouldThrowExactly<NoRegistrationForMessageException>().WithMessage("No registration for message of type Query was found");
+			func.ShouldThrowExactly<NoRegistrationForMessageException>().WithMessage("No registration for message of type Query was found");
 		}
 
 

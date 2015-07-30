@@ -66,9 +66,14 @@ namespace Enexure.MicroBus
 			return new HandlerRegistar(registrations);
 		}
 
-		public IMicroBus BuildBus()
+	    public IMicroBus BuildBus()
+	    {
+	        return BuildBus(new BusSettings());
+	    }
+
+	    public IMicroBus BuildBus(BusSettings busSettings)
 		{
-			return new MicroBus(new HandlerBuilder(BuildHandlerRegistar()), new DefaultDependencyResolver());
+			return new MicroBus(new HandlerBuilder(BuildHandlerRegistar(), busSettings), new DefaultDependencyResolver());
 		}
 	}
 

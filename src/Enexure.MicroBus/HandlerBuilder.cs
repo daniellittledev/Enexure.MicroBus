@@ -9,10 +9,12 @@ namespace Enexure.MicroBus
 	public class HandlerBuilder : IHandlerBuilder
 	{
 		private readonly IHandlerRegistar handlerRegistar;
+		private readonly BusSettings busSettings;
 
-		public HandlerBuilder(IHandlerRegistar handlerRegistar)
+		public HandlerBuilder(IHandlerRegistar handlerRegistar, BusSettings busSettings)
 		{
 			this.handlerRegistar = handlerRegistar;
+			this.busSettings = busSettings;
 		}
 
 		public Func<TCommand, Task> GetRunnerForCommand<TCommand>(IDependencyScope scope)
@@ -20,7 +22,13 @@ namespace Enexure.MicroBus
 		{
 			return GetRunnerForMessage<ICommandHandler<TCommand>, TCommand>(scope,
 				async (message, handlers) => {
-					await Task.WhenAll(handlers.Select(x => x.Handle(message)));
+					if (busSettings.DisableParallelHandlers) {
+						foreach (var handler in handlers) {
+							await handler.Handle(message);
+						}
+					} else {
+						await Task.WhenAll(handlers.Select(x => x.Handle(message)));
+					}
 					return null;
 				});
 		}
@@ -30,7 +38,13 @@ namespace Enexure.MicroBus
 		{
 			return GetRunnerForMessage<IEventHandler<TEvent>, TEvent>(scope,
 				async (message, handlers) => {
-					await Task.WhenAll(handlers.Select(x => x.Handle(message))); 
+					if (busSettings.DisableParallelHandlers) {
+						foreach (var handler in handlers) {
+							await handler.Handle(message);
+						}
+					} else {
+						await Task.WhenAll(handlers.Select(x => x.Handle(message)));
+					}
 					return null;
 				});
 		}
@@ -40,7 +54,7 @@ namespace Enexure.MicroBus
 			where TResult : IResult
 		{
 			return async message => (TResult) await GetRunnerForMessage<IQueryHandler<TQuery, TResult>, TQuery>(scope,
-				async (msg, handlers) => await handlers.Select(x => x.Handle(msg)).Single())(message);
+				async (msg, handlers) => await handlers.Single().Handle(msg))(message);
 		}
 
 		private Func<TMessage, Task<object>> GetRunnerForMessage<THandler, TMessage>(
