@@ -9,7 +9,7 @@ namespace Enexure.MicroBus
 		private readonly MessageType type;
 		private readonly Type messageType;
 		private readonly Pipeline pipeline;
-		private readonly IEnumerable<Type> handlers;
+		private readonly IReadOnlyCollection<Type> handlers;
 
 		public MessageRegistration(Type messageType, Type messageHandlerType, Pipeline pipeline)
 		{
@@ -24,7 +24,7 @@ namespace Enexure.MicroBus
 			this.type = GetMessageType(messageType);
 			this.messageType = messageType;
 			this.pipeline = pipeline;
-			this.handlers = handlers;
+			this.handlers = handlers.ToList();
 		}
 
 		private static MessageType GetMessageType(Type messageType)
@@ -50,7 +50,7 @@ namespace Enexure.MicroBus
 			get { return messageType; }
 		}
 
-		public IEnumerable<Type> Handlers
+		public IReadOnlyCollection<Type> Handlers
 		{
 			get { return handlers; }
 		}

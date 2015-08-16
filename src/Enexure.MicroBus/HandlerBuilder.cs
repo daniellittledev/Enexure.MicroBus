@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Enexure.MicroBus.BuiltInEvents;
 
+using Handler = System.Object;
+using Result = System.Object;
+
 namespace Enexure.MicroBus
 {
 	public class HandlerBuilder : IHandlerBuilder
@@ -17,7 +20,7 @@ namespace Enexure.MicroBus
 			this.busSettings = busSettings;
 		}
 
-		public Func<TCommand, Task> GetRunnerForCommand<TCommand>(IDependencyScope scope)
+		public Func<IMessage, Task> GetRunnerForCommand<TCommand>(IDependencyScope scope)
 			where TCommand : ICommand
 		{
 			return GetRunnerForMessage<ICommandHandler<TCommand>, TCommand>(scope,
@@ -57,17 +60,12 @@ namespace Enexure.MicroBus
 				async (msg, handlers) => await handlers.Single().Handle(msg))(message);
 		}
 
-		private Func<TMessage, Task<object>> GetRunnerForMessage<THandler, TMessage>(
-			IDependencyScope scope,
-			Func<TMessage, IEnumerable<THandler>, Task<object>> runHandlers
-			)
-			where TMessage : IMessage
+		private Func<IMessage, Task<object>> GetRunnerForMessage(IDependencyScope scope, Type messageType)
 		{
-			var messageType = typeof(TMessage);
 			var registration = handlerRegistar.GetRegistrationForMessage(messageType);
 
 			if (registration == null) {
-				if (typeof(TMessage) == typeof(NoMatchingRegistrationEvent)) {
+				if (messageType == typeof(NoMatchingRegistrationEvent)) {
 					throw new NoRegistrationForMessageException(messageType);
 				}
 
@@ -85,33 +83,38 @@ namespace Enexure.MicroBus
 				};
 			}
 
-			return message => GenerateNext(scope, registration.Pipeline.ToList(), registration.Handlers, runHandlers)(message);
+			return message => GenerateNext(scope, registration.Pipeline.ToList(), registration.Handlers)(message);
 		}
 
-		Func<IMessage, Task<object>> GenerateNext<THandler, TMessage>(
+		Func<IMessage, Task<object>> GenerateNext(
 			IDependencyScope scope, 
-			IReadOnlyCollection<Type> pipelineHandlerTypes, 
-			IEnumerable<Type> handlerTypes,
-			Func<TMessage, IEnumerable<THandler>, Task<object>> runHandlers)
-			where TMessage : IMessage
+			IReadOnlyCollection<Type> pipelineHandlerTypes,
+			IEnumerable<Type> leftHandlerTypes
+			)
 		{
 			return (message => {
 
 				if (message == null) {
-					throw new NullMessageTypeException(typeof(TMessage));
-
-				} else if (!(message is TMessage)) {
-					throw new InvalidMessageTypeException(message.GetType(), typeof(TMessage));
+					throw new NullMessageTypeException();
 				}
 
 				if (!pipelineHandlerTypes.Any()) {
-					return runHandlers((TMessage)message, handlerTypes.Select(scope.GetService).Cast<THandler>());
+
+// ReSharper disable once PossibleMultipleEnumeration
+					foreach (dynamic leafHandler in leftHandlerTypes.Select(scope.GetService)) {
+						leafHandler.Handle(message);
+					}
 				}
 
-				var head = (IPipelineHandler)scope.GetService(pipelineHandlerTypes.First());
-				var next = GenerateNext(scope, pipelineHandlerTypes.Skip(1).ToList(), handlerTypes, runHandlers);
+				var head = pipelineHandlerTypes.First();
+				var tail = pipelineHandlerTypes.Skip(1).ToList();
 
-				return head.Handle(next, message);
+				var nextHandler = (IPipelineHandler)scope.GetService(head);
+
+// ReSharper disable once PossibleMultipleEnumeration
+				var nextFunction = GenerateNext(scope, tail, leftHandlerTypes);
+
+				return nextHandler.Handle(nextFunction, message);
 
 			});
 
@@ -123,6 +126,11 @@ namespace Enexure.MicroBus
 	{
 		public NullMessageTypeException(Type type)
 			: base(string.Format("Message was null but an instance of type '{0}' was expected", type.Name))
+		{
+		}
+
+		public NullMessageTypeException()
+			: base("Message was null")
 		{
 		}
 	}
