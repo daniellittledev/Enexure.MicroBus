@@ -2,14 +2,15 @@
 
 namespace Enexure.MicroBus.Sagas
 {
-	public interface ISaga<TData> : ISaga
+	public interface ISaga<out TData> : ISaga
 		where TData : class
 	{
-		TData Data { get; set; }
+		TData Data { get; }
 	}
 
 	public interface ISaga
 	{
-		Guid Id { get; set; }
+		Guid Id { get; }
+		bool IsCompleted { get; }
 	}
 }

@@ -41,14 +41,22 @@
   <ItemGroup>
     <Compile Include="BusBuilderExtensions.cs" />
     <Compile Include="ISaga.cs" />
+    <Compile Include="ISagaFinder.cs" />
+    <Compile Include="ISagaRepository.cs" />
+    <Compile Include="ISagaStartedBy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Saga.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.csproj">
+    <ProjectReference Include="..\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.csproj">
+      <Project>{4BD15BDD-27E9-47E2-A693-D496E892949F}</Project>
+      <Name>Enexure.MicroBus.InfrastructureContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.csproj">
       <Project>{df8290a6-7f5c-4b0f-b2e4-35b3e60167fd}</Project>
       <Name>Enexure.MicroBus.MessageContracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Enexure.MicroBus\Enexure.MicroBus.csproj">
+    <ProjectReference Include="..\Enexure.MicroBus\Enexure.MicroBus.csproj">
       <Project>{C9F49ECA-A00F-48AA-8A23-A3BCFFE40393}</Project>
       <Name>Enexure.MicroBus</Name>
     </ProjectReference>

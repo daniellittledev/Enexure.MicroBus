@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Enexure.MicroBus.Tests.NoDependencyInjection
+namespace Enexure.MicroBus.Tests
 {
 	[TestFixture]
 	public class EventTests
@@ -48,11 +47,8 @@ namespace Enexure.MicroBus.Tests.NoDependencyInjection
 		[Test]
 		public async Task TestEvent()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<PipelineHandler>();
-
 			var bus = new BusBuilder()
-				.RegisterEvent<Event>().To(x => x.Handler<EventHandler>(), pipeline)
+				.RegisterEvent<Event>().To(x => x.Handler<EventHandler>())
 				.BuildBus();
 
 			var @event = new Event();
@@ -64,14 +60,11 @@ namespace Enexure.MicroBus.Tests.NoDependencyInjection
 		[Test]
 		public async Task TestMultipleEvents()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<Common.PipelineHandler>();
-
 			var bus = new BusBuilder()
 				.RegisterEvent<Event>().To(x => {
 					x.Handler<EventHandler>();
 					x.Handler<EventHandler2>();
-				}, pipeline)
+				})
 				.BuildBus();
 
 			var @event = new Event();

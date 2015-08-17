@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Enexure.MicroBus.Tests.Common;
+using Enexure.MicroBus.Tests.Annotations;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Enexure.MicroBus.Tests.NoDependencyInjection
+namespace Enexure.MicroBus.Tests
 {
 	[TestFixture]
 	public class QueryTests
@@ -13,6 +13,7 @@ namespace Enexure.MicroBus.Tests.NoDependencyInjection
 
 		class Result : IResult { }
 
+		[UsedImplicitly]
 		class QueryHandler : IQueryHandler<Query, Result>
 		{
 			public Task<Result> Handle(Query query)
@@ -36,11 +37,8 @@ namespace Enexure.MicroBus.Tests.NoDependencyInjection
 		[Test]
 		public async Task TestQuery()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<PipelineHandler>();
-
 			var bus = new BusBuilder()
-				.RegisterQuery<Query, Result>().To<QueryHandler>(pipeline)
+				.RegisterQuery<Query, Result>().To<QueryHandler>()
 				.BuildBus();
 
 			var result = await bus.Query(new Query());

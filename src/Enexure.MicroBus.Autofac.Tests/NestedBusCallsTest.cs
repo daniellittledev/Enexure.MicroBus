@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Enexure.MicroBus.Autofac;
 using Enexure.MicroBus.Tests.Annotations;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Enexure.MicroBus.Tests.Autofac
+namespace Enexure.MicroBus.Autofac.Tests
 {
 	[TestFixture]
 	public class NestedBusCallsTest

@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
-using Enexure.MicroBus.Autofac;
-using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Enexure.MicroBus.Tests.Autofac
+namespace Enexure.MicroBus.Autofac.Tests
 {
 	[TestFixture]
 	public class AutofacEventTests
@@ -38,13 +36,10 @@ namespace Enexure.MicroBus.Tests.Autofac
 		[Test]
 		public async Task TestEvent()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<Common.PipelineHandler>();
-
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
 
 				return busBuilder
-					.RegisterEvent<Event>().To(x => x.Handler<EventHandler>(), pipeline);
+					.RegisterEvent<Event>().To(x => x.Handler<EventHandler>());
 			}).Build();
 
 			var bus = container.Resolve<IMicroBus>();
@@ -58,16 +53,13 @@ namespace Enexure.MicroBus.Tests.Autofac
 		[Test]
 		public async Task TestMultipleEvents()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<Common.PipelineHandler>();
-
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
 
 				return busBuilder
 					.RegisterEvent<Event>().To(x => {
 						x.Handler<EventHandler>();
 						x.Handler<EventHandler2>();
-					}, pipeline);
+					});
 
 			}).Build();
 

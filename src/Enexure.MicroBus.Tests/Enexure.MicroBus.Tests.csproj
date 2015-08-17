@@ -35,9 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-    </Reference>
     <Reference Include="FluentAssertions">
       <HintPath>..\..\packages\FluentAssertions.3.3.0\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
@@ -60,14 +57,12 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Autofac\NestedBusCallsTest.cs" />
-    <Compile Include="Autofac\BusCommandTests.cs" />
-    <Compile Include="Autofac\BusEventTests.cs" />
-    <Compile Include="Autofac\BusQueryTests.cs" />
-    <Compile Include="NoDependencyInjection\BusEventTests.cs" />
-    <Compile Include="Common\PipelineHandler.cs" />
-    <Compile Include="NoDependencyInjection\BusQueryTests.cs" />
-    <Compile Include="NoDependencyInjection\BusCommandTests.cs" />
+    <Compile Include="BusBuilderTests\RegisterQueryTests.cs" />
+    <Compile Include="BusBuilderTests\RegisterEventTests.cs" />
+    <Compile Include="BusBuilderTests\RegisterCommandTests.cs" />
+    <Compile Include="BusEventTests.cs" />
+    <Compile Include="BusQueryTests.cs" />
+    <Compile Include="BusCommandTests.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -75,10 +70,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Enexure.MicroBus.Autofac\Enexure.MicroBus.Autofac.csproj">
-      <Project>{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}</Project>
-      <Name>Enexure.MicroBus.Autofac</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.csproj">
       <Project>{4BD15BDD-27E9-47E2-A693-D496E892949F}</Project>
       <Name>Enexure.MicroBus.InfrastructureContracts</Name>
@@ -92,6 +83,7 @@
       <Name>Enexure.MicroBus</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

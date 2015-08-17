@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Enexure.MicroBus.Tests.Common;
+using Enexure.MicroBus.Tests.Annotations;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Enexure.MicroBus.Tests.NoDependencyInjection
+namespace Enexure.MicroBus.Tests
 {
 	[TestFixture]
 	public class CommandTests
 	{
 		class Command : ICommand { }
 
+		[UsedImplicitly]
 		class CommandHandler : ICommandHandler<Command>
 		{
 			public Task Handle(Command command)
@@ -33,11 +34,8 @@ namespace Enexure.MicroBus.Tests.NoDependencyInjection
 		[Test]
 		public async Task TestCommand()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<PipelineHandler>();
-
 			var bus = new BusBuilder()
-				.RegisterCommand<Command>().To<CommandHandler>(pipeline)
+				.RegisterCommand<Command>().To<CommandHandler>()
 				.BuildBus();
 
 			await bus.Send(new Command());

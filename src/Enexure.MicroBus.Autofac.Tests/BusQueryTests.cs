@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
-using Enexure.MicroBus.Autofac;
-using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Enexure.MicroBus.Tests.Autofac
+namespace Enexure.MicroBus.Autofac.Tests
 {
 	[TestFixture]
 	public class AutofacQueryTests
@@ -25,13 +23,10 @@ namespace Enexure.MicroBus.Tests.Autofac
 		[Test]
 		public async Task TestQuery()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<Common.PipelineHandler>();
-
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
 
 				return busBuilder
-					.RegisterQuery<Query, Result>().To<QueryHandler>(pipeline);
+					.RegisterQuery<Query, Result>().To<QueryHandler>();
 
 			}).Build();
 
