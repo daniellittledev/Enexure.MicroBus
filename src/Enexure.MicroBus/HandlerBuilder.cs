@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Enexure.MicroBus.BuiltInEvents;
 
@@ -20,47 +21,7 @@ namespace Enexure.MicroBus
 			this.busSettings = busSettings;
 		}
 
-		public Func<IMessage, Task> GetRunnerForCommand<TCommand>(IDependencyScope scope)
-			where TCommand : ICommand
-		{
-			return GetRunnerForMessage<ICommandHandler<TCommand>, TCommand>(scope,
-				async (message, handlers) => {
-					if (busSettings.DisableParallelHandlers) {
-						foreach (var handler in handlers) {
-							await handler.Handle(message);
-						}
-					} else {
-						await Task.WhenAll(handlers.Select(x => x.Handle(message)));
-					}
-					return null;
-				});
-		}
-
-		public Func<TEvent, Task> GetRunnerForEvent<TEvent>(IDependencyScope scope) 
-			where TEvent : IEvent
-		{
-			return GetRunnerForMessage<IEventHandler<TEvent>, TEvent>(scope,
-				async (message, handlers) => {
-					if (busSettings.DisableParallelHandlers) {
-						foreach (var handler in handlers) {
-							await handler.Handle(message);
-						}
-					} else {
-						await Task.WhenAll(handlers.Select(x => x.Handle(message)));
-					}
-					return null;
-				});
-		}
-
-		public Func<TQuery, Task<TResult>> GetRunnerForQuery<TQuery, TResult>(IDependencyScope scope)
-			where TQuery : IQuery<TQuery, TResult>
-			where TResult : IResult
-		{
-			return async message => (TResult) await GetRunnerForMessage<IQueryHandler<TQuery, TResult>, TQuery>(scope,
-				async (msg, handlers) => await handlers.Single().Handle(msg))(message);
-		}
-
-		private Func<IMessage, Task<object>> GetRunnerForMessage(IDependencyScope scope, Type messageType)
+		public Func<IMessage, Task<Result>> GetRunnerForMessage(IDependencyScope scope, Type messageType)
 		{
 			var registration = handlerRegistar.GetRegistrationForMessage(messageType);
 
@@ -69,18 +30,17 @@ namespace Enexure.MicroBus
 					throw new NoRegistrationForMessageException(messageType);
 				}
 
-				Func<NoMatchingRegistrationEvent, Task> runner;
 				try {
-					runner = GetRunnerForEvent<NoMatchingRegistrationEvent>(scope);
+					var runner = GetRunnerForMessage(scope, typeof(NoMatchingRegistrationEvent));
+
+					return message => {
+						runner(new NoMatchingRegistrationEvent(message));
+						throw new NoRegistrationForMessageException(messageType);
+					};
 
 				} catch (NoRegistrationForMessageException) {
 					throw new NoRegistrationForMessageException(messageType);
 				}
-
-				return message => {
-					runner(new NoMatchingRegistrationEvent(message));
-					throw new NoRegistrationForMessageException(messageType);
-				};
 			}
 
 			return message => GenerateNext(scope, registration.Pipeline.ToList(), registration.Handlers)(message);
@@ -92,18 +52,15 @@ namespace Enexure.MicroBus
 			IEnumerable<Type> leftHandlerTypes
 			)
 		{
-			return (message => {
+			return (async message => {
 
 				if (message == null) {
 					throw new NullMessageTypeException();
 				}
 
-				if (!pipelineHandlerTypes.Any()) {
-
-// ReSharper disable once PossibleMultipleEnumeration
-					foreach (dynamic leafHandler in leftHandlerTypes.Select(scope.GetService)) {
-						leafHandler.Handle(message);
-					}
+				if (!pipelineHandlerTypes.Any())
+				{
+					return await RunLeafHandlers(scope, leftHandlerTypes, message);
 				}
 
 				var head = pipelineHandlerTypes.First();
@@ -111,18 +68,78 @@ namespace Enexure.MicroBus
 
 				var nextHandler = (IPipelineHandler)scope.GetService(head);
 
-// ReSharper disable once PossibleMultipleEnumeration
 				var nextFunction = GenerateNext(scope, tail, leftHandlerTypes);
 
-				return nextHandler.Handle(nextFunction, message);
+				return await nextHandler.Handle(nextFunction, message);
 
 			});
 
 		}
 
-	}
+		private async Task<Result> RunLeafHandlers(IDependencyScope scope, IEnumerable<Type> leftHandlerTypes, IMessage message)
+		{
+			Task lastTask = null;
+			var handlers = leftHandlerTypes.Select(scope.GetService);
+			if (busSettings.DisableParallelHandlers) {
+				// ReSharper disable once PossibleMultipleEnumeration
+				foreach (object leafHandler in handlers) {
+					Task task = CallHandleOnHandler(leafHandler, message);
+					lastTask = task;
+					await task;
+				}
+			} else {
+				await Task.WhenAll(handlers.Select(handler =>
+				{
+				    Task task = CallHandleOnHandler(handler, message);
+					lastTask = task;
+					return task;
+				}));
+			}
 
-	public class NullMessageTypeException : Exception
+		    if (lastTask == null)
+		    {
+                            
+		    }
+
+		    if (lastTask != null && lastTask.GetType().IsGenericType)
+			{
+
+                dynamic taskWithResult = lastTask;
+			    try
+			    {
+                    object result = taskWithResult.Result;
+                    return result;
+                }
+			    catch (Exception)
+			    {
+			        
+			        throw;
+			    }
+				
+			    
+			} else {
+				return null;
+			}
+		}
+
+        private Task CallHandleOnHandler(object handler, IMessage message)
+        {
+            var type = handler.GetType();
+            var messageType = message.GetType();
+
+            var handleMethod = type.GetMethod("Handle", BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.HasThis, new [] { messageType }, null);
+
+            var objectTask = handleMethod.Invoke(handler, new object[] { message });
+
+            if (objectTask == null) {
+                throw new NullReferenceException(string.Format("Handler for message of type '{0}' returned null.{1}To Resolve you can try{1} 1) Return a task instead", messageType, ));
+            }
+
+            return (Task) objectTask;
+        }
+    }
+
+    public class NullMessageTypeException : Exception
 	{
 		public NullMessageTypeException(Type type)
 			: base(string.Format("Message was null but an instance of type '{0}' was expected", type.Name))

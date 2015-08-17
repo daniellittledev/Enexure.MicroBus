@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Enexure.MicroBus
 {
@@ -13,28 +14,33 @@ namespace Enexure.MicroBus
 			this.dependencyResolver = dependencyResolver;
 		}
 
-		public Task Send<TCommand>(TCommand busCommand)
-			where TCommand : ICommand
+		public Task Send(ICommand busCommand)
 		{
+			if (busCommand == null) throw new ArgumentNullException("busCommand");
+
 			using (var scope = dependencyResolver.BeginScope()) {
-				return registrations.GetRunnerForCommand<TCommand>(scope)(busCommand);
+				return registrations.GetRunnerForMessage(scope, busCommand.GetType())(busCommand);
 			}
 		}
 
-		public Task Publish<TEvent>(TEvent busEvent)
-			where TEvent : IEvent 
+		public Task Publish(IEvent busEvent)
 		{
+			if (busEvent == null) throw new ArgumentNullException("busEvent");
+
 			using (var scope = dependencyResolver.BeginScope()) {
-				return registrations.GetRunnerForEvent<TEvent>(scope)(busEvent);
+				return registrations.GetRunnerForMessage(scope, busEvent.GetType())(busEvent);
 			}
 		}
 
-		public Task<TResult> Query<TQuery, TResult>(IQuery<TQuery, TResult> busQuery)
+		public async Task<TResult> Query<TQuery, TResult>(IQuery<TQuery, TResult> busQuery)
 			where TQuery : IQuery<TQuery, TResult>
 			where TResult : IResult
 		{
+			if (busQuery == null) throw new ArgumentNullException("busQuery");
+
 			using (var scope = dependencyResolver.BeginScope()) {
-				return registrations.GetRunnerForQuery<TQuery, TResult>(scope)((TQuery)busQuery);
+				var result = await registrations.GetRunnerForMessage(scope, busQuery.GetType())((TQuery)busQuery);
+			    return (TResult) result;
 			}
 		}
 	}

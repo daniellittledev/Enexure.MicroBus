@@ -4,11 +4,9 @@ namespace Enexure.MicroBus
 {
 	public interface IMicroBus
 	{
-		Task Send<TCommand>(TCommand busCommand)
-			where TCommand : ICommand;
+		Task Send(ICommand busCommand);
 
-		Task Publish<TEvent>(TEvent @event)
-			where TEvent : IEvent;
+		Task Publish(IEvent busEvent);
 
 		Task<TResult> Query<TQuery, TResult>(IQuery<TQuery, TResult> query)
 			where TQuery : IQuery<TQuery, TResult>
