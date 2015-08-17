@@ -46,8 +46,8 @@ namespace Enexure.MicroBus
 			return message => GenerateNext(scope, registration.Pipeline.ToList(), registration.Handlers)(message);
 		}
 
-		Func<IMessage, Task<object>> GenerateNext(
-			IDependencyScope scope, 
+		private Func<IMessage, Task<object>> GenerateNext(
+			IDependencyScope scope,
 			IReadOnlyCollection<Type> pipelineHandlerTypes,
 			IEnumerable<Type> leftHandlerTypes
 			)
@@ -58,8 +58,7 @@ namespace Enexure.MicroBus
 					throw new NullMessageTypeException();
 				}
 
-				if (!pipelineHandlerTypes.Any())
-				{
+				if (!pipelineHandlerTypes.Any()) {
 					return await RunLeafHandlers(scope, leftHandlerTypes, message);
 				}
 
@@ -81,65 +80,56 @@ namespace Enexure.MicroBus
 			Task lastTask = null;
 			var handlers = leftHandlerTypes.Select(scope.GetService);
 			if (busSettings.DisableParallelHandlers) {
-				// ReSharper disable once PossibleMultipleEnumeration
-				foreach (object leafHandler in handlers) {
-					Task task = CallHandleOnHandler(leafHandler, message);
-					lastTask = task;
-					await task;
+				foreach (var leafHandler in handlers) {
+					var task = CallHandleOnHandler(leafHandler, message);
+					await (lastTask = task);
 				}
 			} else {
-				await Task.WhenAll(handlers.Select(handler =>
-				{
-				    Task task = CallHandleOnHandler(handler, message);
-					lastTask = task;
-					return task;
+				await Task.WhenAll(handlers.Select(handler => {
+					var task = CallHandleOnHandler(handler, message);
+					return (lastTask = task);
 				}));
 			}
 
-		    if (lastTask == null)
-		    {
-                            
-		    }
-
-		    if (lastTask != null && lastTask.GetType().IsGenericType)
-			{
-
-                dynamic taskWithResult = lastTask;
-			    try
-			    {
-                    object result = taskWithResult.Result;
-                    return result;
-                }
-			    catch (Exception)
-			    {
-			        
-			        throw;
-			    }
-				
-			    
-			} else {
-				return null;
+			if (lastTask == null) {
+				throw new NullReferenceException("Sanity Check fail: while running leaf handlers the last task was null, but an instance was expected.");
 			}
+
+			var taskType = lastTask.GetType();
+			if (!taskType.IsGenericType) {
+				throw new SomehowRecievedTaskWithoutResultException();
+			}
+
+			var resultProperty = taskType.GetProperty("Result").GetMethod;
+			return resultProperty.Invoke(lastTask, new object[] {});
 		}
 
-        private Task CallHandleOnHandler(object handler, IMessage message)
-        {
-            var type = handler.GetType();
-            var messageType = message.GetType();
+		private Task CallHandleOnHandler(object handler, IMessage message)
+		{
+			var type = handler.GetType();
+			var messageType = message.GetType();
 
-            var handleMethod = type.GetMethod("Handle", BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.HasThis, new [] { messageType }, null);
+			var handleMethod = type.GetMethod("Handle", BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.HasThis, new[] {messageType}, null);
 
-            var objectTask = handleMethod.Invoke(handler, new object[] { message });
+			var objectTask = handleMethod.Invoke(handler, new object[] {message});
 
-            if (objectTask == null) {
-                throw new NullReferenceException(string.Format("Handler for message of type '{0}' returned null.{1}To Resolve you can try{1} 1) Return a task instead", messageType, ));
-            }
+			if (objectTask == null) {
+				throw new NullReferenceException(string.Format("Handler for message of type '{0}' returned null.{1}To Resolve you can try{1} 1) Return a task instead", messageType, Environment.NewLine));
+			}
 
-            return (Task) objectTask;
-        }
-    }
+			return (Task)objectTask;
+		}
+	}
 
-    public class NullMessageTypeException : Exception
+	public class SomehowRecievedTaskWithoutResultException : Exception
+	{
+		public SomehowRecievedTaskWithoutResultException()
+			: base(string.Format("Tasks returned by handlers should return Task<?> but Task was returned instead, this is impossible"))
+		{
+		}
+	}
+
+	public class NullMessageTypeException : Exception
 	{
 		public NullMessageTypeException(Type type)
 			: base(string.Format("Message was null but an instance of type '{0}' was expected", type.Name))
