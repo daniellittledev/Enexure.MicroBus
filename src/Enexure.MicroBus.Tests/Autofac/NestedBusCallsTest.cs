@@ -98,12 +98,12 @@ namespace Enexure.MicroBus.Tests.Autofac
 		[Test]
 		public async Task SendingACommandThatRaisesAnEventShouldNotThrow()
 		{
-			var pipline = new Pipeline()
+			var pipeline = new Pipeline()
 				.AddHandler<PipelineHandler>();
 
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => busBuilder
-				.RegisterCommand<Command>().To<CommandHandler>(pipline)
-				.RegisterEvent<Event>().To<EventHandler>(pipline)
+				.RegisterCommand<Command>().To<CommandHandler>(pipeline)
+				.RegisterEvent<Event>().To<EventHandler>(pipeline)
 			).Build();
 
 			var bus = container.Resolve<IMicroBus>();

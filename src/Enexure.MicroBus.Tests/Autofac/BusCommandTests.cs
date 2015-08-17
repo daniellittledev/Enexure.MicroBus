@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Autofac;
 using Enexure.MicroBus.Autofac;
-using Enexure.MicroBus.Tests.Common;
+using Enexure.MicroBus.Tests.Annotations;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -13,6 +13,7 @@ namespace Enexure.MicroBus.Tests.Autofac
 	{
 		class Command : ICommand { }
 
+		[UsedImplicitly]
 		class CommandHandler : ICommandHandler<Command>
 		{
 			public Task Handle(Command command)
@@ -25,13 +26,13 @@ namespace Enexure.MicroBus.Tests.Autofac
 		public async Task TestCommand()
 		{
 
-			var pipline = new Pipeline()
+			var pipeline = new Pipeline()
 				.AddHandler<Common.PipelineHandler>();
 
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
 
 				return busBuilder
-					.RegisterCommand<Command>().To<CommandHandler>(pipline);
+					.RegisterCommand<Command>().To<CommandHandler>(pipeline);
 
 			}).Build();
 

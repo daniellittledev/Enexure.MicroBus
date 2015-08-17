@@ -48,11 +48,11 @@ namespace Enexure.MicroBus.Tests.NoDependencyInjection
 		[Test]
 		public async Task TestEvent()
 		{
-			var pipline = new Pipeline()
+			var pipeline = new Pipeline()
 				.AddHandler<PipelineHandler>();
 
 			var bus = new BusBuilder()
-				.RegisterEvent<Event>().To(x => x.Handler<EventHandler>(), pipline)
+				.RegisterEvent<Event>().To(x => x.Handler<EventHandler>(), pipeline)
 				.BuildBus();
 
 			var @event = new Event();
@@ -64,14 +64,14 @@ namespace Enexure.MicroBus.Tests.NoDependencyInjection
 		[Test]
 		public async Task TestMultipleEvents()
 		{
-			var pipline = new Pipeline()
+			var pipeline = new Pipeline()
 				.AddHandler<Common.PipelineHandler>();
 
 			var bus = new BusBuilder()
 				.RegisterEvent<Event>().To(x => {
 					x.Handler<EventHandler>();
 					x.Handler<EventHandler2>();
-				}, pipline)
+				}, pipeline)
 				.BuildBus();
 
 			var @event = new Event();

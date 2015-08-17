@@ -36,11 +36,11 @@ namespace Enexure.MicroBus.Tests.NoDependencyInjection
 		[Test]
 		public async Task TestQuery()
 		{
-			var pipline = new Pipeline()
+			var pipeline = new Pipeline()
 				.AddHandler<PipelineHandler>();
 
 			var bus = new BusBuilder()
-				.RegisterQuery<Query, Result>().To<QueryHandler>(pipline)
+				.RegisterQuery<Query, Result>().To<QueryHandler>(pipeline)
 				.BuildBus();
 
 			var result = await bus.Query(new Query());

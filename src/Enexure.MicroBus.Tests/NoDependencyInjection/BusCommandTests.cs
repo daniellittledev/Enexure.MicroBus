@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Enexure.MicroBus;
 using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Enexure.MicroBus.Tests
+namespace Enexure.MicroBus.Tests.NoDependencyInjection
 {
 	[TestFixture]
 	public class CommandTests
@@ -34,11 +33,11 @@ namespace Enexure.MicroBus.Tests
 		[Test]
 		public async Task TestCommand()
 		{
-			var pipline = new Pipeline()
+			var pipeline = new Pipeline()
 				.AddHandler<PipelineHandler>();
 
 			var bus = new BusBuilder()
-				.RegisterCommand<Command>().To<CommandHandler>(pipline)
+				.RegisterCommand<Command>().To<CommandHandler>(pipeline)
 				.BuildBus();
 
 			await bus.Send(new Command());

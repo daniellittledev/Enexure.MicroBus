@@ -25,13 +25,13 @@ namespace Enexure.MicroBus.Tests.Autofac
 		[Test]
 		public async Task TestQuery()
 		{
-			var pipline = new Pipeline()
+			var pipeline = new Pipeline()
 				.AddHandler<Common.PipelineHandler>();
 
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
 
 				return busBuilder
-					.RegisterQuery<Query, Result>().To<QueryHandler>(pipline);
+					.RegisterQuery<Query, Result>().To<QueryHandler>(pipeline);
 
 			}).Build();
 

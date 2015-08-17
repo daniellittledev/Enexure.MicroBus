@@ -38,13 +38,13 @@ namespace Enexure.MicroBus.Tests.Autofac
 		[Test]
 		public async Task TestEvent()
 		{
-			var pipline = new Pipeline()
+			var pipeline = new Pipeline()
 				.AddHandler<Common.PipelineHandler>();
 
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
 
 				return busBuilder
-					.RegisterEvent<Event>().To(x => x.Handler<EventHandler>(), pipline);
+					.RegisterEvent<Event>().To(x => x.Handler<EventHandler>(), pipeline);
 			}).Build();
 
 			var bus = container.Resolve<IMicroBus>();
@@ -58,7 +58,7 @@ namespace Enexure.MicroBus.Tests.Autofac
 		[Test]
 		public async Task TestMultipleEvents()
 		{
-			var pipline = new Pipeline()
+			var pipeline = new Pipeline()
 				.AddHandler<Common.PipelineHandler>();
 
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
@@ -67,7 +67,7 @@ namespace Enexure.MicroBus.Tests.Autofac
 					.RegisterEvent<Event>().To(x => {
 						x.Handler<EventHandler>();
 						x.Handler<EventHandler2>();
-					}, pipline);
+					}, pipeline);
 
 			}).Build();
 
