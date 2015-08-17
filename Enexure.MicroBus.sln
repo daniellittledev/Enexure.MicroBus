@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus", "src\Enexure.MicroBus\Enexure.MicroBus.csproj", "{C9F49ECA-A00F-48AA-8A23-A3BCFFE40393}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.MessageContracts", "src\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.csproj", "{DF8290A6-7F5C-4B0F-B2E4-35B3E60167FD}"
@@ -10,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.Tests", "src\Enexure.MicroBus.Tests\Enexure.MicroBus.Tests.csproj", "{2823D66A-15B4-412C-A0DF-7805EB91E235}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.InfrastructureContracts", "src\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.csproj", "{4BD15BDD-27E9-47E2-A693-D496E892949F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.Sagas", "Enexure.MicroBus.Sagas\Enexure.MicroBus.Sagas.csproj", "{4462B366-3CB1-4070-9A0E-532CB45EF869}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +41,10 @@ Global
 		{4BD15BDD-27E9-47E2-A693-D496E892949F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BD15BDD-27E9-47E2-A693-D496E892949F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BD15BDD-27E9-47E2-A693-D496E892949F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4462B366-3CB1-4070-9A0E-532CB45EF869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4462B366-3CB1-4070-9A0E-532CB45EF869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4462B366-3CB1-4070-9A0E-532CB45EF869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4462B366-3CB1-4070-9A0E-532CB45EF869}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

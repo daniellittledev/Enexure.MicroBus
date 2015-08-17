@@ -44,6 +44,14 @@
     <Compile Include="IBusBuilder.cs" />
     <Compile Include="IDependencyResolver.cs" />
     <Compile Include="IDependencyScope.cs" />
+    <Compile Include="Implementation\CommandBuilder.cs" />
+    <Compile Include="Implementation\EventBinder.cs" />
+    <Compile Include="Implementation\EventBuilder.cs" />
+    <Compile Include="ICommandBuilder.cs" />
+    <Compile Include="IEventBinder.cs" />
+    <Compile Include="IEventBuilder.cs" />
+    <Compile Include="IQueryBuilder.cs" />
+    <Compile Include="Implementation\QueryBuilder.cs" />
     <Compile Include="IPipelineBuilder.cs" />
     <Compile Include="IHandlerRegistar.cs" />
     <Compile Include="Internal\ImmutableList.cs" />
