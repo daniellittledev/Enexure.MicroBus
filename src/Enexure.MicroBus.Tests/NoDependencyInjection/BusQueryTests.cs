@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Enexure.MicroBus;
 using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Enexure.MicroBus.Tests
+namespace Enexure.MicroBus.Tests.NoDependencyInjection
 {
 	[TestFixture]
 	public class QueryTests

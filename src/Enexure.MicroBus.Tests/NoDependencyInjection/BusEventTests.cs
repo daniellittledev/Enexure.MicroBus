@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Enexure.MicroBus;
 using Enexure.MicroBus.Tests.Common;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Enexure.MicroBus.Tests
+namespace Enexure.MicroBus.Tests.NoDependencyInjection
 {
 	[TestFixture]
 	public class EventTests
@@ -44,7 +42,7 @@ namespace Enexure.MicroBus.Tests
 
 			var func = (Func<Task>)(() => bus.Publish(new Event()));
 
-            func.ShouldThrowExactly<NoRegistrationForMessageException>().WithMessage("No registration for message of type Event was found");
+			func.ShouldThrowExactly<NoRegistrationForMessageException>().WithMessage("No registration for message of type Event was found");
 		}
 
 		[Test]
@@ -67,7 +65,7 @@ namespace Enexure.MicroBus.Tests
 		public async Task TestMultipleEvents()
 		{
 			var pipline = new Pipeline()
-				.AddHandler<PipelineHandler>();
+				.AddHandler<Common.PipelineHandler>();
 
 			var bus = new BusBuilder()
 				.RegisterEvent<Event>().To(x => {

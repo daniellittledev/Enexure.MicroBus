@@ -26,7 +26,7 @@ namespace Enexure.MicroBus.Tests.Autofac
 		{
 
 			var pipline = new Pipeline()
-				.AddHandler<PipelineHandler>();
+				.AddHandler<Common.PipelineHandler>();
 
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
 

@@ -64,10 +64,10 @@
     <Compile Include="Autofac\BusCommandTests.cs" />
     <Compile Include="Autofac\BusEventTests.cs" />
     <Compile Include="Autofac\BusQueryTests.cs" />
-    <Compile Include="BuiltIn\BusEventTests.cs" />
+    <Compile Include="NoDependencyInjection\BusEventTests.cs" />
     <Compile Include="Common\PipelineHandler.cs" />
-    <Compile Include="BuiltIn\BusQueryTests.cs" />
-    <Compile Include="BuiltIn\BusCommandTests.cs" />
+    <Compile Include="NoDependencyInjection\BusQueryTests.cs" />
+    <Compile Include="NoDependencyInjection\BusCommandTests.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
