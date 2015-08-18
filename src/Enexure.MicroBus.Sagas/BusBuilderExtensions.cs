@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Enexure.MicroBus.Sagas
@@ -11,6 +13,10 @@ namespace Enexure.MicroBus.Sagas
 		{
 
 			// Register a special event handler that will delegate to the Saga
+			var sagaType = saga.GetType();
+			var handleMethods = sagaType.GetMethods(BindingFlags.Instance | BindingFlags.Public).Where(x => x.Name == "Handle");
+
+			handleMethods.Select(x => x.GetParameters()[0].ParameterType);
 
 			return busBuilder;
 		}
