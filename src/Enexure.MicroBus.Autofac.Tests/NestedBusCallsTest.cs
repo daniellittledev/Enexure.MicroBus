@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Enexure.MicroBus.Tests.Annotations;
+using Enexure.MicroBus.Annotations;
 using FluentAssertions;
 using NUnit.Framework;
 

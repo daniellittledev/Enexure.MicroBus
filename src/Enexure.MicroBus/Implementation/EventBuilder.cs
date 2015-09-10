@@ -1,35 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Enexure.MicroBus
 {
 	public class EventBuilder<TEvent> : IEventBuilder<TEvent>
 		where TEvent : IEvent
 	{
-		private readonly BusBuilder busBuilder;
+		private readonly HandlerRegister messageRegister;
 
-		public EventBuilder(BusBuilder busBuilder)
+		public EventBuilder(HandlerRegister messageRegister)
 		{
-			this.busBuilder = busBuilder;
+			this.messageRegister = messageRegister;
 		}
 
-		public IBusBuilder To<TEventHandler>() where TEventHandler : IEventHandler<TEvent>
+		public IMessageRegister To<TEventHandler>() where TEventHandler : IEventHandler<TEvent>
 		{
-			return To<TEventHandler>(new Pipeline());
+			return To<TEventHandler>(Pipeline.EmptyPipeline);
 		}
 
-		public IBusBuilder To(Action<IEventBinder<TEvent>> eventBinder)
+		public IMessageRegister To(Action<IEventBinder<TEvent>> eventBinder)
 		{
-			return To(eventBinder, new Pipeline());
+			return To(eventBinder, Pipeline.EmptyPipeline);
 		}
 
-		public IBusBuilder To<TEventHandler>(Pipeline pipeline)
+		public IMessageRegister To<TEventHandler>(Pipeline pipeline)
 			where TEventHandler : IEventHandler<TEvent>
 		{
 			return To(new [] { typeof(TEventHandler) }, pipeline);
 		}
 
-		public IBusBuilder To(Action<IEventBinder<TEvent>> eventBinder, Pipeline pipeline)
+		public IMessageRegister To(Action<IEventBinder<TEvent>> eventBinder, Pipeline pipeline)
 		{
 			var binder = new EventBinder<TEvent>();
 			eventBinder(binder);
@@ -37,46 +38,46 @@ namespace Enexure.MicroBus
 			return To(binder.GetHandlerTypes(), pipeline);
 		}
 
-		private IBusBuilder To(IEnumerable<Type> handlerTypes, Pipeline pipeline)
+		private IMessageRegister To(IEnumerable<Type> handlerTypes, Pipeline pipeline)
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			return new BusBuilder(busBuilder, new MessageRegistration(typeof(TEvent), handlerTypes, pipeline));
+			return new HandlerRegister(messageRegister, handlerTypes.Select(x => new MessageRegistration(typeof(TEvent), x, pipeline)));
 		}
 
 	}
 
 	public class EventBuilder : IEventBuilder
 	{
-		private readonly BusBuilder busBuilder;
+		private readonly HandlerRegister messageRegister;
 		private readonly Type eventType;
 
-		public EventBuilder(BusBuilder busBuilder, Type eventType)
+		public EventBuilder(HandlerRegister messageRegister, Type eventType)
 		{
-			this.busBuilder = busBuilder;
+			this.messageRegister = messageRegister;
 			this.eventType = eventType;
 		}
 
-		public IBusBuilder To(Type eventHandlerType)
+		public IMessageRegister To(Type eventHandlerType)
 		{
-			return To(eventHandlerType, new Pipeline());
+			return To(eventHandlerType, Pipeline.EmptyPipeline);
 		}
 
-		public IBusBuilder To(IEnumerable<Type> eventHandlerTypes)
+		public IMessageRegister To(IEnumerable<Type> eventHandlerTypes)
 		{
-			return To(eventHandlerTypes, new Pipeline());
+			return To(eventHandlerTypes, Pipeline.EmptyPipeline);
 		}
 
-		public IBusBuilder To(Type eventHandlerType, Pipeline pipeline)
+		public IMessageRegister To(Type eventHandlerType, Pipeline pipeline)
 		{
-			return To(new [] { eventHandlerType }, new Pipeline());
+			return To(new [] { eventHandlerType }, Pipeline.EmptyPipeline);
 		}
 
-		public IBusBuilder To(IEnumerable<Type> eventHandlerTypes, Pipeline pipeline)
+		public IMessageRegister To(IEnumerable<Type> eventHandlerTypes, Pipeline pipeline)
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			return new BusBuilder(busBuilder, new MessageRegistration(eventType, eventHandlerTypes, pipeline));
+			return new HandlerRegister(messageRegister, eventHandlerTypes.Select(x => new MessageRegistration(eventType, x, pipeline)));
 		}
 	}
 }

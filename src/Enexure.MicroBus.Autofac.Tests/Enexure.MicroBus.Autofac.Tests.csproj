@@ -64,7 +64,6 @@
     <Compile Include="BusEventTests.cs" />
     <Compile Include="BusQueryTests.cs" />
     <Compile Include="NestedBusCallsTest.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

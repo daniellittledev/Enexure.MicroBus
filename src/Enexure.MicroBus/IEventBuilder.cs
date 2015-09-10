@@ -6,23 +6,23 @@ namespace Enexure.MicroBus
 	public interface IEventBuilder<out TEvent>
 		where TEvent : IEvent
 	{
-		IBusBuilder To<TEventHandler>()
+		IMessageRegister To<TEventHandler>()
 			where TEventHandler : IEventHandler<TEvent>;
 
-		IBusBuilder To(Action<IEventBinder<TEvent>> eventBinder);
+		IMessageRegister To(Action<IEventBinder<TEvent>> eventBinder);
 
-		IBusBuilder To<TEventHandler>(Pipeline pipeline)
+		IMessageRegister To<TEventHandler>(Pipeline pipeline)
 			where TEventHandler : IEventHandler<TEvent>;
 
-		IBusBuilder To(Action<IEventBinder<TEvent>> eventBinder, Pipeline pipeline);
+		IMessageRegister To(Action<IEventBinder<TEvent>> eventBinder, Pipeline pipeline);
 	}
 
 	public interface IEventBuilder
 	{
-		IBusBuilder To(Type eventHandlerType);
-		IBusBuilder To(IEnumerable<Type> eventHandlerTypes);
+		IMessageRegister To(Type eventHandlerType);
+		IMessageRegister To(IEnumerable<Type> eventHandlerTypes);
 
-		IBusBuilder To(Type eventHandlerType, Pipeline pipeline);
-		IBusBuilder To(IEnumerable<Type> eventHandlerTypes, Pipeline pipeline);
+		IMessageRegister To(Type eventHandlerType, Pipeline pipeline);
+		IMessageRegister To(IEnumerable<Type> eventHandlerTypes, Pipeline pipeline);
 	}
 }

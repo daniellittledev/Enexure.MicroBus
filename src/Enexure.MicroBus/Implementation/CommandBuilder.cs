@@ -5,47 +5,47 @@ namespace Enexure.MicroBus
 	public class CommandBuilder<TCommand> : ICommandBuilder<TCommand>
 		where TCommand : ICommand
 	{
-		private readonly BusBuilder busBuilder;
+		private readonly HandlerRegister messageRegister;
 
-		public CommandBuilder(BusBuilder busBuilder)
+		public CommandBuilder(HandlerRegister messageRegister)
 		{
-			this.busBuilder = busBuilder;
+			this.messageRegister = messageRegister;
 		}
 
-		public IBusBuilder To<TCommandHandler>() 
+		public IMessageRegister To<TCommandHandler>() 
 			where TCommandHandler : ICommandHandler<TCommand>
 		{
-			return new BusBuilder(busBuilder, new MessageRegistration(typeof(TCommand), typeof(TCommandHandler), new Pipeline()));
+			return new HandlerRegister(messageRegister, new MessageRegistration(typeof(TCommand), typeof(TCommandHandler), Pipeline.EmptyPipeline));
 		}
 
-		public IBusBuilder To<TCommandHandler>(Pipeline pipeline)
+		public IMessageRegister To<TCommandHandler>(Pipeline pipeline)
 			where TCommandHandler : ICommandHandler<TCommand>
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			return new BusBuilder(busBuilder, new MessageRegistration(typeof(TCommand), typeof(TCommandHandler), pipeline));
+			return new HandlerRegister(messageRegister, new MessageRegistration(typeof(TCommand), typeof(TCommandHandler), pipeline));
 		}
 	}
 
 	public class CommandBuilder : ICommandBuilder
 	{
-		private readonly BusBuilder busBuilder;
+		private readonly HandlerRegister messageRegister;
 		private readonly Type commandType;
 
-		public CommandBuilder(BusBuilder busBuilder, Type commandType)
+		public CommandBuilder(HandlerRegister messageRegister, Type commandType)
 		{
-			this.busBuilder = busBuilder;
+			this.messageRegister = messageRegister;
 			this.commandType = commandType;
 		}
 
-		public IBusBuilder To(Type commandHandlerType)
+		public IMessageRegister To(Type commandHandlerType)
 		{
-			return new BusBuilder(busBuilder, new MessageRegistration(commandType, commandHandlerType, new Pipeline()));
+			return new HandlerRegister(messageRegister, new MessageRegistration(commandType, commandHandlerType, Pipeline.EmptyPipeline));
 		}
 
-		public IBusBuilder To(Type commandHandlerType, Pipeline pipeline)
+		public IMessageRegister To(Type commandHandlerType, Pipeline pipeline)
 		{
-			return new BusBuilder(busBuilder, new MessageRegistration(commandType, commandHandlerType, pipeline));
+			return new HandlerRegister(messageRegister, new MessageRegistration(commandType, commandHandlerType, pipeline));
 		}
 	}
 }

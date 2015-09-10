@@ -6,46 +6,46 @@ namespace Enexure.MicroBus
 		where TQuery : IQuery<TQuery, TResult>
 		where TResult : IResult
 	{
-		private readonly BusBuilder busBuilder;
+		private readonly HandlerRegister MessageRegister;
 
-		public QueryBuilder(BusBuilder busBuilder)
+		public QueryBuilder(HandlerRegister MessageRegister)
 		{
-			this.busBuilder = busBuilder;
+			this.MessageRegister = MessageRegister;
 		}
 
-		public IBusBuilder To<TQueryHandler>() where TQueryHandler : IQueryHandler<TQuery, TResult>
+		public IMessageRegister To<TQueryHandler>() where TQueryHandler : IQueryHandler<TQuery, TResult>
 		{
-			return To<TQueryHandler>(new Pipeline());
+			return To<TQueryHandler>(Pipeline.EmptyPipeline);
 		}
 
-		public IBusBuilder To<TQueryHandler>(Pipeline pipeline)
+		public IMessageRegister To<TQueryHandler>(Pipeline pipeline)
 			where TQueryHandler : IQueryHandler<TQuery, TResult>
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			return new BusBuilder(busBuilder, new MessageRegistration(typeof(TQuery), typeof(TQueryHandler), pipeline));
+			return new HandlerRegister(MessageRegister, new MessageRegistration(typeof(TQuery), typeof(TQueryHandler), pipeline));
 		}
 	}
 
 	public class QueryBuilder : IQueryBuilder
 	{
-		private readonly BusBuilder busBuilder;
+		private readonly HandlerRegister MessageRegister;
 		private readonly Type queryType;
 
-		public QueryBuilder(BusBuilder busBuilder, Type queryType)
+		public QueryBuilder(HandlerRegister MessageRegister, Type queryType)
 		{
-			this.busBuilder = busBuilder;
+			this.MessageRegister = MessageRegister;
 			this.queryType = queryType;
 		}
 
-		public IBusBuilder To(Type queryHandlerType)
+		public IMessageRegister To(Type queryHandlerType)
 		{
-			return To(queryHandlerType, new Pipeline());
+			return To(queryHandlerType, Pipeline.EmptyPipeline);
 		}
 
-		public IBusBuilder To(Type queryHandlerType, Pipeline pipeline)
+		public IMessageRegister To(Type queryHandlerType, Pipeline pipeline)
 		{
-			return new BusBuilder(busBuilder, new MessageRegistration(queryType, queryHandlerType, pipeline));
+			return new HandlerRegister(MessageRegister, new MessageRegistration(queryType, queryHandlerType, pipeline));
 		}
 	}
 }

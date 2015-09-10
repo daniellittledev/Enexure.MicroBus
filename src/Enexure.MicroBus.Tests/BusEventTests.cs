@@ -36,8 +36,7 @@ namespace Enexure.MicroBus.Tests
 		[Test]
 		public void NoHandlerShouldThrow()
 		{
-			var bus = new BusBuilder()
-				.BuildBus();
+		    var bus = BusBuilder.BuildBus(b => b);
 
 			var func = (Func<Task>)(() => bus.Publish(new Event()));
 
@@ -47,9 +46,9 @@ namespace Enexure.MicroBus.Tests
 		[Test]
 		public async Task TestEvent()
 		{
-			var bus = new BusBuilder()
-				.RegisterEvent<Event>().To(x => x.Handler<EventHandler>())
-				.BuildBus();
+            var bus = BusBuilder.BuildBus(b =>
+                b.RegisterEvent<Event>().To(x => x.Handler<EventHandler>())
+            );
 
 			var @event = new Event();
 			await bus.Publish(@event);
@@ -60,12 +59,12 @@ namespace Enexure.MicroBus.Tests
 		[Test]
 		public async Task TestMultipleEvents()
 		{
-			var bus = new BusBuilder()
-				.RegisterEvent<Event>().To(x => {
-					x.Handler<EventHandler>();
-					x.Handler<EventHandler2>();
-				})
-				.BuildBus();
+		    var bus = BusBuilder.BuildBus(b =>
+		        b.RegisterEvent<Event>().To(x => {
+		            x.Handler<EventHandler>();
+		            x.Handler<EventHandler2>();
+		        })
+		    );
 
 			var @event = new Event();
 			await bus.Publish(@event);

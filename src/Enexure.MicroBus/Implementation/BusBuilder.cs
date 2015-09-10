@@ -1,69 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Enexure.MicroBus
 {
-	public class BusBuilder : IBusBuilder
+	public class BusBuilder
 	{
-		private readonly ImmutableList<MessageRegistration> registrations;
+		private readonly Func<IMessageRegister, IMessageRegister> register;
 
-		public BusBuilder()
+		public BusBuilder(Func<IMessageRegister, IMessageRegister> register)
 		{
-			registrations = ImmutableList<MessageRegistration>.Empty;
+			this.register = register;
 		}
 
-		public BusBuilder(IEnumerable<MessageRegistration> registrations)
+		public static IMicroBus BuildBus(Func<IMessageRegister, IMessageRegister> register)
 		{
-			this.registrations = registrations as ImmutableList<MessageRegistration> ?? ImmutableList<MessageRegistration>.Empty.AddRange(registrations);
-		}
-
-		public BusBuilder(BusBuilder busBuilder, MessageRegistration registrations)
-		{
-			this.registrations = busBuilder.registrations.Add(registrations);
-		}
-
-		public ICommandBuilder<TCommand> RegisterCommand<TCommand>()
-			where TCommand : ICommand
-		{
-			return new CommandBuilder<TCommand>(this);
-		}
-
-		public ICommandBuilder RegisterCommand(Type type)
-		{
-			return new CommandBuilder(this, type);
-		}
-
-		public IEventBuilder<TEvent> RegisterEvent<TEvent>()
-			where TEvent : IEvent
-		{
-			return new EventBuilder<TEvent>(this);
-		}
-
-		public IEventBuilder RegisterEvent(Type type)
-		{
-			return new EventBuilder(this, type);
-		}
-
-		public IQueryBuilder<TQuery, TResult> RegisterQuery<TQuery, TResult>()
-			where TQuery : IQuery<TQuery, TResult>
-			where TResult : IResult
-		{
-			return new QueryBuilder<TQuery, TResult>(this);
-		}
-
-		public IQueryBuilder RegisterQuery(Type type)
-		{
-			return new QueryBuilder(this, type);
-		}
-
-		public IReadOnlyCollection<MessageRegistration> GetMessageRegistrations()
-		{
-			return registrations;
-		}
-
-		public IHandlerRegistar BuildHandlerRegistar()
-		{
-			return new HandlerRegistar(registrations);
+			return new BusBuilder(register).BuildBus();
 		}
 
 		public IMicroBus BuildBus()
@@ -73,7 +23,12 @@ namespace Enexure.MicroBus
 
 		public IMicroBus BuildBus(BusSettings busSettings)
 		{
-			return new MicroBus(new PipelineBuilder(BuildHandlerRegistar(), busSettings), new DefaultDependencyResolver());
+			var registrations = register(new HandlerRegister()).GetMessageRegistrations();
+			var handlerProvider = new HandlerProvider(registrations);
+			var pipelineBuilder = new PipelineBuilder(handlerProvider, busSettings);
+			var dependencyResolver = new DefaultDependencyResolver();
+
+			return new MicroBus(pipelineBuilder, dependencyResolver);
 		}
 	}
 }

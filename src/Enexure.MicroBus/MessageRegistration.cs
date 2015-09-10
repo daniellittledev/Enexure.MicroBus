@@ -1,48 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Enexure.MicroBus
 {
 	public class MessageRegistration
 	{
-		private readonly MessageType type;
 		private readonly Type messageType;
 		private readonly Pipeline pipeline;
-		private readonly IReadOnlyCollection<Type> handlers;
+		private readonly Type handler;
 
-		public MessageRegistration(Type messageType, Type messageHandlerType, Pipeline pipeline)
+		public MessageRegistration(Type messageType, Type handlerType, Pipeline pipeline)
 		{
-			this.type = GetMessageType(messageType);
+			if (messageType == null) throw new ArgumentNullException(nameof(messageType));
+			if (handlerType == null) throw new ArgumentNullException(nameof(handlerType));
+			if (pipeline == null) throw new ArgumentNullException(nameof(pipeline));
+
+			// TODO: messageType should implement IMessage
+			// TODO: handlerType should be a handler
+
 			this.messageType = messageType;
 			this.pipeline = pipeline;
-			this.handlers = new[] { messageHandlerType };
-		}
-
-		public MessageRegistration(Type messageType, IEnumerable<Type> handlers, Pipeline pipeline)
-		{
-			this.type = GetMessageType(messageType);
-			this.messageType = messageType;
-			this.pipeline = pipeline;
-			this.handlers = handlers.ToList();
-		}
-
-		private static MessageType GetMessageType(Type messageType)
-		{
-			if (typeof(ICommand).IsAssignableFrom(messageType)) {
-				return Enexure.MicroBus.MessageType.Command;
-
-			} else if (typeof(IEvent).IsAssignableFrom(messageType)) {
-				return Enexure.MicroBus.MessageType.Event;
-
-			} else if (messageType.GetInterfaces()
-				.Where(i => i.IsGenericType)
-				.Any(i => i.GetGenericTypeDefinition() == typeof(IQuery<,>))) {
-					return Enexure.MicroBus.MessageType.Query;
-
-			} else {
-				throw new NotSupportedException(string.Format("The message type {0} is not supported", messageType));
-			}
+			this.handler = handlerType;
 		}
 
 		public Type MessageType
@@ -50,9 +27,9 @@ namespace Enexure.MicroBus
 			get { return messageType; }
 		}
 
-		public IReadOnlyCollection<Type> Handlers
+		public Type Handler
 		{
-			get { return handlers; }
+			get { return handler; }
 		}
 
 		public Pipeline Pipeline
@@ -60,9 +37,5 @@ namespace Enexure.MicroBus
 			get { return pipeline; }
 		}
 
-		public MessageType Type
-		{
-			get { return type; }
-		}
 	}
 }

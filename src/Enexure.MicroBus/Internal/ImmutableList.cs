@@ -48,7 +48,7 @@ namespace Enexure.MicroBus
 			} else if (collection.Count == 1) {
 				return new ImmutableList<T>(collection.Single(), this);
 			} else {
-				return collection.Aggregate(this, (current, item) => new ImmutableList<T>(collection.Single(), current));
+				return collection.Aggregate(this, (current, item) => new ImmutableList<T>(item, current));
 			}
 		}
 

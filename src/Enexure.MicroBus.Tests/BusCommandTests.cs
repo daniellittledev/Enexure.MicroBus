@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Enexure.MicroBus.Tests.Annotations;
+using Enexure.MicroBus.Annotations;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -23,8 +23,7 @@ namespace Enexure.MicroBus.Tests
 		[Test]
 		public void NoHandlerShouldThrow()
 		{
-			var bus = new BusBuilder()
-				.BuildBus();
+			var bus = BusBuilder.BuildBus(b => b);
 
 			var func = (Func<Task>)(() => bus.Send(new Command()));
 
@@ -34,9 +33,7 @@ namespace Enexure.MicroBus.Tests
 		[Test]
 		public async Task TestCommand()
 		{
-			var bus = new BusBuilder()
-				.RegisterCommand<Command>().To<CommandHandler>()
-				.BuildBus();
+			var bus = BusBuilder.BuildBus(b => b.RegisterCommand<Command>().To<CommandHandler>());
 
 			await bus.Send(new Command());
 
@@ -45,8 +42,7 @@ namespace Enexure.MicroBus.Tests
 		[Test]
 		public void TestMissingCommand()
 		{
-			var bus = new BusBuilder()
-				.BuildBus();
+			var bus = BusBuilder.BuildBus(b => b);
 
 			new Func<Task>(() => bus.Send(new Command()))
 				.ShouldThrow<NoRegistrationForMessageException>();

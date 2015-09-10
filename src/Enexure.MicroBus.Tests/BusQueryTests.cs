@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Enexure.MicroBus.Tests.Annotations;
+using Enexure.MicroBus.Annotations;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -25,8 +25,7 @@ namespace Enexure.MicroBus.Tests
 		[Test]
 		public void NoHandlerShouldThrow()
 		{
-			var bus = new BusBuilder()
-				.BuildBus();
+			var bus = BusBuilder.BuildBus(b => b);
 
 			var func = (Func<Task>)(() => bus.Query(new Query()));
 
@@ -37,9 +36,9 @@ namespace Enexure.MicroBus.Tests
 		[Test]
 		public async Task TestQuery()
 		{
-			var bus = new BusBuilder()
-				.RegisterQuery<Query, Result>().To<QueryHandler>()
-				.BuildBus();
+			var bus = BusBuilder.BuildBus(b => 
+				b.RegisterQuery<Query, Result>().To<QueryHandler>()
+			);
 
 			var result = await bus.Query(new Query());
 

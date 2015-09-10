@@ -7,6 +7,13 @@ namespace Enexure.MicroBus
 {
 	public sealed class Pipeline : IEnumerable<Type>
 	{
+		private static Pipeline pipeline;
+
+		static Pipeline()
+		{
+			pipeline = new Pipeline();
+		}
+
 		readonly ImmutableList<Type> types = ImmutableList<Type>.Empty;
 
 		public Pipeline()
@@ -16,6 +23,11 @@ namespace Enexure.MicroBus
 		private Pipeline(ImmutableList<Type> types)
 		{
 			this.types = types;
+		}
+
+		public static Pipeline EmptyPipeline
+		{
+			get { return pipeline; }
 		}
 
 		public IEnumerator<Type> GetEnumerator()

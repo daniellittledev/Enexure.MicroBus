@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Enexure.MicroBus.Annotations;
 using Enexure.MicroBus.BuiltInEvents;
 
 using Handler = System.Object;
@@ -12,20 +13,23 @@ namespace Enexure.MicroBus
 {
 	public class PipelineBuilder : IPipelineBuilder
 	{
-		private readonly IHandlerRegistar handlerRegistar;
+		private readonly IHandlerProvider handlerProvider;
 		private readonly BusSettings busSettings;
 
-		public PipelineBuilder(IHandlerRegistar handlerRegistar, BusSettings busSettings)
+		public PipelineBuilder([NotNull] IHandlerProvider handlerProvider, [NotNull] BusSettings busSettings)
 		{
-			this.handlerRegistar = handlerRegistar;
+			if (handlerProvider == null) throw new ArgumentNullException(nameof(handlerProvider));
+			if (busSettings == null) throw new ArgumentNullException(nameof(busSettings));
+
+
+			this.handlerProvider = handlerProvider;
 			this.busSettings = busSettings;
 		}
 
 		public Func<IMessage, Task<Result>> GetPipelineForMessage(IDependencyScope scope, Type messageType)
 		{
-			var registration = handlerRegistar.GetRegistrationForMessage(messageType);
-
-			if (registration == null) {
+			GroupedMessageRegistration registration;
+			if (!handlerProvider.GetRegistrationForMessage(messageType, out registration)) {
 				if (messageType == typeof(NoMatchingRegistrationEvent)) {
 					throw new NoRegistrationForMessageException(messageType);
 				}
