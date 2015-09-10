@@ -1,6 +1,10 @@
 
 function Get-VersionString($version) {
-	return "$($version.Major).$($version.Minor).$($version.Patch).$($version.Revision)"
+	if ($version.Revision -ne $null) {
+		return "$($version.Major).$($version.Minor).$($version.Patch).$($version.Revision)"
+	} else {
+		return "$($version.Major).$($version.Minor).$($version.Patch)"
+	}
 }
 
 function Get-Versions($solutionRoot, $buildNumber) {
