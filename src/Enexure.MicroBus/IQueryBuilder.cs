@@ -6,16 +6,16 @@ namespace Enexure.MicroBus
 		where TQuery : IQuery<TQuery, TResult>
 		where TResult : IResult
 	{
-		IMessageRegister To<TQueryHandler>()
+		IHandlerRegister To<TQueryHandler>()
 			where TQueryHandler : IQueryHandler<TQuery, TResult>;
 
-		IMessageRegister To<TQueryHandler>(Pipeline pipeline)
+		IHandlerRegister To<TQueryHandler>(Pipeline pipeline)
 			where TQueryHandler : IQueryHandler<TQuery, TResult>;
 	}
 
 	public interface IQueryBuilder
 	{
-		IMessageRegister To(Type queryHandlerType);
-		IMessageRegister To(Type queryHandlerType, Pipeline pipeline);
+		IHandlerRegister To(Type queryHandlerType);
+		IHandlerRegister To(Type queryHandlerType, Pipeline pipeline);
 	}
 }

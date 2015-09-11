@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Enexure.MicroBus
 {
-	public interface IMessageRegister
+	public interface IHandlerRegister
 	{
 		ICommandBuilder<TCommand> RegisterCommand<TCommand>()
 			where TCommand : ICommand;

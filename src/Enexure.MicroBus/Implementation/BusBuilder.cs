@@ -4,14 +4,14 @@ namespace Enexure.MicroBus
 {
 	public class BusBuilder
 	{
-		private readonly Func<IMessageRegister, IMessageRegister> register;
+		private readonly Func<IHandlerRegister, IHandlerRegister> register;
 
-		public BusBuilder(Func<IMessageRegister, IMessageRegister> register)
+		public BusBuilder(Func<IHandlerRegister, IHandlerRegister> register)
 		{
 			this.register = register;
 		}
 
-		public static IMicroBus BuildBus(Func<IMessageRegister, IMessageRegister> register)
+		public static IMicroBus BuildBus(Func<IHandlerRegister, IHandlerRegister> register)
 		{
 			return new BusBuilder(register).BuildBus();
 		}

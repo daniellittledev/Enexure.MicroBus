@@ -8,9 +8,12 @@ namespace Enexure.MicroBus.Autofac
 {
 	internal class AutofacDependencyScope : AutofacDependencyResolver, IDependencyScope
 	{
+		private readonly ILifetimeScope lifetimeScope;
+
 		public AutofacDependencyScope(ILifetimeScope lifetimeScope)
 			: base(lifetimeScope)
 		{
+			this.lifetimeScope = lifetimeScope;
 		}
 
 		public object GetService(Type serviceType)

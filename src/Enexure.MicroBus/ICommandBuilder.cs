@@ -5,16 +5,16 @@ namespace Enexure.MicroBus
 	public interface ICommandBuilder<out TCommand>
 		where TCommand : ICommand
 	{
-		IMessageRegister To<TCommandHandler>()
+		IHandlerRegister To<TCommandHandler>()
 			where TCommandHandler : ICommandHandler<TCommand>;
 
-		IMessageRegister To<TCommandHandler>(Pipeline pipeline)
+		IHandlerRegister To<TCommandHandler>(Pipeline pipeline)
 			where TCommandHandler : ICommandHandler<TCommand>;
 	}
 
 	public interface ICommandBuilder
 	{
-		IMessageRegister To(Type commandHandlerType);
-		IMessageRegister To(Type commandHandlerType, Pipeline pipeline);
+		IHandlerRegister To(Type commandHandlerType);
+		IHandlerRegister To(Type commandHandlerType, Pipeline pipeline);
 	}
 }

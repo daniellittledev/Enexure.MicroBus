@@ -8,12 +8,12 @@ namespace Enexure.MicroBus.Autofac
 	public static class ContainerExtensions
 	{
 		public static ContainerBuilder RegisterMicroBus(this ContainerBuilder containerBuilder,
-			Func<IMessageRegister, IMessageRegister> registerHandlers)
+			Func<IHandlerRegister, IHandlerRegister> registerHandlers)
 		{
 			return RegisterMicroBus(containerBuilder, registerHandlers, new BusSettings());
 		}
 
-		public static ContainerBuilder RegisterMicroBus(this ContainerBuilder containerBuilder, Func<IMessageRegister, IMessageRegister> registerHandlers, BusSettings busSettings)
+		public static ContainerBuilder RegisterMicroBus(this ContainerBuilder containerBuilder, Func<IHandlerRegister, IHandlerRegister> registerHandlers, BusSettings busSettings)
 		{
 			var register = registerHandlers(new HandlerRegister());
 			var registrations = register.GetMessageRegistrations();

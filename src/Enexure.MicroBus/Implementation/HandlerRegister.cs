@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Enexure.MicroBus
 {
-	public class HandlerRegister : IMessageRegister
+	public class HandlerRegister : IHandlerRegister
 	{
 		private readonly ImmutableList<MessageRegistration> registrations;
 
@@ -17,14 +17,14 @@ namespace Enexure.MicroBus
 			this.registrations = registrations as ImmutableList<MessageRegistration> ?? ImmutableList<MessageRegistration>.Empty.AddRange(registrations);
 		}
 
-		public HandlerRegister(HandlerRegister messageRegister, MessageRegistration registration)
+		public HandlerRegister(HandlerRegister handlerRegister, MessageRegistration registration)
 		{
-			this.registrations = messageRegister.registrations.Add(registration);
+			this.registrations = handlerRegister.registrations.Add(registration);
 		}
 
-		public HandlerRegister(HandlerRegister messageRegister, IEnumerable<MessageRegistration> registrations)
+		public HandlerRegister(HandlerRegister handlerRegister, IEnumerable<MessageRegistration> registrations)
 		{
-			this.registrations = messageRegister.registrations.AddRange(registrations);
+			this.registrations = handlerRegister.registrations.AddRange(registrations);
 		}
 
 		public ICommandBuilder<TCommand> RegisterCommand<TCommand>()

@@ -51,7 +51,7 @@
     <Compile Include="ICommandBuilder.cs" />
     <Compile Include="IEventBinder.cs" />
     <Compile Include="IEventBuilder.cs" />
-    <Compile Include="Implementation\MessageRegister.cs" />
+    <Compile Include="Implementation\HandlerRegister.cs" />
     <Compile Include="Implementation\MultipleDifferentPipelinesRegisteredException.cs" />
     <Compile Include="IQueryBuilder.cs" />
     <Compile Include="Implementation\QueryBuilder.cs" />

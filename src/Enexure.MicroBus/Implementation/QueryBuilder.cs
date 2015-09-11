@@ -6,46 +6,46 @@ namespace Enexure.MicroBus
 		where TQuery : IQuery<TQuery, TResult>
 		where TResult : IResult
 	{
-		private readonly HandlerRegister MessageRegister;
+		private readonly HandlerRegister handlerRegister;
 
-		public QueryBuilder(HandlerRegister MessageRegister)
+		public QueryBuilder(HandlerRegister handlerRegister)
 		{
-			this.MessageRegister = MessageRegister;
+			this.handlerRegister = handlerRegister;
 		}
 
-		public IMessageRegister To<TQueryHandler>() where TQueryHandler : IQueryHandler<TQuery, TResult>
+		public IHandlerRegister To<TQueryHandler>() where TQueryHandler : IQueryHandler<TQuery, TResult>
 		{
 			return To<TQueryHandler>(Pipeline.EmptyPipeline);
 		}
 
-		public IMessageRegister To<TQueryHandler>(Pipeline pipeline)
+		public IHandlerRegister To<TQueryHandler>(Pipeline pipeline)
 			where TQueryHandler : IQueryHandler<TQuery, TResult>
 		{
 			if (pipeline == null) throw new ArgumentNullException("pipeline");
 
-			return new HandlerRegister(MessageRegister, new MessageRegistration(typeof(TQuery), typeof(TQueryHandler), pipeline));
+			return new HandlerRegister(handlerRegister, new MessageRegistration(typeof(TQuery), typeof(TQueryHandler), pipeline));
 		}
 	}
 
 	public class QueryBuilder : IQueryBuilder
 	{
-		private readonly HandlerRegister MessageRegister;
+		private readonly HandlerRegister handlerRegister;
 		private readonly Type queryType;
 
-		public QueryBuilder(HandlerRegister MessageRegister, Type queryType)
+		public QueryBuilder(HandlerRegister handlerRegister, Type queryType)
 		{
-			this.MessageRegister = MessageRegister;
+			this.handlerRegister = handlerRegister;
 			this.queryType = queryType;
 		}
 
-		public IMessageRegister To(Type queryHandlerType)
+		public IHandlerRegister To(Type queryHandlerType)
 		{
 			return To(queryHandlerType, Pipeline.EmptyPipeline);
 		}
 
-		public IMessageRegister To(Type queryHandlerType, Pipeline pipeline)
+		public IHandlerRegister To(Type queryHandlerType, Pipeline pipeline)
 		{
-			return new HandlerRegister(MessageRegister, new MessageRegistration(queryType, queryHandlerType, pipeline));
+			return new HandlerRegister(handlerRegister, new MessageRegistration(queryType, queryHandlerType, pipeline));
 		}
 	}
 }

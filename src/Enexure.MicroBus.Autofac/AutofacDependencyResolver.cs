@@ -4,7 +4,7 @@ namespace Enexure.MicroBus.Autofac
 {
 	internal class AutofacDependencyResolver : IDependencyResolver
 	{
-		protected readonly ILifetimeScope lifetimeScope;
+		private readonly ILifetimeScope lifetimeScope;
 
 		public AutofacDependencyResolver(ILifetimeScope lifetimeScope)
 		{

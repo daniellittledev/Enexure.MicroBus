@@ -7,7 +7,7 @@ namespace Enexure.MicroBus.Sagas
 {
 	public static class BusBuilderExtensions
 	{
-		public static IMessageRegister RegisterSaga<TSaga, TSagaData>(this IMessageRegister MessageRegister, TSaga saga)
+		public static IHandlerRegister RegisterSaga<TSaga, TSagaData>(this IHandlerRegister handlerRegister, TSaga saga)
 			where TSaga : ISaga<TSagaData>
 			where TSagaData : class
 		{
@@ -18,7 +18,7 @@ namespace Enexure.MicroBus.Sagas
 
 			handleMethods.Select(x => x.GetParameters()[0].ParameterType);
 
-			return MessageRegister;
+			return handlerRegister;
 		}
 	}
 
