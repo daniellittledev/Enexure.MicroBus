@@ -78,7 +78,7 @@ function Invoke-MsBuild
 
 
 		# Get the path to the MsBuild executable.
-		$msBuildPath = Get-MsBuildPath
+		$msBuildPath = Get-MsBuildPath "14.0"
 	
 		$PropertiesArgument = ""
 		if ($MSBuildProperties -ne $null) {
