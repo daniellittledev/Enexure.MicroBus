@@ -14,7 +14,7 @@ namespace Enexure.MicroBus.Tests
 		[UsedImplicitly]
 		class CommandHandler : ICommandHandler<Command>
 		{
-			public Task Handle(Command command)
+			public Task Handle(Command Command)
 			{
 				return Task.FromResult(0);
 			}

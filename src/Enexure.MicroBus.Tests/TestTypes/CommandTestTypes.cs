@@ -5,33 +5,33 @@ namespace Enexure.MicroBus.Tests
 {
 	class CommandInterfaceHandler : ICommandHandler<ICommand>
 	{
-		public Task Handle(ICommand command)
+		public Task Handle(ICommand Command)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 
 	class CommandAHandler : ICommandHandler<CommandA>
 	{
-		public Task Handle(CommandA command)
+		public Task Handle(CommandA Command)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 
 	class OtherCommandAHandler : ICommandHandler<CommandA>
 	{
-		public Task Handle(CommandA command)
+		public Task Handle(CommandA Command)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 
 	class CommandBHandler : ICommandHandler<CommandB>
 	{
-		public Task Handle(CommandB command)
+		public Task Handle(CommandB Command)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 
@@ -39,7 +39,7 @@ namespace Enexure.MicroBus.Tests
 	{
 		public Task Handle(CommandC @event)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 

@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Enexure.MicroBus
 {
 	public class MessageRegistration
 	{
-		private readonly Type messageType;
-		private readonly Pipeline pipeline;
-		private readonly Type handler;
+		public MessageRegistration(Type messageType, Type handlerType)
+			: this(messageType, handlerType, Pipeline.EmptyPipeline)
+		{
+		}
 
 		public MessageRegistration(Type messageType, Type handlerType, Pipeline pipeline)
 		{
@@ -14,28 +18,35 @@ namespace Enexure.MicroBus
 			if (handlerType == null) throw new ArgumentNullException(nameof(handlerType));
 			if (pipeline == null) throw new ArgumentNullException(nameof(pipeline));
 
-			// TODO: messageType should implement IMessage
-			// TODO: handlerType should be a handler
+			if (!typeof(IMessage).IsAssignableFrom(messageType)) throw new ArgumentException($"Parameter {nameof(messageType)} must implement IMessage", nameof(messageType));
 
-			this.messageType = messageType;
-			this.pipeline = pipeline;
-			this.handler = handlerType;
+			if (typeof(ICommand).IsAssignableFrom(messageType)) {
+				GetValue(new[] { messageType }, messageType, handlerType, type => typeof(ICommandHandler<>).MakeGenericType(type));
+
+			} else if (typeof(IEvent).IsAssignableFrom(messageType)) {
+				GetValue(Messages.ExpandType(messageType).Where(x => x != typeof(IMessage)), messageType, handlerType, type => typeof(IEventHandler<>).MakeGenericType(type));
+
+			} else if (typeof(IQuery).IsAssignableFrom(messageType)) {
+
+				var genericArguments = messageType.GetInterfaces().Single(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IQuery<,>)).GetGenericArguments();
+				GetValue(new[] { messageType }, messageType, handlerType, type => typeof(IQueryHandler<,>).MakeGenericType(genericArguments));
+			}
+
+			this.MessageType = messageType;
+			this.Pipeline = pipeline;
+			this.Handler = handlerType;
 		}
 
-		public Type MessageType
+		private static void GetValue(IEnumerable<Type> possibleMessageTypes, Type messageType, Type handlerType, Func<Type, Type> messageToHandler)
 		{
-			get { return messageType; }
+			var anyMatchingHandlers = possibleMessageTypes.Select(messageToHandler).Any(possibleTypeMatch => possibleTypeMatch.IsAssignableFrom(handlerType));
+			if (!anyMatchingHandlers) throw new ArgumentException($"The handler {handlerType.FullName} cannot handle the message type {messageType.FullName}. Check that the handler implements the correct interface.", nameof(handlerType));
 		}
 
-		public Type Handler
-		{
-			get { return handler; }
-		}
+		public Type MessageType { get; }
 
-		public Pipeline Pipeline
-		{
-			get { return pipeline; }
-		}
+		public Type Handler { get; }
 
+		public Pipeline Pipeline { get; }
 	}
 }

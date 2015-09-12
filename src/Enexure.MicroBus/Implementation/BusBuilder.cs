@@ -24,7 +24,7 @@ namespace Enexure.MicroBus
 		public IMicroBus BuildBus(BusSettings busSettings)
 		{
 			var registrations = register(new HandlerRegister()).GetMessageRegistrations();
-			var handlerProvider = new HandlerProvider(registrations);
+			var handlerProvider = HandlerProvider.Create(registrations);
 			var pipelineBuilder = new PipelineBuilder(handlerProvider, busSettings);
 			var dependencyResolver = new DefaultDependencyResolver();
 

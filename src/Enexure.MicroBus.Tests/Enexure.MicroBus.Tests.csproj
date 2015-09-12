@@ -57,7 +57,13 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="CommandTestTypes.cs" />
+    <Compile Include="HandlerProviderTests\QueryHandlerProviderTests.cs" />
+    <Compile Include="MessageRegistrations\MessageExpandingTests.cs" />
+    <Compile Include="MessageRegistrations\CreateMessageRegistrationTests.cs" />
+    <Compile Include="PipelineTests\Class1.cs" />
+    <Compile Include="TestTypes\QueryTestTypes.cs" />
+    <Compile Include="TestTypes\CommandTestTypes.cs" />
+    <Compile Include="HandlerProviderTests\CommandHandlerProviderTests.cs" />
     <Compile Include="HandlerRegisterTests\RegisterQueryTests.cs" />
     <Compile Include="HandlerRegisterTests\RegisterEventTests.cs" />
     <Compile Include="HandlerRegisterTests\RegisterCommandTests.cs" />
@@ -66,7 +72,7 @@
     <Compile Include="BusCommandTests.cs" />
     <Compile Include="HandlerProviderTests\EventHandlerProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EventTestTypes.cs" />
+    <Compile Include="TestTypes\EventTestTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

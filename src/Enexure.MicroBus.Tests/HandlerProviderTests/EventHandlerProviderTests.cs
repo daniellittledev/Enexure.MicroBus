@@ -12,13 +12,13 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 		[Test]
 		public void NoRegistrationShouldBeFine()
 		{
-			var provider = new HandlerProvider(Enumerable.Empty<MessageRegistration>());
+			var provider = HandlerProvider.Create(Enumerable.Empty<MessageRegistration>());
 		}
 
 		[Test]
 		public void RetrievalOfAMessageThatWasNotRegistered()
 		{
-			var provider = new HandlerProvider(Enumerable.Empty<MessageRegistration>());
+			var provider = HandlerProvider.Create(Enumerable.Empty<MessageRegistration>());
 
 			GroupedMessageRegistration registration;
 			provider.GetRegistrationForMessage(typeof(EventA), out registration);
@@ -29,7 +29,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 		[Test]
 		public void BasicRegistrationAndRetrieval()
 		{
-			var provider = new HandlerProvider(new [] {
+			var provider = HandlerProvider.Create(new [] {
 				new MessageRegistration(typeof(EventA), typeof(EventAHandler), new Pipeline()), 
 			});
 
@@ -45,7 +45,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 		{
 			var pipeline = new Pipeline();
 
-			var provider = new HandlerProvider(new[] {
+			var provider = HandlerProvider.Create(new[] {
 				new MessageRegistration(typeof(EventA), typeof(EventAHandler), pipeline),
 				new MessageRegistration(typeof(EventA), typeof(OtherEventAHandler), pipeline),
 			});
@@ -62,7 +62,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 		{
 			var pipeline = new Pipeline();
 
-			var provider = new HandlerProvider(new[] {
+			var provider = HandlerProvider.Create(new[] {
 				new MessageRegistration(typeof(EventA), typeof(EventAHandler), pipeline),
 				new MessageRegistration(typeof(EventB), typeof(EventBHandler), pipeline),
 			});
@@ -79,7 +79,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 		{
 			var pipeline = new Pipeline();
 
-			var provider = new HandlerProvider(new[] {
+			var provider = HandlerProvider.Create(new[] {
 				new MessageRegistration(typeof(EventA), typeof(EventAHandler), pipeline),
 				new MessageRegistration(typeof(EventB), typeof(EventBHandler), pipeline),
 			});
@@ -96,7 +96,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 		{
 			var pipeline = new Pipeline();
 
-			var provider = new HandlerProvider(new[] {
+			var provider = HandlerProvider.Create(new[] {
 				new MessageRegistration(typeof(EventB), typeof(EventBHandler), pipeline),
 				new MessageRegistration(typeof(EventC), typeof(EventCHandler), pipeline),
 				new MessageRegistration(typeof(EventA), typeof(EventAHandler), pipeline),
@@ -114,7 +114,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 		[Test]
 		public void RegisteringTwoDifferentPipelinesShouldThrowAnException()
 		{
-			new Action(() => { new HandlerProvider(new[] {
+			new Action(() => { HandlerProvider.Create(new[] {
 					new MessageRegistration(typeof(EventA), typeof(EventAHandler), new Pipeline()),
 					new MessageRegistration(typeof(EventB), typeof(EventBHandler), new Pipeline()),
 				});

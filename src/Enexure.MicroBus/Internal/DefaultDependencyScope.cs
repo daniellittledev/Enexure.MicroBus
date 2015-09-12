@@ -12,7 +12,7 @@ namespace Enexure.MicroBus
 
 		public IEnumerable<object> GetServices(Type serviceType)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 
 		public void Dispose()

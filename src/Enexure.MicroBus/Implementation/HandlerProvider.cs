@@ -8,7 +8,17 @@ namespace Enexure.MicroBus
 	{
 		private readonly IDictionary<Type, GroupedMessageRegistration> registrationsLookup;
 
-		public HandlerProvider(IEnumerable<MessageRegistration> registrations)
+		private HandlerProvider(IDictionary<Type, GroupedMessageRegistration> registrations)
+		{
+			registrationsLookup = registrations;
+		}
+
+		public static HandlerProvider Create(IEnumerable<MessageRegistration> registrations)
+		{
+			return new HandlerProvider(GroupRegistrations(registrations));
+		}
+
+		private static Dictionary<Type, GroupedMessageRegistration> GroupRegistrations(IEnumerable<MessageRegistration> registrations)
 		{
 			var tempRegistrationsLookup = new Dictionary<Type, GroupedMessageRegistration>();
 
@@ -16,34 +26,47 @@ namespace Enexure.MicroBus
 
 			foreach (var group in groups) {
 
-				var pipelineGroups = @group
+				var messageType = group.Key.MessageType;
+				if (!typeof(IEvent).IsAssignableFrom(messageType) && group.Skip(1).Any()) {
+
+					if (typeof(ICommand).IsAssignableFrom(messageType)) {
+
+						throw new MultipleRegistrationsWithTheSameCommandException(messageType);
+					} else {
+
+						throw new MultipleRegistrationsWithTheSameQueryException(messageType);
+					}
+				}
+
+				var pipelineGroups = group
 					.GroupBy(x => x.Pipeline)
 					.ToList();
 
 				if (pipelineGroups.Count > 1) {
-					throw new MultipleDifferentPipelinesRegisteredException(group.Key.MessageType, pipelineGroups.Select(x=> x.Key).ToList());
+					throw new MultipleDifferentPipelinesRegisteredException(messageType, pipelineGroups.Select(x => x.Key).ToList());
 				}
 
 				var pipelineRegistrations = pipelineGroups
 					.Select(pipelineGroup => new GroupedMessageRegistration(pipelineGroup.Key, pipelineGroup.Select(x => x.Handler).ToArray()))
 					.ToList();
 
-				tempRegistrationsLookup.Add(group.Key.MessageType, pipelineRegistrations.Single());
+				tempRegistrationsLookup.Add(messageType, pipelineRegistrations.Single());
 			}
 
-			registrationsLookup = new Dictionary<Type, GroupedMessageRegistration>(tempRegistrationsLookup);
+			var registrationsLookup = new Dictionary<Type, GroupedMessageRegistration>(tempRegistrationsLookup);
 
 			foreach (var registration in tempRegistrationsLookup) {
-
 				var handlers = GetAllHandlers(tempRegistrationsLookup, registration.Key, registration.Value.Pipeline).ToList();
 
 				registrationsLookup[registration.Key] = new GroupedMessageRegistration(registration.Value.Pipeline, handlers);
 			}
+
+			return registrationsLookup;
 		}
 
-		private IEnumerable<Type> GetAllHandlers(Dictionary<Type, GroupedMessageRegistration> tempRegistrationsLookup, Type messageType, Pipeline pipeline)
+		private static IEnumerable<Type> GetAllHandlers(Dictionary<Type, GroupedMessageRegistration> tempRegistrationsLookup, Type messageType, Pipeline pipeline)
 		{
-			var types = GetAllBaseTypesAndInheritedInterfaces(messageType).Where(tempRegistrationsLookup.ContainsKey);
+			var types = Messages.ExpandType(messageType).Where(tempRegistrationsLookup.ContainsKey);
 			foreach (var type in types) {
 				var registration = tempRegistrationsLookup[type];
 
@@ -55,38 +78,6 @@ namespace Enexure.MicroBus
 					yield return handler;
 				}
 			}
-		}
-
-		private IEnumerable<Type> GetAllBaseTypesAndInheritedInterfaces(Type type)
-		{
-			foreach (var @interface in GetAllInterfaces(type)) {
-				yield return @interface;
-			}
-			foreach (var baseType in GetAllBaseTypes(type)) {
-				yield return baseType;
-			}
-		}
-
-		private IEnumerable<Type> GetAllInterfaces(Type type)
-		{
-			foreach (var @interface in type.GetInterfaces()) {
-				foreach (var result in GetAllInterfaces(@interface)) {
-					yield return result;
-				}
-			}
-			if (type.IsInterface) {
-				yield return type;
-			}
-		}
-
-		private IEnumerable<Type> GetAllBaseTypes(Type type)
-		{
-			if (type.BaseType != null) {
-				foreach (var baseType in GetAllBaseTypes(type.BaseType)) {
-					yield return baseType;
-				}
-			}
-			yield return type;
 		}
 
 		public bool GetRegistrationForMessage(Type commandType, out GroupedMessageRegistration registration)

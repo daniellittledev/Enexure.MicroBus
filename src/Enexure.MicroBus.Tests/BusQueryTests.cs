@@ -9,16 +9,12 @@ namespace Enexure.MicroBus.Tests
 	[TestFixture]
 	public class QueryTests
 	{
-		class Query : IQuery<Query, Result> { }
-
-		class Result : IResult { }
-
 		[UsedImplicitly]
-		class QueryHandler : IQueryHandler<Query, Result>
+		class QueryHandler : IQueryHandler<QueryA, ResultA>
 		{
-			public Task<Result> Handle(Query query)
+			public Task<ResultA> Handle(QueryA Query)
 			{
-				return Task.FromResult(new Result());
+				return Task.FromResult(new ResultA());
 			}
 		}
 
@@ -27,9 +23,9 @@ namespace Enexure.MicroBus.Tests
 		{
 			var bus = BusBuilder.BuildBus(b => b);
 
-			var func = (Func<Task>)(() => bus.Query(new Query()));
+			var func = (Func<Task>)(() => bus.Query(new QueryA()));
 
-			func.ShouldThrowExactly<NoRegistrationForMessageException>().WithMessage("No registration for message of type Query was found");
+			func.ShouldThrowExactly<NoRegistrationForMessageException>().WithMessage($"No registration for message of type {typeof(QueryA).Name} was found");
 		}
 
 
@@ -37,10 +33,10 @@ namespace Enexure.MicroBus.Tests
 		public async Task TestQuery()
 		{
 			var bus = BusBuilder.BuildBus(b => 
-				b.RegisterQuery<Query, Result>().To<QueryHandler>()
+				b.RegisterQuery<QueryA, ResultA>().To<QueryHandler>()
 			);
 
-			var result = await bus.Query(new Query());
+			var result = await bus.Query(new QueryA());
 
 			result.Should().NotBeNull();
 

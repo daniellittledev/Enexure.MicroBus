@@ -19,7 +19,7 @@ namespace Enexure.MicroBus.Autofac
 			var registrations = register.GetMessageRegistrations();
 
 			RegisterHandlersWithAutofac(containerBuilder, registrations);
-			var handlerProvider = new HandlerProvider(registrations);
+			var handlerProvider = HandlerProvider.Create(registrations);
 
 			containerBuilder.RegisterInstance(handlerProvider).As<IHandlerProvider>().SingleInstance();
 			containerBuilder.RegisterType<PipelineBuilder>().As<IPipelineBuilder>();

@@ -7,7 +7,7 @@ namespace Enexure.MicroBus.Tests
 	{
 		public Task Handle(IEvent @event)
 		{
-			throw new NotImplementedException();
+			throw new InvalidOperationException();
 		}
 	}
 
@@ -15,7 +15,7 @@ namespace Enexure.MicroBus.Tests
 	{
 		public Task Handle(EventA @event)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 
@@ -23,7 +23,7 @@ namespace Enexure.MicroBus.Tests
 	{
 		public Task Handle(EventA @event)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 
@@ -31,7 +31,7 @@ namespace Enexure.MicroBus.Tests
 	{
 		public Task Handle(EventB @event)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 
@@ -39,7 +39,7 @@ namespace Enexure.MicroBus.Tests
 	{
 		public Task Handle(EventC @event)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 	}
 
