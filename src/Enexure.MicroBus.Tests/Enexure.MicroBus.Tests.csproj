@@ -60,7 +60,7 @@
     <Compile Include="HandlerProviderTests\QueryHandlerProviderTests.cs" />
     <Compile Include="MessageRegistrations\MessageExpandingTests.cs" />
     <Compile Include="MessageRegistrations\CreateMessageRegistrationTests.cs" />
-    <Compile Include="PipelineTests\Class1.cs" />
+    <Compile Include="PipelineTests\PipelineTests.cs" />
     <Compile Include="TestTypes\QueryTestTypes.cs" />
     <Compile Include="TestTypes\CommandTestTypes.cs" />
     <Compile Include="HandlerProviderTests\CommandHandlerProviderTests.cs" />

@@ -63,10 +63,11 @@ namespace Enexure.MicroBus
 				yield break;
 			}
 
-			yield return head;
-			foreach (var elem in tail) {
+			foreach (var elem in tail)
+			{
 				yield return elem;
 			}
+			yield return head;
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
