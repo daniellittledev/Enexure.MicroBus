@@ -7,8 +7,7 @@ namespace Enexure.MicroBus.Autofac
 {
 	public static class ContainerExtensions
 	{
-		public static ContainerBuilder RegisterMicroBus(this ContainerBuilder containerBuilder,
-			Func<IHandlerRegister, IHandlerRegister> registerHandlers)
+		public static ContainerBuilder RegisterMicroBus(this ContainerBuilder containerBuilder, Func<IHandlerRegister, IHandlerRegister> registerHandlers)
 		{
 			return RegisterMicroBus(containerBuilder, registerHandlers, new BusSettings());
 		}
@@ -31,20 +30,15 @@ namespace Enexure.MicroBus.Autofac
 			return containerBuilder;
 		}
 
-		public static void RegisterHandlersWithAutofac(ContainerBuilder containerBuilder, IEnumerable<MessageRegistration> registrations)
+		public static void RegisterHandlersWithAutofac(ContainerBuilder containerBuilder, IReadOnlyCollection<MessageRegistration> registrations)
 		{
-			var pipelines = new List<Pipeline>();
+			var handlers = registrations.Select(x => x.Handler).Distinct();
+			var piplelineHandlers = registrations.Select(x => x.Pipeline).Distinct().SelectMany(x => x).Distinct();
 
-			foreach (var registration in registrations) {
-
-				if (!pipelines.Contains(registration.Pipeline)) {
-					pipelines.Add(registration.Pipeline);
-				}
-
-				containerBuilder.RegisterType(registration.Handler).AsSelf().InstancePerLifetimeScope();
+			foreach (var handlerType in handlers) {
+				containerBuilder.RegisterType(handlerType).AsSelf().InstancePerLifetimeScope();
 			}
 
-			var piplelineHandlers = pipelines.SelectMany(x => x).Distinct();
 			foreach (var piplelineHandler in piplelineHandlers) {
 				containerBuilder.RegisterType(piplelineHandler).AsSelf().AsImplementedInterfaces().InstancePerLifetimeScope();
 			}
