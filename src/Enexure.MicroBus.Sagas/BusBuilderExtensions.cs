@@ -1,64 +1,39 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Enexure.MicroBus.Sagas
 {
 	public static class BusBuilderExtensions
 	{
-		public static IHandlerRegister RegisterSaga<TSaga, TSagaData>(this IHandlerRegister handlerRegister, TSaga saga)
-			where TSaga : ISaga<TSagaData>
-			where TSagaData : class
+		public static IHandlerRegister RegisterSaga<TSaga>(this IHandlerRegister handlerRegister)
+			where TSaga : ISaga
 		{
+			var sagaType = typeof(TSaga);
+			return HandlerRegister(handlerRegister, sagaType);
+		}
 
-			// Register a special event handler that will delegate to the Saga
-			var sagaType = saga.GetType();
-			var handleMethods = sagaType.GetMethods(BindingFlags.Instance | BindingFlags.Public).Where(x => x.Name == "Handle");
+		public static IHandlerRegister RegisterSaga(this IHandlerRegister handlerRegister, Type sagaType)
+		{
+			var sagaInterfaces = sagaType.GetInterfaces().Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ISaga<>)).ToList();
 
-			handleMethods.Select(x => x.GetParameters()[0].ParameterType);
+			if (!sagaInterfaces.Any()) throw new ArgumentException("Type must implement ISaga<T>", nameof(sagaType));
+			if (sagaInterfaces.Count > 1) throw new ArgumentException("A Saga can only implement ISaga<T> once", nameof(sagaType));
+
+			return HandlerRegister(handlerRegister, sagaType);
+		}
+
+		private static IHandlerRegister HandlerRegister(IHandlerRegister handlerRegister, Type sagaType)
+		{
+			var eventTypes = sagaType.GetInterfaces().Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEventHandler<>)).Select(x => x.GetGenericArguments().First());
+
+			foreach (var eventType in eventTypes)
+			{
+				handlerRegister.RegisterEvent(eventType).To(typeof(SagaRunnerEventHandler<,>).MakeGenericType(sagaType, eventType));
+			}
 
 			return handlerRegister;
 		}
-	}
 
-	// Note: if we could register to IEvent this could be different
-	
-	// Register <IEvent>().To<GenericHandler>
-
-	// On lookup in HandlerRegistar step up through base types until IEvent and concat the handlers.
-
-	// Validation for each registration do the same thing, the pipeline should be the same.
-
-	// Also check the pipelines are the same when running.
-
-	public class SagaManagingEventHandler<TEvent> : IEventHandler<TEvent>
-		where TEvent : IEvent
-	{
-		private readonly ISagaRepository sagaRepository;
-
-		public SagaManagingEventHandler(ISagaRepository sagaRepository)
-		{
-			this.sagaRepository = sagaRepository;
-		}
-
-		public async Task Handle(TEvent @event)
-		{
-			// Get the Saga Type
-
-			// Get the Saga Instance
-
-			var saga = await sagaRepository.GetSagaForAsync(@event);
-			var sagaHandle = (IEventHandler<TEvent>)saga;
-
-			// Call the Handle Method for the event
-			await sagaHandle.Handle(@event);
-
-			// Update or Complete
-			if (saga.IsCompleted) {
-			}
-
-			throw new NotImplementedException();
-		}
 	}
 }

@@ -46,6 +46,7 @@
     <Compile Include="ISagaStartedBy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Saga.cs" />
+    <Compile Include="SagaRunnerEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.csproj">

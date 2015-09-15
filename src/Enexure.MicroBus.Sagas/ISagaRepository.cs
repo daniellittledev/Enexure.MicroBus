@@ -4,7 +4,7 @@ namespace Enexure.MicroBus.Sagas
 {
 	public interface ISagaRepository
 	{
-		Task<ISaga> GetSagaForAsync(IMessage message);
+		Task<ISaga> GetSagaForAsync<TSaga>(IEvent message);
 		Task UpdateAsync(ISaga saga);
 		Task CompleteAsync(ISaga saga);
 	}

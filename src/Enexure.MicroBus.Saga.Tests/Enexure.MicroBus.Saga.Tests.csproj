@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -57,6 +60,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Enexure.MicroBus.Autofac\Enexure.MicroBus.Autofac.csproj">
+      <Project>{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}</Project>
+      <Name>Enexure.MicroBus.Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.csproj">
+      <Project>{4BD15BDD-27E9-47E2-A693-D496E892949F}</Project>
+      <Name>Enexure.MicroBus.InfrastructureContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Enexure.MicroBus.Sagas\Enexure.MicroBus.Sagas.csproj">
+      <Project>{4462B366-3CB1-4070-9A0E-532CB45EF869}</Project>
+      <Name>Enexure.MicroBus.Sagas</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Enexure.MicroBus\Enexure.MicroBus.csproj">
+      <Project>{c9f49eca-a00f-48aa-8a23-a3bcffe40393}</Project>
+      <Name>Enexure.MicroBus</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
