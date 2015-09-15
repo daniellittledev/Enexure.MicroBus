@@ -63,6 +63,7 @@
     <Compile Include="BusCommandTests.cs" />
     <Compile Include="BusEventTests.cs" />
     <Compile Include="BusQueryTests.cs" />
+    <Compile Include="ScopesAndDisposeTests.cs" />
     <Compile Include="NestedBusCallsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

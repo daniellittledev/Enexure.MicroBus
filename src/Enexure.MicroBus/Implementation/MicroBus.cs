@@ -14,21 +14,21 @@ namespace Enexure.MicroBus
 			this.dependencyResolver = dependencyResolver;
 		}
 
-		public Task Send(ICommand busCommand)
+		public async Task Send(ICommand busCommand)
 		{
-			if (busCommand == null) throw new ArgumentNullException("busCommand");
+			if (busCommand == null) throw new ArgumentNullException(nameof(busCommand));
 
 			using (var scope = dependencyResolver.BeginScope()) {
-				return registrations.GetPipelineForMessage(scope, busCommand.GetType())(busCommand);
+				await (registrations.GetPipelineForMessage(scope, busCommand.GetType())(busCommand));
 			}
 		}
 
-		public Task Publish(IEvent busEvent)
+		public async Task Publish(IEvent busEvent)
 		{
-			if (busEvent == null) throw new ArgumentNullException("busEvent");
+			if (busEvent == null) throw new ArgumentNullException(nameof(busEvent));
 
 			using (var scope = dependencyResolver.BeginScope()) {
-				return registrations.GetPipelineForMessage(scope, busEvent.GetType())(busEvent);
+				await (registrations.GetPipelineForMessage(scope, busEvent.GetType())(busEvent));
 			}
 		}
 
@@ -36,11 +36,11 @@ namespace Enexure.MicroBus
 			where TQuery : IQuery<TQuery, TResult>
 			where TResult : IResult
 		{
-			if (busQuery == null) throw new ArgumentNullException("busQuery");
+			if (busQuery == null) throw new ArgumentNullException(nameof(busQuery));
 
 			using (var scope = dependencyResolver.BeginScope()) {
 				var result = await registrations.GetPipelineForMessage(scope, busQuery.GetType())((TQuery)busQuery);
-			    return (TResult) result;
+				return (TResult) result;
 			}
 		}
 	}
