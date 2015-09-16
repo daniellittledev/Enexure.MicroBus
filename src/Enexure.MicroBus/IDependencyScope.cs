@@ -8,5 +8,9 @@ namespace Enexure.MicroBus
 		object GetService(Type serviceType);
 
 		IEnumerable<object> GetServices(Type serviceType);
+
+		T GetService<T>();
+
+		IEnumerable<T> GetServices<T>();
 	}
 }

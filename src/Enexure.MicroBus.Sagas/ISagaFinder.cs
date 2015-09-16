@@ -1,9 +1,11 @@
-﻿namespace Enexure.MicroBus.Sagas
+﻿using System.Threading.Tasks;
+
+namespace Enexure.MicroBus.Sagas
 {
-	public interface ISagaFinder<TData, in TMessage>
+	public interface ISagaFinder<TSaga, in TMessage>
 		where TMessage : IMessage
-		where TData : class
+		where TSaga : ISaga
 	{
-		ISaga<TData> FindBy(TMessage message);
+		Task<TSaga> FindByAsync(TMessage message);
 	}
 }

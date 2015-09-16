@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Autofac;
 using Enexure.MicroBus.Autofac;
 using Enexure.MicroBus.Sagas;
@@ -10,12 +9,6 @@ namespace Enexure.MicroBus.Saga.Tests
 	[TestFixture]
 	public class RegisterSagaTests
 	{
-		private class TestSaga : ISaga
-		{
-			public Guid Id { get; protected set;  }
-			public bool IsCompleted { get; protected set; }
-		}
-
 		[Test]
 		public void RegisterSaga()
 		{

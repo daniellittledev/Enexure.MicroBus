@@ -26,6 +26,16 @@ namespace Enexure.MicroBus.Autofac
 			return ((IEnumerable)lifetimeScope.Resolve(typeof(IEnumerable<>).MakeGenericType(serviceType))).Cast<object>();
 		}
 
+		public T GetService<T>()
+		{
+			return (T)GetService(typeof(T));
+		}
+
+		public IEnumerable<T> GetServices<T>()
+		{
+			return (IEnumerable<T>)GetService(typeof(IEnumerable<T>));
+		}
+
 		public void Dispose()
 		{
 			lifetimeScope.Dispose();

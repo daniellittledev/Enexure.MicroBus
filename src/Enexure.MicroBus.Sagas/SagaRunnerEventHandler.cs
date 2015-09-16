@@ -15,7 +15,7 @@ namespace Enexure.MicroBus.Sagas
 
 		public async Task Handle(TEvent @event)
 		{
-			var saga = await sagaRepository.GetSagaForAsync<TSaga>(@event);
+			var saga = await sagaRepository.GetSagaForAsync<TSaga, TEvent>(@event);
 
 			// ReSharper disable once SuspiciousTypeConversion.Global
 			var sagaHandle = (IEventHandler<TEvent>)saga;

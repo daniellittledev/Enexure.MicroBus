@@ -57,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterSagaTests.cs" />
     <Compile Include="StartSagaTests.cs" />
+    <Compile Include="TestSaga.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

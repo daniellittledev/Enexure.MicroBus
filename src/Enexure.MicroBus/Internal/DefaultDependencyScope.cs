@@ -15,6 +15,16 @@ namespace Enexure.MicroBus
 			throw new NotSupportedException();
 		}
 
+		public T GetService<T>()
+		{
+			return (T)GetService(typeof(T));
+		}
+
+		public IEnumerable<T> GetServices<T>()
+		{
+			return (IEnumerable<T>)GetService(typeof(IEnumerable<T>));
+		}
+
 		public void Dispose()
 		{
 		}
