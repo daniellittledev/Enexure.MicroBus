@@ -2,10 +2,10 @@
 
 namespace Enexure.MicroBus.Sagas
 {
-	public interface ISagaFinder<TSaga, in TMessage>
-		where TMessage : IMessage
+	public interface ISagaFinder<TSaga, in TEvent>
+		where TEvent : IEvent
 		where TSaga : ISaga
 	{
-		Task<TSaga> FindByAsync(TMessage message);
+		Task<TSaga> FindByAsync(TEvent message);
 	}
 }

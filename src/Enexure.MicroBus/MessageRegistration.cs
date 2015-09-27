@@ -13,10 +13,17 @@ namespace Enexure.MicroBus
 		}
 
 		public MessageRegistration(Type messageType, Type handlerType, Pipeline pipeline)
+			: this(messageType, handlerType, pipeline, new Type[] { }, new Type[] { })
+		{
+		}
+
+		public MessageRegistration(Type messageType, Type handlerType, Pipeline pipeline, IReadOnlyCollection<Type> dependancies, IReadOnlyCollection<Type> scopedDependancies)
 		{
 			if (messageType == null) throw new ArgumentNullException(nameof(messageType));
 			if (handlerType == null) throw new ArgumentNullException(nameof(handlerType));
 			if (pipeline == null) throw new ArgumentNullException(nameof(pipeline));
+			if (dependancies == null) throw new ArgumentNullException(nameof(dependancies));
+			if (scopedDependancies == null) throw new ArgumentNullException(nameof(scopedDependancies));
 
 			if (!typeof(IMessage).IsAssignableFrom(messageType)) throw new ArgumentException($"Parameter {nameof(messageType)} must implement IMessage", nameof(messageType));
 
@@ -35,6 +42,9 @@ namespace Enexure.MicroBus
 			this.MessageType = messageType;
 			this.Pipeline = pipeline;
 			this.Handler = handlerType;
+
+			Dependancies = dependancies;
+			ScopedDependancies = scopedDependancies;
 		}
 
 		private static void GetValue(IEnumerable<Type> possibleMessageTypes, Type messageType, Type handlerType, Func<Type, Type> messageToHandler)
@@ -48,5 +58,9 @@ namespace Enexure.MicroBus
 		public Type Handler { get; }
 
 		public Pipeline Pipeline { get; }
+
+		public IReadOnlyCollection<Type> Dependancies { get; }
+
+		public IReadOnlyCollection<Type> ScopedDependancies { get; }
 	}
 }

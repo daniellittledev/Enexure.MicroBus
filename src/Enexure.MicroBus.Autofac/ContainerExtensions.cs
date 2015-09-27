@@ -35,12 +35,33 @@ namespace Enexure.MicroBus.Autofac
 			var handlers = registrations.Select(x => x.Handler).Distinct();
 			var piplelineHandlers = registrations.Select(x => x.Pipeline).Distinct().SelectMany(x => x).Distinct();
 
-			foreach (var handlerType in handlers) {
+			foreach (var handlerType in handlers)
+			{
 				containerBuilder.RegisterType(handlerType).AsSelf().InstancePerLifetimeScope();
 			}
 
-			foreach (var piplelineHandler in piplelineHandlers) {
+			foreach (var piplelineHandler in piplelineHandlers)
+			{
 				containerBuilder.RegisterType(piplelineHandler).AsSelf().AsImplementedInterfaces().InstancePerLifetimeScope();
+			}
+
+			foreach (var registration in registrations)
+			{
+				if (registration.Dependancies.Any())
+				{
+					foreach (var dependancy in registration.Dependancies)
+					{
+						containerBuilder.RegisterType(dependancy).AsSelf();
+					}
+				}
+
+				if (registration.ScopedDependancies.Any())
+				{
+					foreach (var dependancy in registration.ScopedDependancies)
+					{
+						containerBuilder.RegisterType(dependancy).AsSelf().InstancePerLifetimeScope();
+					}
+				}
 			}
 		}
 	}

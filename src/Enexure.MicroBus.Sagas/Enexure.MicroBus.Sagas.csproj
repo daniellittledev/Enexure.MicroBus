@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusBuilderExtensions.cs" />
-    <Compile Include="InMemory\InMemoryRepository.cs" />
+    <Compile Include="Repositories\InMemoryRepository.cs" />
     <Compile Include="ISaga.cs" />
     <Compile Include="ISagaFinder.cs" />
     <Compile Include="ISagaRepository.cs" />

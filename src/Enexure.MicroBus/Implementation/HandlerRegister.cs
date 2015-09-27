@@ -66,5 +66,9 @@ namespace Enexure.MicroBus
 			return registrations;
 		}
 
+		public IHandlerRegister RegisterMessage(MessageRegistration messageRegistration)
+		{
+			return new HandlerRegister(this, messageRegistration);
+		}
 	}
 }

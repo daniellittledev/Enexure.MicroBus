@@ -21,6 +21,8 @@ namespace Enexure.MicroBus
 
 		IQueryBuilder RegisterQuery(Type type);
 
+		IHandlerRegister RegisterMessage(MessageRegistration messageRegistration);
+
 
 		IReadOnlyCollection<MessageRegistration> GetMessageRegistrations();
 
