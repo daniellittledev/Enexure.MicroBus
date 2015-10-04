@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Enexure.MicroBus.Sagas;
 using Enexure.MicroBus.Sagas.Repositories;
-using System.Linq;
 
 namespace Enexure.MicroBus.Saga.Tests
 {
@@ -11,7 +10,7 @@ namespace Enexure.MicroBus.Saga.Tests
 		public Guid Id { get; protected set; }
 		public bool IsCompleted { get; protected set; }
 
-		public Task Handle(SagaEndingEvent @event)
+		public Task Handle(SagaStartingAEvent @event)
 		{
 			Id = @event.Identifier;
 
@@ -25,9 +24,9 @@ namespace Enexure.MicroBus.Saga.Tests
 			return Task.FromResult(0);
 		}
 
-		public Task Handle(SagaStartingAEvent @event)
+		public Task Handle(SagaEndingEvent @event)
 		{
-			IsCompleted = true;
+			IsCompleted = true; 
 
 			return Task.FromResult(0);
 		}
@@ -35,45 +34,45 @@ namespace Enexure.MicroBus.Saga.Tests
 
 	public class FinderA : ISagaFinder<TestSaga, SagaStartingAEvent>
 	{
-		private readonly InMemorySagaStore store;
+		private readonly ISagaStore store;
 
-		public FinderA(InMemorySagaStore store)
+		public FinderA(ISagaStore store)
 		{
 			this.store = store;
 		}
 
 		public Task<TestSaga> FindByAsync(SagaStartingAEvent message)
 		{
-			return Task.FromResult((TestSaga)store.Sagas.SingleOrDefault(x => x.Id == message.Identifier));
+			return Task.FromResult((TestSaga)store.Get(message.Identifier));
 		}
 	}
 
 	public class FinderB : ISagaFinder<TestSaga, SagaStartingBEvent>
 	{
-		private readonly InMemorySagaStore store;
+		private readonly ISagaStore store;
 
-		public FinderB(InMemorySagaStore store)
+		public FinderB(ISagaStore store)
 		{
 			this.store = store;
 		}
 
 		public Task<TestSaga> FindByAsync(SagaStartingBEvent message)
 		{
-			return Task.FromResult((TestSaga)store.Sagas.SingleOrDefault(x => x.Id == message.Identifier));
+			return Task.FromResult((TestSaga)store.Find(x => x.Id == message.Identifier));
 		}
 	}
 	public class FinderC : ISagaFinder<TestSaga, SagaEndingEvent>
 	{
-		private readonly InMemorySagaStore store;
+		private readonly ISagaStore store;
 
-		public FinderC(InMemorySagaStore store)
+		public FinderC(ISagaStore store)
 		{
 			this.store = store;
 		}
 
 		public Task<TestSaga> FindByAsync(SagaEndingEvent message)
 		{
-			return Task.FromResult((TestSaga)store.Sagas.SingleOrDefault(x => x.Id == message.Identifier));
+			return Task.FromResult((TestSaga)store.Find(x => x.Id == message.Identifier));
 		}
 	}
 

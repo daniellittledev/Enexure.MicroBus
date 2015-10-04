@@ -1,27 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Enexure.MicroBus.Sagas.Repositories
 {
-	public class InMemorySagaStore
-	{
-		// TODO Should be a dictionary of ISagaData
-
-		public InMemorySagaStore()
-		{
-			Sagas = new List<ISaga>();
-		}
-
-		public IList<ISaga> Sagas { get; set; }
-	}
-
 	public class InMemoryRepository : ISagaRepository
 	{
-		private readonly InMemorySagaStore sagaStore;
+		private readonly ISagaStore sagaStore;
 		private readonly IDependencyScope scope;
 
-		public InMemoryRepository(InMemorySagaStore sagaStore, IDependencyScope scope)
+		public InMemoryRepository(ISagaStore sagaStore, IDependencyScope scope)
 		{
 			this.sagaStore = sagaStore;
 			this.scope = scope;
@@ -35,23 +21,27 @@ namespace Enexure.MicroBus.Sagas.Repositories
 
 			var finder = scope.GetService<ISagaFinder<TSaga, TEvent>>();
 
-			var saga = finder != null ? await finder.FindByAsync(message) : default(TSaga);
+			if (finder == null && !isStartable) {
+				throw new NoSagaFinderIsRegisteredForNonStartingEventException(typeof(TSaga), typeof(TEvent));
+			}
 
-			if (saga == null) {
-				if (isStartable) {
-					saga = scope.GetService<TSaga>();
-					sagaStore.Sagas.Add(saga);
-					return saga;
-				}
+			if (finder == null) {
+				return null;
+			}
 
-				if (finder == null) {
-					throw new NoSagaFinderIsRegisteredForNonStartingEventException(typeof(TSaga), typeof(TEvent));
-				}
+			var saga = await finder.FindByAsync(message);
 
+			if (saga == null && !isStartable) {
 				throw new NoSagaFoundForNonStartingEventException(typeof(TSaga), typeof(TEvent));
 			}
 
 			return saga;
+		}
+
+		public Task CreateAsync(ISaga saga)
+		{
+			sagaStore.Add(saga);
+			return Task.FromResult(0);
 		}
 
 		public Task UpdateAsync(ISaga saga)
@@ -62,25 +52,10 @@ namespace Enexure.MicroBus.Sagas.Repositories
 
 		public Task CompleteAsync(ISaga saga)
 		{
-			sagaStore.Sagas.Remove(saga);
+			sagaStore.Remove(saga);
 
 			return Task.FromResult(0);
 		}
 	}
 
-	public class NoSagaFoundForNonStartingEventException : Exception
-	{
-		public NoSagaFoundForNonStartingEventException(Type type, Type type1)
-		{
-			throw new NotImplementedException();
-		}
-	}
-
-	public class NoSagaFinderIsRegisteredForNonStartingEventException : Exception
-	{
-		public NoSagaFinderIsRegisteredForNonStartingEventException(Type type, Type type1)
-		{
-			throw new NotImplementedException();
-		}
-	}
 }

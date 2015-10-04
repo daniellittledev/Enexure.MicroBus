@@ -8,7 +8,7 @@ namespace Enexure.MicroBus.Sagas.Autofac
 		public static ContainerBuilder RegisterSagas(this ContainerBuilder containerBuilder)
 		{
 			containerBuilder.RegisterType<InMemoryRepository>().As<ISagaRepository>().InstancePerLifetimeScope();
-			containerBuilder.RegisterType<InMemorySagaStore>().AsSelf().SingleInstance();
+			containerBuilder.RegisterType<InMemorySagaStore>().As<ISagaStore>().SingleInstance();
 
 			return containerBuilder;
 		}

@@ -59,7 +59,7 @@ namespace Enexure.MicroBus.Autofac
 				{
 					foreach (var dependancy in registration.ScopedDependancies)
 					{
-						containerBuilder.RegisterType(dependancy).AsSelf().InstancePerLifetimeScope();
+						containerBuilder.RegisterType(dependancy).AsSelf().AsImplementedInterfaces().InstancePerLifetimeScope();
 					}
 				}
 			}

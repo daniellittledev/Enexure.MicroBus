@@ -10,16 +10,16 @@ namespace Enexure.MicroBus.Sagas
 		public static IHandlerRegister RegisterSaga<TSaga>(this IHandlerRegister handlerRegister)
 			where TSaga : ISaga
 		{
-			return handlerRegister.RegisterSaga<TSaga>(Pipeline.EmptyPipeline, SagaFinders.Empty);
+			return handlerRegister.RegisterSaga<TSaga>(Pipeline.EmptyPipeline, FinderList.Empty);
 		}
 
-		public static IHandlerRegister RegisterSaga<TSaga>(this IHandlerRegister handlerRegister, SagaFinders sagaFinders)
+		public static IHandlerRegister RegisterSaga<TSaga>(this IHandlerRegister handlerRegister, FinderList sagaFinders)
 			where TSaga : ISaga
 		{
 			return handlerRegister.RegisterSaga<TSaga>(Pipeline.EmptyPipeline, sagaFinders);
 		}
 
-		public static IHandlerRegister RegisterSaga<TSaga>(this IHandlerRegister handlerRegister, Pipeline pipeline, SagaFinders sagaFinders)
+		public static IHandlerRegister RegisterSaga<TSaga>(this IHandlerRegister handlerRegister, Pipeline pipeline, FinderList sagaFinders)
 			where TSaga : ISaga
 		{
 			var sagaType = typeof(TSaga);
@@ -28,15 +28,15 @@ namespace Enexure.MicroBus.Sagas
 
 		public static IHandlerRegister RegisterSaga(this IHandlerRegister handlerRegister, Type sagaType, Pipeline pipeline)
 		{
-			return HandlerRegister(handlerRegister, sagaType, pipeline, SagaFinders.Empty);
+			return HandlerRegister(handlerRegister, sagaType, pipeline, FinderList.Empty);
 		}
 
-		public static IHandlerRegister RegisterSaga(this IHandlerRegister handlerRegister, Type sagaType, SagaFinders sagaFinders)
+		public static IHandlerRegister RegisterSaga(this IHandlerRegister handlerRegister, Type sagaType, FinderList sagaFinders)
 		{
 			return handlerRegister.RegisterSaga(sagaType, Pipeline.EmptyPipeline, sagaFinders);
 		}
 
-		public static IHandlerRegister RegisterSaga(this IHandlerRegister handlerRegister, Type sagaType, Pipeline pipeline, SagaFinders sagaFinders)
+		public static IHandlerRegister RegisterSaga(this IHandlerRegister handlerRegister, Type sagaType, Pipeline pipeline, FinderList sagaFinders)
 		{
 			var sagaInterfaces = sagaType.GetInterfaces().Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ISaga<>)).ToList();
 
@@ -46,7 +46,7 @@ namespace Enexure.MicroBus.Sagas
 			return HandlerRegister(handlerRegister, sagaType, pipeline, sagaFinders);
 		}
 
-		private static IHandlerRegister HandlerRegister(IHandlerRegister handlerRegister, Type sagaType, Pipeline pipeline, SagaFinders sagaFinders)
+		private static IHandlerRegister HandlerRegister(IHandlerRegister handlerRegister, Type sagaType, Pipeline pipeline, FinderList sagaFinders)
 		{
 			var eventTypes = sagaType.GetInterfaces()
 				.Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEventHandler<>))
@@ -67,15 +67,17 @@ namespace Enexure.MicroBus.Sagas
 
 	}
 
-	public class SagaFinders : IEnumerable<Type>
+	public class FinderList : IEnumerable<Type>
 	{
 		List<Type> sagaFinders = new List<Type>();
 
-		public static SagaFinders Empty { get {
-				return new SagaFinders();
-			} }
+		public static FinderList Empty {
+			get {
+				return new FinderList();
+			}
+		}
 
-		public void AddSagaFinder<TSagaFinder>()
+		public FinderList AddSagaFinder<TSagaFinder>()
 		{
 			var isActuallyASagaFinder = typeof(TSagaFinder)
 				.GetInterfaces()
@@ -88,6 +90,8 @@ namespace Enexure.MicroBus.Sagas
 			}
 
 			sagaFinders.Add(typeof(TSagaFinder));
+
+			return this;
 		}
 
 		public IEnumerator<Type> GetEnumerator()
