@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Enexure.MicroBus
 {
@@ -26,5 +27,6 @@ namespace Enexure.MicroBus
 
 		IReadOnlyCollection<MessageRegistration> GetMessageRegistrations();
 
+		IHandlerRegister RegisterTypes(Func<Type, bool> predicate, Pipeline pipeline, params Assembly[] assemblies);
 	}
 }

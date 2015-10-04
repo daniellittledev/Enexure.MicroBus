@@ -63,6 +63,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BusCommandTests.cs" />
+    <Compile Include="AutofacTypeScannerTests.cs" />
     <Compile Include="BusEventTests.cs" />
     <Compile Include="BusQueryTests.cs" />
     <Compile Include="ScopesAndDisposeTests.cs" />
