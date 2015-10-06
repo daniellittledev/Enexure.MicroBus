@@ -3,51 +3,52 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Enexure.MicroBus.Sagas.Repositories
 {
-	public class InMemorySagaStore : ISagaStore
+	public class InMemorySagaRepository : ISagaRepository
 	{
 		private readonly IDictionary<Guid, ISaga> sagas;
 
-		public InMemorySagaStore()
+		public InMemorySagaRepository()
 		{
 			sagas = new Dictionary<Guid, ISaga>();
 		}
 
-		public void Add(ISaga saga)
+		public Task CreateAsync(ISaga saga)
 		{
 			sagas.Add(saga.Id, saga);
+
+			return Task.FromResult(0);
 		}
 
-		public void Remove(ISaga saga)
+		public Task UpdateAsync(ISaga saga)
+		{
+			return Task.FromResult(0);
+		}
+
+		public Task CompleteAsync(ISaga saga)
 		{
 			sagas.Remove(saga.Id);
+
+			return Task.FromResult(0);
 		}
 
-		public IEnumerator<ISaga> GetEnumerator()
-		{
-			return sagas.Values.GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return sagas.Values.GetEnumerator();
-		}
-
-		public ISaga Get(Guid sagaId)
+		public Task<ISaga> GetAsync(Guid sagaId)
 		{
 			ISaga saga;
 			if (sagas.TryGetValue(sagaId, out saga)) {
-				return saga;
+				return Task.FromResult(saga);
 			}
 
-			return null;
+			return Task.FromResult<ISaga>(null);
 		}
 
-		public ISaga Find(Expression<Func<ISaga, bool>> predicate)
+		public Task<ISaga> FindAsync(Expression<Func<ISaga, bool>> predicate)
 		{
-			return sagas.Values.AsQueryable().SingleOrDefault(predicate);
+			return Task.FromResult(sagas.Values.AsQueryable().SingleOrDefault(predicate));
 		}
+
 	}
 }

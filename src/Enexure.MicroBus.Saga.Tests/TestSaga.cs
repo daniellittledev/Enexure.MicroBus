@@ -34,45 +34,45 @@ namespace Enexure.MicroBus.Saga.Tests
 
 	public class FinderA : ISagaFinder<TestSaga, SagaStartingAEvent>
 	{
-		private readonly ISagaStore store;
+		private readonly ISagaRepository store;
 
-		public FinderA(ISagaStore store)
+		public FinderA(ISagaRepository store)
 		{
 			this.store = store;
 		}
 
-		public Task<TestSaga> FindByAsync(SagaStartingAEvent message)
+		public async Task<TestSaga> FindByAsync(SagaStartingAEvent message)
 		{
-			return Task.FromResult((TestSaga)store.Get(message.Identifier));
+			return (TestSaga) await store.GetAsync(message.Identifier);
 		}
 	}
 
 	public class FinderB : ISagaFinder<TestSaga, SagaStartingBEvent>
 	{
-		private readonly ISagaStore store;
+		private readonly ISagaRepository store;
 
-		public FinderB(ISagaStore store)
+		public FinderB(ISagaRepository store)
 		{
 			this.store = store;
 		}
 
-		public Task<TestSaga> FindByAsync(SagaStartingBEvent message)
+		public async Task<TestSaga> FindByAsync(SagaStartingBEvent message)
 		{
-			return Task.FromResult((TestSaga)store.Find(x => x.Id == message.Identifier));
+			return (TestSaga) await store.FindAsync(x => x.Id == message.Identifier);
 		}
 	}
 	public class FinderC : ISagaFinder<TestSaga, SagaEndingEvent>
 	{
-		private readonly ISagaStore store;
+		private readonly ISagaRepository store;
 
-		public FinderC(ISagaStore store)
+		public FinderC(ISagaRepository store)
 		{
 			this.store = store;
 		}
 
-		public Task<TestSaga> FindByAsync(SagaEndingEvent message)
+		public async Task<TestSaga> FindByAsync(SagaEndingEvent message)
 		{
-			return Task.FromResult((TestSaga)store.Find(x => x.Id == message.Identifier));
+			return (TestSaga) await store.FindAsync(x => x.Id == message.Identifier);
 		}
 	}
 

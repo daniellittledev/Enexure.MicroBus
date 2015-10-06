@@ -7,15 +7,21 @@ namespace Enexure.MicroBus.Sagas.Autofac
 	{
 		public static ContainerBuilder RegisterSagas(this ContainerBuilder containerBuilder)
 		{
-			containerBuilder.RegisterType<InMemoryRepository>().As<ISagaRepository>().InstancePerLifetimeScope();
-			containerBuilder.RegisterType<InMemorySagaStore>().As<ISagaStore>().SingleInstance();
+			containerBuilder
+				.RegisterType<InMemorySagaRepository>()
+				.As<ISagaRepository>()
+				.SingleInstance();
 
 			return containerBuilder;
 		}
 
 		public static ContainerBuilder RegisterSagaFinder<TSagaFinder>(this ContainerBuilder containerBuilder)
 		{
-			containerBuilder.RegisterType(typeof(TSagaFinder)).AsImplementedInterfaces().InstancePerLifetimeScope();
+			containerBuilder
+				.RegisterType<TSagaFinder>()
+				.AsImplementedInterfaces()
+				.InstancePerLifetimeScope();
+
 			return containerBuilder;
 		}
 	}

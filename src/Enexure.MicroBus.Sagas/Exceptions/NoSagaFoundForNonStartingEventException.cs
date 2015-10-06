@@ -2,9 +2,9 @@
 
 namespace Enexure.MicroBus.Sagas
 {
-	public class NoSagaFoundForNonStartingEventException : Exception
+	public class NoSagaFoundException : Exception
 	{
-		public NoSagaFoundForNonStartingEventException(Type sagaType, Type eventType)
+		public NoSagaFoundException(Type sagaType, Type eventType)
 			: base($"The event {eventType.FullName} cannot start the saga {sagaType.FullName}")
 		{
 		}

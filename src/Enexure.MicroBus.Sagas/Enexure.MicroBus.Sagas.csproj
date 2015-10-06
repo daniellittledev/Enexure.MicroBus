@@ -44,8 +44,6 @@
     <Compile Include="Exceptions\NoSagaFoundForNonStartingEventException.cs" />
     <Compile Include="Exceptions\SagaNotFoundException.cs" />
     <Compile Include="Repositories\InMemorySagaStore.cs" />
-    <Compile Include="IInMemorySagaStore.cs" />
-    <Compile Include="Repositories\InMemoryRepository.cs" />
     <Compile Include="ISaga.cs" />
     <Compile Include="ISagaFinder.cs" />
     <Compile Include="ISagaRepository.cs" />

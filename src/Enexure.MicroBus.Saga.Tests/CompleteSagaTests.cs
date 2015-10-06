@@ -76,7 +76,7 @@ namespace Enexure.MicroBus.Saga.Tests
 
 			Func<Task> func = () => bus.Publish(new SagaEndingEvent() { Identifier = id });
 
-			func.ShouldThrowExactly<NoSagaFoundForNonStartingEventException>();
+			func.ShouldThrowExactly<NoSagaFoundException>();
 
 		}
 

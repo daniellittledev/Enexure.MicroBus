@@ -17,7 +17,7 @@ namespace Enexure.MicroBus.Sagas
 
 		public async Task Handle(TEvent @event)
 		{
-			var saga = await sagaRepository.GetSagaForAsync<TSaga, TEvent>(@event);
+			var saga = await GetSagaForAsync(@event);
 			var isNew = (saga == null);
 
 			if (isNew) {
@@ -26,7 +26,6 @@ namespace Enexure.MicroBus.Sagas
 
 			// ReSharper disable once SuspiciousTypeConversion.Global
 			var sagaHandle = (IEventHandler<TEvent>)saga;
-
 			await sagaHandle.Handle(@event);
 
 			if (isNew) {
@@ -38,6 +37,32 @@ namespace Enexure.MicroBus.Sagas
 			} else {
 				await sagaRepository.UpdateAsync(saga);
 			}
+		}
+
+		private async Task<ISaga> GetSagaForAsync(TEvent message)
+		{
+			var isStartable = typeof(ISagaStartedBy<TEvent>).IsAssignableFrom(typeof(TSaga));
+
+			var finder = scope.GetService<ISagaFinder<TSaga, TEvent>>();
+
+			if (finder == null && !isStartable)
+			{
+				throw new NoSagaFinderRegisteredException(typeof(TSaga), typeof(TEvent));
+			}
+
+			if (finder == null)
+			{
+				return null;
+			}
+
+			var saga = await finder.FindByAsync(message);
+
+			if (saga == null && !isStartable)
+			{
+				throw new NoSagaFoundException(typeof(TSaga), typeof(TEvent));
+			}
+
+			return saga;
 		}
 	}
 }
