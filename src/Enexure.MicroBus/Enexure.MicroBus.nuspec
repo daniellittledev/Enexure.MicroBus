@@ -12,8 +12,8 @@
     <description>$description$</description>
     <tags>MicroBus Bus Mediator</tags>
     <dependencies>
-      <dependency id="Enexure.MicroBus.MessageContracts" version="1.1.0" />
-      <dependency id="Enexure.MicroBus.InfrastructureContracts" version="2.0.0" />
+      <dependency id="Enexure.MicroBus.MessageContracts" version="1.6.0" />
+      <dependency id="Enexure.MicroBus.InfrastructureContracts" version="2.6.0" />
     </dependencies>
   </metadata>
 </package>
