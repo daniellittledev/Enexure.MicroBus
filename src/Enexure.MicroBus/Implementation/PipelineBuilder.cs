@@ -38,8 +38,7 @@ namespace Enexure.MicroBus
 					var runner = GetPipelineForMessage(scope, typeof(NoMatchingRegistrationEvent));
 
 					return message => {
-						runner(new NoMatchingRegistrationEvent(message));
-						throw new NoRegistrationForMessageException(messageType);
+						return runner(new NoMatchingRegistrationEvent(message));
 					};
 
 				} catch (NoRegistrationForMessageException) {
