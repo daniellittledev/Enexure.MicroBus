@@ -13,15 +13,17 @@ namespace Enexure.MicroBus
 {
 	public class PipelineBuilder : IPipelineBuilder
 	{
+		private readonly IGlobalPipelineProvider globalPipelineProvider;
 		private readonly IHandlerProvider handlerProvider;
 		private readonly BusSettings busSettings;
 
-		public PipelineBuilder([NotNull] IHandlerProvider handlerProvider, [NotNull] BusSettings busSettings)
+		public PipelineBuilder([NotNull]IHandlerProvider handlerProvider, [NotNull]IGlobalPipelineProvider globalPipelineProvider, [NotNull]BusSettings busSettings)
 		{
+			if (globalPipelineProvider == null) throw new ArgumentNullException(nameof(globalPipelineProvider));
 			if (handlerProvider == null) throw new ArgumentNullException(nameof(handlerProvider));
 			if (busSettings == null) throw new ArgumentNullException(nameof(busSettings));
 
-
+			this.globalPipelineProvider = globalPipelineProvider;
 			this.handlerProvider = handlerProvider;
 			this.busSettings = busSettings;
 		}
@@ -45,6 +47,9 @@ namespace Enexure.MicroBus
 					throw new NoRegistrationForMessageException(messageType);
 				}
 			}
+
+			// Add this to the list if this is the top level.
+			//globalPipelineProvider.GetGlobalPipeline()
 
 			return message => GenerateNext(scope, registration.Pipeline.ToList(), registration.Handlers)(message);
 		}

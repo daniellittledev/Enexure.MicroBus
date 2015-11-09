@@ -5,15 +5,22 @@ namespace Enexure.MicroBus
 	public class BusBuilder
 	{
 		private readonly Func<IHandlerRegister, IHandlerRegister> register;
+		private readonly Pipeline pipeline;
 
-		public BusBuilder(Func<IHandlerRegister, IHandlerRegister> register)
+		private BusBuilder(Func<IHandlerRegister, IHandlerRegister> register, Pipeline pipeline)
 		{
 			this.register = register;
+			this.pipeline = pipeline;
 		}
 
 		public static IMicroBus BuildBus(Func<IHandlerRegister, IHandlerRegister> register)
 		{
-			return new BusBuilder(register).BuildBus();
+			return new BusBuilder(register, Pipeline.EmptyPipeline).BuildBus();
+		}
+
+		public static IMicroBus BuildBus(Func<IHandlerRegister, IHandlerRegister> register, Pipeline pipeline)
+		{
+			return new BusBuilder(register, pipeline).BuildBus();
 		}
 
 		public IMicroBus BuildBus()
@@ -23,9 +30,12 @@ namespace Enexure.MicroBus
 
 		public IMicroBus BuildBus(BusSettings busSettings)
 		{
-			var registrations = register(new HandlerRegister()).GetMessageRegistrations();
+			var register = this.register(new HandlerRegister());
+			var registrations = register.GetMessageRegistrations();
 			var handlerProvider = HandlerProvider.Create(registrations);
-			var pipelineBuilder = new PipelineBuilder(handlerProvider, busSettings);
+
+			var globalPipelineProvider = new GlobalPipelineProvider(pipeline);
+			var pipelineBuilder = new PipelineBuilder(handlerProvider, globalPipelineProvider, busSettings);
 			var dependencyResolver = new DefaultDependencyResolver();
 
 			return new MicroBus(pipelineBuilder, dependencyResolver);
