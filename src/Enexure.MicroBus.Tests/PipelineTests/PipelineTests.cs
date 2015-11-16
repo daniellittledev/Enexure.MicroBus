@@ -14,11 +14,7 @@ namespace Enexure.MicroBus.Tests.PipelineTests
 				.AddHandler<PipelineHandlerA>()
 				.AddHandler<PipelineHandlerB>();
 
-			var bus = BusBuilder.BuildBus(b =>
-				b.RegisterCommand<Command>().To<CommandHandler>(pipeline)
-				);
-
-			await bus.Send(new Command());
+			throw new InconclusiveException("This should unit test the PipelineBuilder class");
 		}
 
 		private class Command : ICommand

@@ -9,6 +9,10 @@ namespace Enexure.MicroBus.Tests
 	[TestFixture]
 	public class QueryTests
 	{
+		class QueryA : IQuery<QueryA, ResultA> { }
+
+		class ResultA : IResult { }
+
 		[UsedImplicitly]
 		class QueryHandler : IQueryHandler<QueryA, ResultA>
 		{

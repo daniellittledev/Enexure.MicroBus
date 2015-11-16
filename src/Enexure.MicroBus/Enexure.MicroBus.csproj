@@ -39,9 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exception\InvalidMessageTypeException.cs" />
+    <Compile Include="Exception\NoRegistrationForMessageException.cs" />
+    <Compile Include="Exception\NullMessageTypeException.cs" />
     <Compile Include="Exception\MultipleRegistrationsWithTheSameMessageException.cs" />
+    <Compile Include="Exception\SomehowRecievedTaskWithoutResultException.cs" />
     <Compile Include="GroupedMessageRegistration.cs" />
-    <Compile Include="Implementation\BusBuilder.cs" />
     <Compile Include="BusSettings.cs" />
     <Compile Include="IBusRegister.cs" />
     <Compile Include="IDependencyResolver.cs" />
@@ -53,24 +56,24 @@
     <Compile Include="IEventBinder.cs" />
     <Compile Include="IEventBuilder.cs" />
     <Compile Include="Implementation\GlobalPipelineProvider.cs" />
+    <Compile Include="Implementation\GlobalPipelineTracker.cs" />
     <Compile Include="Implementation\HandlerRegister.cs" />
     <Compile Include="Exception\MultipleDifferentPipelinesRegisteredException.cs" />
     <Compile Include="Exception\MultipleRegistrationsWithTheSameCommandException.cs" />
     <Compile Include="Exception\MultipleRegistrationsWithTheSameQueryException.cs" />
     <Compile Include="IGlobalPipelineProvider.cs" />
-    <Compile Include="Implementation\Messages.cs" />
+    <Compile Include="IGlobalPipelineTracker.cs" />
+    <Compile Include="Internal\MessagesHelper.cs" />
     <Compile Include="IQueryBuilder.cs" />
     <Compile Include="Implementation\QueryBuilder.cs" />
     <Compile Include="IPipelineBuilder.cs" />
     <Compile Include="IHandlerProvider.cs" />
     <Compile Include="Internal\ImmutableList.cs" />
     <Compile Include="MessageRegistration.cs" />
-    <Compile Include="Internal\DefaultDependencyScope.cs" />
-    <Compile Include="BuiltInEvents\NoMatchingRegistrationEvent.cs" />
+    <Compile Include="Messages\NoMatchingRegistrationEvent.cs" />
     <Compile Include="MessageType.cs" />
     <Compile Include="MessageTypeExtensions.cs" />
     <Compile Include="Pipeline.cs" />
-    <Compile Include="Internal\DefaultDependencyResolver.cs" />
     <Compile Include="Implementation\PipelineBuilder.cs" />
     <Compile Include="Implementation\HandlerProvider.cs" />
     <Compile Include="Implementation\MicroBus.cs" />

@@ -4,31 +4,40 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Enexure.MicroBus.Annotations;
-using Enexure.MicroBus.BuiltInEvents;
-
-using Handler = System.Object;
+using Enexure.MicroBus.Messages;
 using Result = System.Object;
 
 namespace Enexure.MicroBus
 {
 	public class PipelineBuilder : IPipelineBuilder
 	{
-		private readonly IGlobalPipelineProvider globalPipelineProvider;
 		private readonly IHandlerProvider handlerProvider;
+		private readonly IGlobalPipelineProvider globalPipelineProvider;
+		private readonly IGlobalPipelineTracker tracker;
+		private readonly IDependencyScope dependencyScope;
 		private readonly BusSettings busSettings;
 
-		public PipelineBuilder([NotNull]IHandlerProvider handlerProvider, [NotNull]IGlobalPipelineProvider globalPipelineProvider, [NotNull]BusSettings busSettings)
+		public PipelineBuilder(
+			[NotNull]BusSettings busSettings,
+			[NotNull]IHandlerProvider handlerProvider,
+			[NotNull]IGlobalPipelineProvider globalPipelineProvider,
+			[NotNull]IGlobalPipelineTracker tracker,
+			[NotNull]IDependencyScope dependencyScope)
 		{
-			if (globalPipelineProvider == null) throw new ArgumentNullException(nameof(globalPipelineProvider));
 			if (handlerProvider == null) throw new ArgumentNullException(nameof(handlerProvider));
+			if (globalPipelineProvider == null) throw new ArgumentNullException(nameof(globalPipelineProvider));
+			if (tracker == null) throw new ArgumentNullException(nameof(tracker));
+			if (dependencyScope == null) throw new ArgumentNullException(nameof(dependencyScope));
 			if (busSettings == null) throw new ArgumentNullException(nameof(busSettings));
 
-			this.globalPipelineProvider = globalPipelineProvider;
 			this.handlerProvider = handlerProvider;
+			this.globalPipelineProvider = globalPipelineProvider;
+			this.tracker = tracker;
+			this.dependencyScope = dependencyScope;
 			this.busSettings = busSettings;
 		}
 
-		public Func<IMessage, Task<Result>> GetPipelineForMessage(IDependencyScope scope, Type messageType)
+		public Func<IMessage, Task<Result>> GetPipelineForMessage(Type messageType)
 		{
 			GroupedMessageRegistration registration;
 			if (!handlerProvider.GetRegistrationForMessage(messageType, out registration)) {
@@ -37,7 +46,7 @@ namespace Enexure.MicroBus
 				}
 
 				try {
-					var runner = GetPipelineForMessage(scope, typeof(NoMatchingRegistrationEvent));
+					var runner = GetPipelineForMessage(typeof(NoMatchingRegistrationEvent));
 
 					return message => {
 						return runner(new NoMatchingRegistrationEvent(message));
@@ -48,14 +57,18 @@ namespace Enexure.MicroBus
 				}
 			}
 
-			// Add this to the list if this is the top level.
-			//globalPipelineProvider.GetGlobalPipeline()
+			var completePipeline = tracker.HasRun 
+				? globalPipelineProvider.GetGlobalPipeline().Concat(registration.Pipeline).ToList() 
+				: registration.Pipeline.ToList();
 
-			return message => GenerateNext(scope, registration.Pipeline.ToList(), registration.Handlers)(message);
+			tracker.MarkAsRun();
+
+			return message => GenerateNext(busSettings, dependencyScope, completePipeline, registration.Handlers)(message);
 		}
 
-		private Func<IMessage, Task<object>> GenerateNext(
-			IDependencyScope scope,
+		private static Func<IMessage, Task<object>> GenerateNext(
+			BusSettings busSettings,
+			IDependencyScope dependencyScope,
 			IReadOnlyCollection<Type> pipelineHandlerTypes,
 			IEnumerable<Type> leftHandlerTypes
 			)
@@ -67,52 +80,55 @@ namespace Enexure.MicroBus
 				}
 
 				if (!pipelineHandlerTypes.Any()) {
-					return await RunLeafHandlers(scope, leftHandlerTypes, message);
+					return await RunLeafHandlers(busSettings, dependencyScope, leftHandlerTypes, message);
 				}
 
 				var head = pipelineHandlerTypes.First();
+				var nextHandler = (IPipelineHandler)dependencyScope.GetService(head);
+
 				var tail = pipelineHandlerTypes.Skip(1).ToList();
-
-				var nextHandler = (IPipelineHandler)scope.GetService(head);
-
-				var nextFunction = GenerateNext(scope, tail, leftHandlerTypes);
+				var nextFunction = GenerateNext(busSettings, dependencyScope, tail, leftHandlerTypes);
 
 				return await nextHandler.Handle(nextFunction, message);
-
 			});
-
 		}
 
-		private async Task<Result> RunLeafHandlers(IDependencyScope scope, IEnumerable<Type> leftHandlerTypes, IMessage message)
+		private static async Task<Result> RunLeafHandlers(
+			BusSettings busSettings,
+			IDependencyScope dependencyScope,
+			IEnumerable<Type> leftHandlerTypes,
+			IMessage message)
 		{
 			Task lastTask = null;
-			var handlers = leftHandlerTypes.Select(scope.GetService);
+			var handlers = leftHandlerTypes.Select(dependencyScope.GetService);
+
 			if (busSettings.DisableParallelHandlers) {
 				foreach (var leafHandler in handlers) {
-					var task = CallHandleOnHandler(leafHandler, message);
-					await (lastTask = task);
+					await (lastTask = CallHandleOnHandler(leafHandler, message));
 				}
 			} else {
-				await Task.WhenAll(handlers.Select(handler => {
-					var task = CallHandleOnHandler(handler, message);
-					return (lastTask = task);
-				}));
+				await Task.WhenAll(handlers.Select(handler => (lastTask = CallHandleOnHandler(handler, message))));
 			}
 
 			if (lastTask == null) {
 				throw new NullReferenceException("Sanity Check fail: while running leaf handlers the last task was null, but an instance was expected.");
 			}
 
-			var taskType = lastTask.GetType();
-			if (!taskType.IsGenericType) {
+			return GetTaskResult(lastTask);
+		}
+
+		private static object GetTaskResult(Task task)
+		{
+			var taskType = task.GetType();
+			if (!taskType.IsGenericType) { 
 				throw new SomehowRecievedTaskWithoutResultException();
 			}
 
 			var resultProperty = taskType.GetProperty("Result").GetMethod;
-			return resultProperty.Invoke(lastTask, new object[] {});
+			return resultProperty.Invoke(task, new object[] { });
 		}
 
-		private Task CallHandleOnHandler(object handler, IMessage message)
+		private static Task CallHandleOnHandler(object handler, IMessage message)
 		{
 			var type = handler.GetType();
 			var messageType = message.GetType();
@@ -129,40 +145,4 @@ namespace Enexure.MicroBus
 		}
 	}
 
-	public class SomehowRecievedTaskWithoutResultException : Exception
-	{
-		public SomehowRecievedTaskWithoutResultException()
-			: base(string.Format("Tasks returned by handlers should return Task<?> but Task was returned instead, this is impossible"))
-		{
-		}
-	}
-
-	public class NullMessageTypeException : Exception
-	{
-		public NullMessageTypeException(Type type)
-			: base(string.Format("Message was null but an instance of type '{0}' was expected", type.Name))
-		{
-		}
-
-		public NullMessageTypeException()
-			: base("Message was null")
-		{
-		}
-	}
-
-	public class InvalidMessageTypeException : Exception
-	{
-		public InvalidMessageTypeException(Type getType, Type type)
-			: base(string.Format("Message was of type '{0}' but an instance of type '{1}' was expected", getType.Name, type.Name))
-		{
-		}
-	}
-
-	public class NoRegistrationForMessageException : Exception
-	{
-		public NoRegistrationForMessageException(Type commandType)
-			: base(string.Format("No registration for message of type {0} was found", commandType.Name))
-		{
-		}
-	}
 }

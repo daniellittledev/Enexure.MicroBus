@@ -10,7 +10,7 @@ namespace Enexure.MicroBus.Tests.MessageRegistrations
 		[Test]
 		public void ExpandingAnInterface()
 		{
-			var types = Messages.ExpandType(typeof(IEvent)).ToList();
+			var types = MessagesHelper.ExpandType(typeof(IEvent)).ToList();
 			types.Count.Should().Be(1);
 			types.First().Should().Be(typeof(IEvent));
 		}
@@ -18,7 +18,7 @@ namespace Enexure.MicroBus.Tests.MessageRegistrations
 		[Test]
 		public void ExpandingAnEventWithASubType()
 		{
-			var types = Messages.ExpandType(typeof(EventB)).ToList();
+			var types = MessagesHelper.ExpandType(typeof(EventB)).ToList();
 			types.Count.Should().Be(3);
 			types.Skip(0).First().Should().Be(typeof(IEvent));
 			types.Skip(1).First().Should().Be(typeof(EventA));

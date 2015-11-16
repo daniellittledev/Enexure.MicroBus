@@ -66,7 +66,7 @@ namespace Enexure.MicroBus
 
 		private static IEnumerable<Type> GetAllHandlers(Dictionary<Type, GroupedMessageRegistration> tempRegistrationsLookup, Type messageType, Pipeline pipeline)
 		{
-			var types = Messages.ExpandType(messageType).Where(tempRegistrationsLookup.ContainsKey);
+			var types = MessagesHelper.ExpandType(messageType).Where(tempRegistrationsLookup.ContainsKey);
 			foreach (var type in types) {
 				var registration = tempRegistrationsLookup[type];
 

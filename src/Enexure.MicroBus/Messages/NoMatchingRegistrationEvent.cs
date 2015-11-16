@@ -1,4 +1,4 @@
-﻿namespace Enexure.MicroBus.BuiltInEvents
+﻿namespace Enexure.MicroBus.Messages
 {
 	public class NoMatchingRegistrationEvent : IEvent
 	{

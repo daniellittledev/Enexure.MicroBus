@@ -23,22 +23,27 @@ namespace Enexure.MicroBus
 			return new BusBuilder(register, pipeline).BuildBus();
 		}
 
-		public IMicroBus BuildBus()
+		private IMicroBus BuildBus()
 		{
 			return BuildBus(new BusSettings());
 		}
 
-		public IMicroBus BuildBus(BusSettings busSettings)
+		private IMicroBus BuildBus(BusSettings busSettings)
 		{
+			var tracker = new GlobalPipelineTracker();
+
 			var register = this.register(new HandlerRegister());
 			var registrations = register.GetMessageRegistrations();
 			var handlerProvider = HandlerProvider.Create(registrations);
 
-			var globalPipelineProvider = new GlobalPipelineProvider(pipeline);
-			var pipelineBuilder = new PipelineBuilder(handlerProvider, globalPipelineProvider, busSettings);
+			throw new NotImplementedException();
+
+			//var globalPipelineProvider = new GlobalPipelineProvider(pipeline);
+			//var pipelineBuilder = new PipelineBuilder(busSettings, handlerProvider, globalPipelineProvider, tracker);
+
 			var dependencyResolver = new DefaultDependencyResolver();
 
-			return new MicroBus(pipelineBuilder, dependencyResolver);
+			return new MicroBus(dependencyResolver);
 		}
 	}
 }

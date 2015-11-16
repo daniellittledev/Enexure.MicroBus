@@ -43,7 +43,8 @@ namespace Enexure.MicroBus.Autofac.Tests
 			public Task<object> Handle(Func<IMessage, Task<object>> next, IMessage message)
 			{
 				var pipeMessage = message as IPipeTestMessage;
-				if (pipeMessage != null) {
+				if (pipeMessage != null)
+				{
 					pipeMessage.HandlerIds.Add(id);
 				}
 
@@ -113,6 +114,43 @@ namespace Enexure.MicroBus.Autofac.Tests
 			command.Run.Should().Be(true);
 
 			command.HandlerIds.Distinct().Should().HaveCount(1, "There should have been only one instance of the pipeline handler");
+		}
+
+		[UsedImplicitly]
+		class GlobalPipelineHandler : IPipelineHandler
+		{
+			public Task<object> Handle(Func<IMessage, Task<object>> next, IMessage message)
+			{
+				var pipeMessage = message as IPipeTestMessage;
+				if (pipeMessage != null)
+				{
+					pipeMessage.HandlerIds.Add(Guid.NewGuid());
+				}
+
+				return next(message);
+			}
+		}
+
+		[Test]
+		public async Task GlobalPipelineHandlerShouldOnlyBeRunOnce()
+		{
+			var pipeline = new Pipeline()
+				.AddHandler<GlobalPipelineHandler>();
+
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => busBuilder
+				.RegisterCommand<Command>().To<CommandHandler>()
+				.RegisterEvent<Event>().To<EventHandler>(),
+				pipeline
+			).Build();
+
+			var bus = container.Resolve<IMicroBus>();
+
+			var command = new Command();
+			await bus.Send(command);
+
+			command.Run.Should().Be(true);
+
+			command.HandlerIds.Distinct().Should().HaveCount(1, "Global pipeline handler should only be run once");
 		}
 	}
 }

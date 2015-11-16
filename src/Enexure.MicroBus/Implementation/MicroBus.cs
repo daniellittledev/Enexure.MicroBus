@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Enexure.MicroBus.Annotations;
+using System;
 using System.Threading.Tasks;
 
 namespace Enexure.MicroBus
 {
 	public class MicroBus : IMicroBus
 	{
-		private readonly IPipelineBuilder registrations;
 		private readonly IDependencyResolver dependencyResolver;
 
-		public MicroBus(IPipelineBuilder registrations, IDependencyResolver dependencyResolver)
+		public MicroBus([NotNull]IDependencyResolver dependencyResolver)
 		{
-			this.registrations = registrations;
+			if (dependencyResolver == null) throw new ArgumentNullException(nameof(dependencyResolver));
+
 			this.dependencyResolver = dependencyResolver;
 		}
 
@@ -19,7 +20,9 @@ namespace Enexure.MicroBus
 			if (busCommand == null) throw new ArgumentNullException(nameof(busCommand));
 
 			using (var scope = dependencyResolver.BeginScope()) {
-				await (registrations.GetPipelineForMessage(scope, busCommand.GetType())(busCommand));
+				var builder = scope.GetService<IPipelineBuilder>();
+				var messageProcessor = builder.GetPipelineForMessage(busCommand.GetType());
+				await messageProcessor(busCommand);
 			}
 		}
 
@@ -28,7 +31,9 @@ namespace Enexure.MicroBus
 			if (busEvent == null) throw new ArgumentNullException(nameof(busEvent));
 
 			using (var scope = dependencyResolver.BeginScope()) {
-				await (registrations.GetPipelineForMessage(scope, busEvent.GetType())(busEvent));
+				var builder = scope.GetService<IPipelineBuilder>();
+				var messageProcessor = builder.GetPipelineForMessage(busEvent.GetType());
+				await messageProcessor(busEvent);
 			}
 		}
 
@@ -39,8 +44,9 @@ namespace Enexure.MicroBus
 			if (busQuery == null) throw new ArgumentNullException(nameof(busQuery));
 
 			using (var scope = dependencyResolver.BeginScope()) {
-				var result = await registrations.GetPipelineForMessage(scope, busQuery.GetType())((TQuery)busQuery);
-				return (TResult) result;
+				var builder = scope.GetService<IPipelineBuilder>();
+				var messageProcessor = builder.GetPipelineForMessage(busQuery.GetType());
+				return (TResult) await messageProcessor(busQuery);
 			}
 		}
 	}

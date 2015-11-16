@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Enexure.MicroBus
 {
-	public static class Messages
+	public static class MessagesHelper
 	{
 		public static IEnumerable<Type> ExpandType(Type type)
 		{

@@ -31,7 +31,7 @@ namespace Enexure.MicroBus
 				GetValue(new[] { messageType }, messageType, handlerType, type => typeof(ICommandHandler<>).MakeGenericType(type));
 
 			} else if (typeof(IEvent).IsAssignableFrom(messageType)) {
-				GetValue(Messages.ExpandType(messageType).Where(x => x != typeof(IMessage)), messageType, handlerType, type => typeof(IEventHandler<>).MakeGenericType(type));
+				GetValue(MessagesHelper.ExpandType(messageType).Where(x => x != typeof(IMessage)), messageType, handlerType, type => typeof(IEventHandler<>).MakeGenericType(type));
 
 			} else if (typeof(IQuery).IsAssignableFrom(messageType)) {
 

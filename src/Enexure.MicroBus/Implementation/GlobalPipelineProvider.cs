@@ -2,7 +2,7 @@
 
 namespace Enexure.MicroBus
 {
-	internal class GlobalPipelineProvider : IGlobalPipelineProvider
+	public class GlobalPipelineProvider : IGlobalPipelineProvider
 	{
 		private Pipeline pipeline;
 
