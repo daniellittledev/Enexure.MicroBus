@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Enexure.MicroBus.Sagas;
-using Enexure.MicroBus.Sagas.Repositories;
 
 namespace Enexure.MicroBus.Saga.Tests
 {

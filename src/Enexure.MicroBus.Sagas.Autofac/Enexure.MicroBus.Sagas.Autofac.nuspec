@@ -10,9 +10,9 @@
 		<iconUrl>https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>$description$</description>
-		<tags>MicroBus Bus Mediator Autofac</tags>
+		<tags>MicroBus Bus Mediator Autofac Saga</tags>
 		<dependencies>
-			<dependency id="Enexure.MicroBus" version="2.0.0" />
+			<dependency id="Enexure.MicroBus.Sagas" version="0.2.0" />
 		</dependencies>
 	</metadata>
 </package>
