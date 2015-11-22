@@ -5,9 +5,18 @@ namespace Enexure.MicroBus
 {
 	public class NoRegistrationForMessageException : Exception
 	{
-		public NoRegistrationForMessageException(Type commandType)
-			: base(string.Format("No registration for message of type {0} was found", commandType.Name))
+		private readonly Type messageType;
+
+		public NoRegistrationForMessageException(Type messageType)
+			: base(string.Format("No registration for message of type {0} was found", messageType.Name))
 		{
+			this.messageType = messageType;
+		}
+
+		public Type MessageType {
+			get {
+				return messageType;
+			}
 		}
 	}
 }
