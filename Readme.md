@@ -6,7 +6,7 @@ MicroBus is a simple in process mediator for .NET
 
 > PM> Install-Package [Enexure.MicroBus](https://www.nuget.org/packages/Enexure.MicroBus/)
 
-I wanted a super simple mediator with as few dependencies as possible. You can register handlers and pipelines without dependency injection, use a dependency injection framework or write your own activator. 
+I wanted a super simple mediator with as few dependencies as possible. You can register handlers and pipelines using a dependency injection framework or write your own activator. 
 
 MicroBus supports the three fundamental bus message types, commands, events and queries(request/response). 
 
