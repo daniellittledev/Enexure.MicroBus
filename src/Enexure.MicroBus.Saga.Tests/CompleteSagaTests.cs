@@ -1,10 +1,10 @@
 ﻿using Autofac;
 using Enexure.MicroBus.Autofac;
 using Enexure.MicroBus.Sagas;
-using Enexure.MicroBus.Sagas.Autofac;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
+using Enexure.MicroBus.Sagas.Autofac;
 using FluentAssertions;
 
 namespace Enexure.MicroBus.Saga.Tests

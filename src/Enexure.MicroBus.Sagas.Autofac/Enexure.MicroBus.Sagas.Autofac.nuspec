@@ -12,7 +12,7 @@
 		<description>$description$</description>
 		<tags>MicroBus Bus Mediator Autofac Saga</tags>
 		<dependencies>
-			<dependency id="Enexure.MicroBus.Sagas" version="0.2.0" />
+			<dependency id="Enexure.MicroBus.Sagas" version="0.2.1" />
 		</dependencies>
 	</metadata>
 </package>
