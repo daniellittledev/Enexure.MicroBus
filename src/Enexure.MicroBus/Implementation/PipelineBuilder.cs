@@ -58,8 +58,8 @@ namespace Enexure.MicroBus
 			}
 
 			var completePipeline = tracker.HasRun 
-				? globalPipelineProvider.GetGlobalPipeline().Concat(registration.Pipeline).ToList() 
-				: registration.Pipeline.ToList();
+				? registration.Pipeline.ToList() 
+				: globalPipelineProvider.GetGlobalPipeline().Concat(registration.Pipeline).ToList();
 
 			tracker.MarkAsRun();
 

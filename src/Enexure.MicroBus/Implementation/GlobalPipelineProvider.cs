@@ -8,10 +8,12 @@ namespace Enexure.MicroBus
 
 		public GlobalPipelineProvider(Pipeline pipeline)
 		{
-			this.pipeline = pipeline;
+		    if (pipeline == null) throw new ArgumentNullException(nameof(pipeline));
+
+		    this.pipeline = pipeline;
 		}
 
-		public Pipeline GetGlobalPipeline()
+	    public Pipeline GetGlobalPipeline()
 		{
 			return pipeline;
 		}

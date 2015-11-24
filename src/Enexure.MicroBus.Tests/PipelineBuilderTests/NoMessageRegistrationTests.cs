@@ -23,7 +23,9 @@ namespace Enexure.MicroBus.Tests.PipelineBuilderTests
 
 			var handlerProvider = HandlerProvider.Create(new MessageRegistration[] {});
 
-			var pipelineBuilder = new PipelineBuilder(busSettings, handlerProvider, globalPipelineProvider, globalPipelineTracker, dependencyScope);
+            globalPipelineProvider.GetGlobalPipeline().Returns(Pipeline.EmptyPipeline);
+
+            var pipelineBuilder = new PipelineBuilder(busSettings, handlerProvider, globalPipelineProvider, globalPipelineTracker, dependencyScope);
 
 			Action action = () => pipelineBuilder.GetPipelineForMessage(typeof(TestCommand));
 
@@ -40,7 +42,8 @@ namespace Enexure.MicroBus.Tests.PipelineBuilderTests
 
 			var handler = Substitute.For<IEventHandler<NoMatchingRegistrationEvent>>();
 
-			dependencyScope.GetService(typeof(IEventHandler<NoMatchingRegistrationEvent>)).Returns(handler);
+            globalPipelineProvider.GetGlobalPipeline().Returns(Pipeline.EmptyPipeline);
+            dependencyScope.GetService(typeof(IEventHandler<NoMatchingRegistrationEvent>)).Returns(handler);
 
 			var handlerProvider = HandlerProvider.Create(new[] {
 				new MessageRegistration(typeof(NoMatchingRegistrationEvent), typeof(IEventHandler<NoMatchingRegistrationEvent>))
@@ -65,7 +68,8 @@ namespace Enexure.MicroBus.Tests.PipelineBuilderTests
 
 			var handler = Substitute.For<IEventHandler<NoMatchingRegistrationEvent>>();
 
-			dependencyScope.GetService(typeof(IEventHandler<NoMatchingRegistrationEvent>)).Returns(handler);
+		    globalPipelineProvider.GetGlobalPipeline().Returns(Pipeline.EmptyPipeline);
+            dependencyScope.GetService(typeof(IEventHandler<NoMatchingRegistrationEvent>)).Returns(handler);
 
 			var handlerProvider = HandlerProvider.Create(new[] {
 				new MessageRegistration(typeof(NoMatchingRegistrationEvent), typeof(IEventHandler<NoMatchingRegistrationEvent>))
