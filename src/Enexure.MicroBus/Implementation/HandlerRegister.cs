@@ -73,8 +73,25 @@ namespace Enexure.MicroBus
 			return new HandlerRegister(this, messageRegistration);
 		}
 
+		public IHandlerRegister RegisterTypes(params Assembly[] assemblies)
+		{
+			return RegisterTypes(null, Pipeline.EmptyPipeline, assemblies);
+		}
+
+		public IHandlerRegister RegisterTypes(Func<Type, bool> predicate, params Assembly[] assemblies)
+		{
+			return RegisterTypes(predicate, Pipeline.EmptyPipeline, assemblies);
+		}
+
+		public IHandlerRegister RegisterTypes(Pipeline pipeline, params Assembly[] assemblies)
+		{
+			return RegisterTypes(null, pipeline, assemblies);
+		}
+
 		public IHandlerRegister RegisterTypes(Func<Type, bool> predicate, Pipeline pipeline, params Assembly[] assemblies)
 		{
+			var noPredicate = (predicate == null);
+
 			var types = new [] {
 				typeof(ICommandHandler<>),
 				typeof(IEventHandler<>),
@@ -85,7 +102,9 @@ namespace Enexure.MicroBus
 				.SelectMany(x => x.GetTypes())
 				.Where(x => x.IsClass && !x.IsGenericType)
 				.SelectMany(x => x.GetInterfaces().Select(y => new { Type = x, Interface = y }))
-				.Where(x => x.Interface.IsGenericType && types.Contains(x.Interface.GetGenericTypeDefinition()) && predicate(x.Type));
+				.Where(x => x.Interface.IsGenericType 
+					&& types.Contains(x.Interface.GetGenericTypeDefinition()) 
+					&& (noPredicate || predicate(x.Type)));
 
 			var messageRegistrations = new List<MessageRegistration>();
 

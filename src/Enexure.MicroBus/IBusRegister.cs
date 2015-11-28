@@ -27,6 +27,12 @@ namespace Enexure.MicroBus
 
 		IReadOnlyCollection<MessageRegistration> GetMessageRegistrations();
 
+		IHandlerRegister RegisterTypes(params Assembly[] assemblies);
+
+		IHandlerRegister RegisterTypes(Func<Type, bool> predicate, params Assembly[] assemblies);
+
+		IHandlerRegister RegisterTypes(Pipeline pipeline, params Assembly[] assemblies);
+
 		IHandlerRegister RegisterTypes(Func<Type, bool> predicate, Pipeline pipeline, params Assembly[] assemblies);
 	}
 }
