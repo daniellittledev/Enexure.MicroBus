@@ -39,6 +39,7 @@ obj/
 [Dd]ebug*/
 [Rr]elease*/
 Ankh.NoLoad
+project.lock.json
 
 #Databases
 *.mdf

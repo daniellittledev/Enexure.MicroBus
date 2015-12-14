@@ -1,0 +1,26 @@
+{
+	"version": "1.6.0",
+	"authors": [ "Daniel Little" ],
+	"owners": [ "lavinski" ],
+	"tags": [ "MicroBus", "Mediator", "Contracts", "Bus" ],
+	"releaseNotes": "core-clr support (rc1)",
+	"copyright": "Copyright © Daniel Little 2015",
+	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
+	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
+	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
+	"description": "Contains the core message contracts for MicroBus which includes the command, query and event interfaces",
+
+	"compilationOptions": {
+	},
+	"compile": [
+		"**/*.cs"
+	],
+	"dependencies": {
+	},
+	"frameworks": {
+		"net40": {
+			"frameworkAssemblies": {
+			}
+		}
+	}
+}

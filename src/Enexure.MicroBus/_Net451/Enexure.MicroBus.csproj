@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C9F49ECA-A00F-48AA-8A23-A3BCFFE40393}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Enexure.MicroBus</RootNamespace>
+    <AssemblyName>Enexure.MicroBus</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Exception\InvalidMessageTypeException.cs" />
+    <Compile Include="Exception\NoRegistrationForMessageException.cs" />
+    <Compile Include="Exception\NullMessageTypeException.cs" />
+    <Compile Include="Exception\MultipleRegistrationsWithTheSameMessageException.cs" />
+    <Compile Include="Exception\SomehowRecievedTaskWithoutResultException.cs" />
+    <Compile Include="GroupedMessageRegistration.cs" />
+    <Compile Include="BusSettings.cs" />
+    <Compile Include="IBusRegister.cs" />
+    <Compile Include="IDependencyResolver.cs" />
+    <Compile Include="IDependencyScope.cs" />
+    <Compile Include="Implementation\CommandBuilder.cs" />
+    <Compile Include="Implementation\EventBinder.cs" />
+    <Compile Include="Implementation\EventBuilder.cs" />
+    <Compile Include="ICommandBuilder.cs" />
+    <Compile Include="IEventBinder.cs" />
+    <Compile Include="IEventBuilder.cs" />
+    <Compile Include="Implementation\GlobalPipelineProvider.cs" />
+    <Compile Include="Implementation\GlobalPipelineTracker.cs" />
+    <Compile Include="Implementation\HandlerRegister.cs" />
+    <Compile Include="Exception\MultipleDifferentPipelinesRegisteredException.cs" />
+    <Compile Include="Exception\MultipleRegistrationsWithTheSameCommandException.cs" />
+    <Compile Include="Exception\MultipleRegistrationsWithTheSameQueryException.cs" />
+    <Compile Include="IGlobalPipelineProvider.cs" />
+    <Compile Include="IGlobalPipelineTracker.cs" />
+    <Compile Include="Internal\MessagesHelper.cs" />
+    <Compile Include="IQueryBuilder.cs" />
+    <Compile Include="Implementation\QueryBuilder.cs" />
+    <Compile Include="IPipelineBuilder.cs" />
+    <Compile Include="IHandlerProvider.cs" />
+    <Compile Include="Internal\ImmutableList.cs" />
+    <Compile Include="MessageRegistration.cs" />
+    <Compile Include="Messages\NoMatchingRegistrationEvent.cs" />
+    <Compile Include="MessageType.cs" />
+    <Compile Include="MessageTypeExtensions.cs" />
+    <Compile Include="Pipeline.cs" />
+    <Compile Include="Implementation\PipelineBuilder.cs" />
+    <Compile Include="Implementation\HandlerProvider.cs" />
+    <Compile Include="Implementation\MicroBus.cs" />
+    <Compile Include="Internal\TypeExtensions.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyVersion.cs" Condition="exists('Properties\AssemblyVersion.cs')" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.csproj">
+      <Project>{4bd15bdd-27e9-47e2-a693-d496e892949f}</Project>
+      <Name>Enexure.MicroBus.InfrastructureContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.csproj">
+      <Project>{df8290a6-7f5c-4b0f-b2e4-35b3e60167fd}</Project>
+      <Name>Enexure.MicroBus.MessageContracts</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Enexure.MicroBus.nuspec" />
+    <None Include="Version.json" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

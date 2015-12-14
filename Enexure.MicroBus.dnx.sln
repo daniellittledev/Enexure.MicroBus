@@ -1,0 +1,96 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.Autofac", "src\Enexure.MicroBus.Autofac\Enexure.MicroBus.Autofac.xproj", "{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.Sagas.Autofac.Tests", "src\Enexure.MicroBus.Saga.Tests\Enexure.MicroBus.Sagas.Autofac.Tests.xproj", "{C29FCCB4-38B7-4549-9670-D688F9BBF9A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{3D61E0F8-481D-4CEB-B53B-757C0EDD56B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{8E9E13DB-C081-4207-9CD3-04A6EB34A39F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DependencyInjection", "DependencyInjection", "{21E34B17-1947-4477-BFC8-859BDF577084}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.Autofac.Tests", "src\Enexure.MicroBus.Autofac.Tests\Enexure.MicroBus.Autofac.Tests.xproj", "{BE67EC15-6D7F-41D7-8D6F-954C4CE70787}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.Sagas.Autofac", "src\Enexure.MicroBus.Sagas.Autofac\Enexure.MicroBus.Sagas.Autofac.xproj", "{6CB1D0D4-5DBA-400F-8B62-40B9E9F6D323}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Autofac", "Autofac", "{D6BA7654-EB91-459C-A729-801AE7B88174}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{4F28E015-19FF-44B7-B24A-2766765F0692}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saga", "Saga", "{C97FCBDF-3FB2-4ABE-A4AD-0BE1C6F47948}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.InfrastructureContracts", "src\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.xproj", "{351F5456-8EB0-4F21-ABC3-77B7EFFB1915}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.MessageContracts", "src\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.xproj", "{BD03D32F-98C1-4D58-9583-DCC5A727B538}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus", "src\Enexure.MicroBus\Enexure.MicroBus.xproj", "{C6DCC744-47C4-4EB5-A734-604FDDF8A030}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Sagas", "src\Enexure.MicroBus.Sagas\Enexure.MicroBus.Sagas.xproj", "{B7A54026-DE9C-43C4-A48C-3332C85DF3A8}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Tests", "src\Enexure.MicroBus.Tests\Enexure.MicroBus.Tests.xproj", "{F6E6BC4E-0132-42A8-88CD-D19AAB883E89}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{C29FCCB4-38B7-4549-9670-D688F9BBF9A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C29FCCB4-38B7-4549-9670-D688F9BBF9A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C29FCCB4-38B7-4549-9670-D688F9BBF9A3}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{C29FCCB4-38B7-4549-9670-D688F9BBF9A3}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{BE67EC15-6D7F-41D7-8D6F-954C4CE70787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE67EC15-6D7F-41D7-8D6F-954C4CE70787}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE67EC15-6D7F-41D7-8D6F-954C4CE70787}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE67EC15-6D7F-41D7-8D6F-954C4CE70787}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{6CB1D0D4-5DBA-400F-8B62-40B9E9F6D323}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB1D0D4-5DBA-400F-8B62-40B9E9F6D323}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB1D0D4-5DBA-400F-8B62-40B9E9F6D323}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB1D0D4-5DBA-400F-8B62-40B9E9F6D323}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{351F5456-8EB0-4F21-ABC3-77B7EFFB1915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{351F5456-8EB0-4F21-ABC3-77B7EFFB1915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{351F5456-8EB0-4F21-ABC3-77B7EFFB1915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{351F5456-8EB0-4F21-ABC3-77B7EFFB1915}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD03D32F-98C1-4D58-9583-DCC5A727B538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD03D32F-98C1-4D58-9583-DCC5A727B538}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD03D32F-98C1-4D58-9583-DCC5A727B538}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD03D32F-98C1-4D58-9583-DCC5A727B538}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6DCC744-47C4-4EB5-A734-604FDDF8A030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6DCC744-47C4-4EB5-A734-604FDDF8A030}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6DCC744-47C4-4EB5-A734-604FDDF8A030}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6DCC744-47C4-4EB5-A734-604FDDF8A030}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7A54026-DE9C-43C4-A48C-3332C85DF3A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7A54026-DE9C-43C4-A48C-3332C85DF3A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7A54026-DE9C-43C4-A48C-3332C85DF3A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7A54026-DE9C-43C4-A48C-3332C85DF3A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6E6BC4E-0132-42A8-88CD-D19AAB883E89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6E6BC4E-0132-42A8-88CD-D19AAB883E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6E6BC4E-0132-42A8-88CD-D19AAB883E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6E6BC4E-0132-42A8-88CD-D19AAB883E89}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3CEA3C7C-F9DB-43BA-8769-743AD1EEEC9A} = {4F28E015-19FF-44B7-B24A-2766765F0692}
+		{C29FCCB4-38B7-4549-9670-D688F9BBF9A3} = {C97FCBDF-3FB2-4ABE-A4AD-0BE1C6F47948}
+		{BE67EC15-6D7F-41D7-8D6F-954C4CE70787} = {4F28E015-19FF-44B7-B24A-2766765F0692}
+		{6CB1D0D4-5DBA-400F-8B62-40B9E9F6D323} = {C97FCBDF-3FB2-4ABE-A4AD-0BE1C6F47948}
+		{D6BA7654-EB91-459C-A729-801AE7B88174} = {21E34B17-1947-4477-BFC8-859BDF577084}
+		{4F28E015-19FF-44B7-B24A-2766765F0692} = {D6BA7654-EB91-459C-A729-801AE7B88174}
+		{C97FCBDF-3FB2-4ABE-A4AD-0BE1C6F47948} = {D6BA7654-EB91-459C-A729-801AE7B88174}
+		{351F5456-8EB0-4F21-ABC3-77B7EFFB1915} = {3D61E0F8-481D-4CEB-B53B-757C0EDD56B8}
+		{BD03D32F-98C1-4D58-9583-DCC5A727B538} = {3D61E0F8-481D-4CEB-B53B-757C0EDD56B8}
+		{C6DCC744-47C4-4EB5-A734-604FDDF8A030} = {8E9E13DB-C081-4207-9CD3-04A6EB34A39F}
+		{B7A54026-DE9C-43C4-A48C-3332C85DF3A8} = {8E9E13DB-C081-4207-9CD3-04A6EB34A39F}
+		{F6E6BC4E-0132-42A8-88CD-D19AAB883E89} = {8E9E13DB-C081-4207-9CD3-04A6EB34A39F}
+	EndGlobalSection
+EndGlobal

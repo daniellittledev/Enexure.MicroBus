@@ -1,0 +1,33 @@
+{
+	"version": "2.0.2",
+	"authors": [ "Daniel Little" ],
+	"owners": [ "lavinski" ],
+	"tags": [ "MicroBus", "Mediator", "Core", "Bus" ],
+	"releaseNotes": "core-clr support (rc1)",
+	"copyright": "Copyright © Daniel Little 2015",
+	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
+	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
+	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
+	"description": "Contains the core implementation of MicroBus",
+
+	"compilationOptions": {
+	},
+	"compile": [
+		"**/*.cs"
+	],
+	"dependencies": {
+		"Enexure.MicroBus.MessageContracts": "1.6.0-*",
+		"Enexure.MicroBus.InfrastructureContracts": "2.6.0-*"
+	},
+	"frameworks": {
+		"net45": {
+			"dependencies": {
+				"Microsoft.Bcl": "1.1.9"
+			},
+			"frameworkAssemblies": {
+				"mscorlib": "4.0.0.0",
+				"System.Core": "4.0.0.0"
+			}
+		}
+	}
+}

@@ -23,9 +23,9 @@ namespace Enexure.MicroBus.Tests.PipelineBuilderTests
 
 			var handlerProvider = HandlerProvider.Create(new MessageRegistration[] {});
 
-            globalPipelineProvider.GetGlobalPipeline().Returns(Pipeline.EmptyPipeline);
+			globalPipelineProvider.GetGlobalPipeline().Returns(Pipeline.EmptyPipeline);
 
-            var pipelineBuilder = new PipelineBuilder(busSettings, handlerProvider, globalPipelineProvider, globalPipelineTracker, dependencyScope);
+			var pipelineBuilder = new PipelineBuilder(busSettings, handlerProvider, globalPipelineProvider, globalPipelineTracker, dependencyScope);
 
 			Action action = () => pipelineBuilder.GetPipelineForMessage(typeof(TestCommand));
 
