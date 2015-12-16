@@ -1,1 +1,38 @@
-{}
+{
+	"version": "0.2.2",
+	"authors": [ "Daniel Little" ],
+	"owners": [ "lavinski" ],
+	"tags": [ "MicroBus", "Mediator", "Saga", "Bus" ],
+	"releaseNotes": "core-clr support (rc1)",
+	"copyright": "Copyright © Daniel Little 2015",
+	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
+	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
+	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
+	"description": "Enexure.MicroBus.Autofac.Tests",
+
+	"compilationOptions": {
+	},
+	"compile": [
+		"**/*.cs"
+	],
+	"dependencies": {
+		"Enexure.MicroBus": { "target": "project" },
+		"Enexure.MicroBus.MessageContracts": { "target": "project" },
+		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" },
+		"Enexure.MicroBus.Autofac": { "target": "project" }
+	},
+	"frameworks": {
+		"net45": {
+			"dependencies": {
+				"NSubstitute": "1.9.2",
+				"FluentAssertions": "4.1.1",
+				"NUnit": "2.6.4",
+				"Microsoft.Bcl": "1.1.9"
+			},
+			"frameworkAssemblies": {
+				"mscorlib": "4.0.0.0",
+				"System.Core": "4.0.0.0"
+			}
+		}
+	}
+}

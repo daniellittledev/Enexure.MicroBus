@@ -8,7 +8,7 @@
 	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
 	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
 	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
-	"description": "Contains Saga addons for MicroBus",
+	"description": "Enexure.MicroBus.Tests",
 
 	"compilationOptions": {
 	},
@@ -16,9 +16,9 @@
 		"**/*.cs"
 	],
 	"dependencies": {
-		"Enexure.MicroBus": "2.0.2-*",
-		"Enexure.MicroBus.MessageContracts": "1.6.0-*",
-		"Enexure.MicroBus.InfrastructureContracts": "2.6.0-*"
+		"Enexure.MicroBus": { "target": "project" },
+		"Enexure.MicroBus.MessageContracts": { "target": "project" },
+		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" }
 	},
 	"frameworks": {
 		"net45": {

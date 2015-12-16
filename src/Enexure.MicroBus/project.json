@@ -16,8 +16,8 @@
 		"**/*.cs"
 	],
 	"dependencies": {
-		"Enexure.MicroBus.MessageContracts": "1.6.0-*",
-		"Enexure.MicroBus.InfrastructureContracts": "2.6.0-*"
+		"Enexure.MicroBus.MessageContracts": { "target": "project" },
+		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" }
 	},
 	"frameworks": {
 		"net45": {

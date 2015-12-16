@@ -6,8 +6,8 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>df2a615e-e662-4d7e-b9c2-9ef0295a96fe</ProjectGuid>
-    <RootNamespace>Enexure.MicroBus.Autofac.Tests</RootNamespace>
+    <ProjectGuid>8653a272-5329-43df-9ba5-cf90477241a9</ProjectGuid>
+    <RootNamespace>Enexure.MicroBus.Saga.Autofac.Tests</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">..\..\artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">..\..\artifacts\bin\$(MSBuildProjectName)\</OutputPath>
   </PropertyGroup>
