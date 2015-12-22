@@ -25,6 +25,12 @@
 			"dependencies": {
 				"Microsoft.Bcl": "1.1.9"
 			}
+		},
+		"dnxcore50": {
+			"dependencies": {
+				"System.Runtime": "4.0.20",
+				"System.Threading": "4.0.10"
+			}
 		}
 	}
 }
