@@ -32,6 +32,13 @@
 				"mscorlib": "4.0.0.0",
 				"System.Core": "4.0.0.0"
 			}
+		},
+		"dnxcore5.0": {
+			"dependencies": {
+				"Autofac": "4.0.0-rc1-177",
+				"System.Linq": "4.0.1-beta-23516",
+				"System.Collections": "4.0.11-beta-23516"
+			}
 		}
 	}
 }

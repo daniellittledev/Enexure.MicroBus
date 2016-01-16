@@ -4,7 +4,7 @@
 	"owners": [ "lavinski" ],
 	"tags": [ "MicroBus", "Mediator", "Saga", "Bus" ],
 	"releaseNotes": "core-clr support (rc1)",
-	"copyright": "Copyright © Daniel Little 2015",
+	"copyright": "Copyright ï¿½ Daniel Little 2015",
 	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
 	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
 	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
@@ -28,6 +28,16 @@
 			"frameworkAssemblies": {
 				"mscorlib": "4.0.0.0",
 				"System.Core": "4.0.0.0"
+			}
+		},
+		"dnxcore5.0": {
+			"dependencies": {
+				"System.Linq.Expressions": "4.0.11-beta-23516",
+				"System.Runtime": "4.0.21-beta-23516",
+				"System.Reflection": "4.1.0-beta-23516",
+				"System.Linq": "4.0.1-beta-23516",
+				"System.Collections": "4.0.11-beta-23516",
+				"System.Linq.Queryable": "4.0.1-beta-23516"
 			}
 		}
 	}

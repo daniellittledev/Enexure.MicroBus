@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Enexure.MicroBus.Sagas
 {
@@ -41,7 +42,7 @@ namespace Enexure.MicroBus.Sagas
 
 		private async Task<ISaga> GetSagaForAsync(TEvent message)
 		{
-			var isStartable = typeof(ISagaStartedBy<TEvent>).IsAssignableFrom(typeof(TSaga));
+			var isStartable = typeof(ISagaStartedBy<TEvent>).GetTypeInfo().IsAssignableFrom(typeof(TSaga).GetTypeInfo());
 
 			var finder = scope.GetService<ISagaFinder<TSaga, TEvent>>();
 

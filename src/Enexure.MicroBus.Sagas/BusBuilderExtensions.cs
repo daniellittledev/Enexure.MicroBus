@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Enexure.MicroBus.Sagas
 {
@@ -38,7 +39,7 @@ namespace Enexure.MicroBus.Sagas
 
 		public static IHandlerRegister RegisterSaga(this IHandlerRegister handlerRegister, Type sagaType, Pipeline pipeline, FinderList sagaFinders)
 		{
-			var sagaInterfaces = sagaType.GetInterfaces().Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ISaga<>)).ToList();
+			var sagaInterfaces = sagaType.GetTypeInfo().ImplementedInterfaces.Where(x => x.GetTypeInfo().IsGenericType && x.GetGenericTypeDefinition() == typeof(ISaga<>)).ToList();
 
 			if (!sagaInterfaces.Any()) throw new ArgumentException("Type must implement ISaga<T>", nameof(sagaType));
 			if (sagaInterfaces.Count > 1) throw new ArgumentException("A Saga can only implement ISaga<T> once", nameof(sagaType));
@@ -48,9 +49,9 @@ namespace Enexure.MicroBus.Sagas
 
 		private static IHandlerRegister HandlerRegister(IHandlerRegister handlerRegister, Type sagaType, Pipeline pipeline, FinderList sagaFinders)
 		{
-			var eventTypes = sagaType.GetInterfaces()
-				.Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEventHandler<>))
-				.Select(x => x.GetGenericArguments().First());
+			var eventTypes = sagaType.GetTypeInfo().ImplementedInterfaces
+				.Where(x => x.GetTypeInfo().IsGenericType && x.GetGenericTypeDefinition() == typeof(IEventHandler<>))
+				.Select(x => x.GenericTypeArguments.First());
 
 			foreach (var eventType in eventTypes)
 			{
@@ -80,8 +81,9 @@ namespace Enexure.MicroBus.Sagas
 		public FinderList AddSagaFinder<TSagaFinder>()
 		{
 			var isActuallyASagaFinder = typeof(TSagaFinder)
-				.GetInterfaces()
-				.Where(i => i.IsGenericType)
+				.GetTypeInfo()
+				.ImplementedInterfaces
+				.Where(i => i.GetTypeInfo().IsGenericType)
 				.Select(i => i.GetGenericTypeDefinition())
 				.Contains(typeof(ISagaFinder<,>));
 
