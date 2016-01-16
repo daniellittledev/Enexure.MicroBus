@@ -1,26 +1,29 @@
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Enexure.MicroBus
 {
-    public static class MessageTypeExtensions
-    {
-        public static MessageType GetMessageType(this Type messageType)
-        {
-            if (typeof(ICommand).IsAssignableFrom(messageType)) {
-                return MessageType.Command;
+	public static class MessageTypeExtensions
+	{
+		public static MessageType GetMessageType(this Type messageType)
+		{
+			var typeInfo = messageType.GetTypeInfo();
 
-            } else if (typeof(IEvent).IsAssignableFrom(messageType)) {
-                return MessageType.Event;
+			if (typeof(ICommand).GetTypeInfo().IsAssignableFrom(typeInfo)) {
+				return MessageType.Command;
 
-            } else if (messageType.GetInterfaces()
-                .Where(i => i.IsGenericType)
-                .Any(i => i.GetGenericTypeDefinition() == typeof(IQuery<,>))) {
-                return MessageType.Query;
+			} else if (typeof(IEvent).GetTypeInfo().IsAssignableFrom(typeInfo)) {
+				return MessageType.Event;
 
-            } else {
-                throw new NotSupportedException(string.Format("The message type {0} is not supported", messageType));
-            }
-        }
-    }
+			} else if (typeInfo.ImplementedInterfaces
+				.Where(i => i.GetTypeInfo().IsGenericType)
+				.Any(i => i.GetGenericTypeDefinition() == typeof(IQuery<,>))) {
+				return MessageType.Query;
+
+			} else {
+				throw new NotSupportedException(string.Format("The message type {0} is not supported", messageType));
+			}
+		}
+	}
 }

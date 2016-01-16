@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Tests.HandlerProviderTests
 {
-	[TestFixture]
 	public class CommandHandlerProviderTests
 	{
-		[Test]
+		[Fact]
 		public void RetrievalOfAMessageThatWasNotRegistered()
 		{
 			var provider = HandlerProvider.Create(Enumerable.Empty<MessageRegistration>());
@@ -19,7 +18,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 			registration.Should().BeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void BasicRegistrationAndRetrieval()
 		{
 			var provider = HandlerProvider.Create(new [] {
@@ -33,7 +32,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 			registration.Handlers.Count.Should().Be(1);
 		}
 
-		[Test]
+		[Fact]
 		public void RegisteringTwoCommandsToTheSameMessageShouldFail()
 		{
 			var pipeline = new Pipeline();

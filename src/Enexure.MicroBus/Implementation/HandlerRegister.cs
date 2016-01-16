@@ -78,7 +78,7 @@ namespace Enexure.MicroBus
 			return RegisterTypes(null, Pipeline.EmptyPipeline, assemblies);
 		}
 
-		public IHandlerRegister RegisterTypes(Func<Type, bool> predicate, params Assembly[] assemblies)
+		public IHandlerRegister RegisterTypes(Func<TypeInfo, bool> predicate, params Assembly[] assemblies)
 		{
 			return RegisterTypes(predicate, Pipeline.EmptyPipeline, assemblies);
 		}
@@ -88,7 +88,7 @@ namespace Enexure.MicroBus
 			return RegisterTypes(null, pipeline, assemblies);
 		}
 
-		public IHandlerRegister RegisterTypes(Func<Type, bool> predicate, Pipeline pipeline, params Assembly[] assemblies)
+		public IHandlerRegister RegisterTypes(Func<TypeInfo, bool> predicate, Pipeline pipeline, params Assembly[] assemblies)
 		{
 			var noPredicate = (predicate == null);
 
@@ -99,10 +99,10 @@ namespace Enexure.MicroBus
 			};
 
 			var matchingTypes = assemblies
-				.SelectMany(x => x.GetTypes())
+				.SelectMany(x => x.DefinedTypes)
 				.Where(x => x.IsClass && !x.IsGenericType)
-				.SelectMany(x => x.GetInterfaces().Select(y => new { Type = x, Interface = y }))
-				.Where(x => x.Interface.IsGenericType 
+				.SelectMany(x => x.ImplementedInterfaces.Select(y => new { Type = x, Interface = y }))
+				.Where(x => x.Interface.GetTypeInfo().IsGenericType 
 					&& types.Contains(x.Interface.GetGenericTypeDefinition()) 
 					&& (noPredicate || predicate(x.Type)));
 
@@ -110,10 +110,10 @@ namespace Enexure.MicroBus
 
 			foreach (var item in matchingTypes) {
 
-				var messageType = item.Interface.GetGenericArguments().First();
+				var messageType = item.Interface.GetTypeInfo().GenericTypeArguments.First();
 
-				if (!item.Type.GetInterfaces().Any(i => i.Name == "ISaga")) {
-					messageRegistrations.Add(new MessageRegistration(messageType, item.Type, pipeline));
+				if (!item.Type.ImplementedInterfaces.Any(i => i.Name == "ISaga")) {
+					messageRegistrations.Add(new MessageRegistration(messageType, item.Type.GetType(), pipeline));
 				}
 			}
 

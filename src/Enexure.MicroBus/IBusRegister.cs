@@ -29,10 +29,10 @@ namespace Enexure.MicroBus
 
 		IHandlerRegister RegisterTypes(params Assembly[] assemblies);
 
-		IHandlerRegister RegisterTypes(Func<Type, bool> predicate, params Assembly[] assemblies);
+		IHandlerRegister RegisterTypes(Func<TypeInfo, bool> predicate, params Assembly[] assemblies);
 
 		IHandlerRegister RegisterTypes(Pipeline pipeline, params Assembly[] assemblies);
 
-		IHandlerRegister RegisterTypes(Func<Type, bool> predicate, Pipeline pipeline, params Assembly[] assemblies);
+		IHandlerRegister RegisterTypes(Func<TypeInfo, bool> predicate, Pipeline pipeline, params Assembly[] assemblies);
 	}
 }

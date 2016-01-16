@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Tests.MessageRegistrations
 {
-	[TestFixture]
 	public class MessageExpandingTests
 	{
-		[Test]
+		[Fact]
 		public void ExpandingAnInterface()
 		{
 			var types = MessagesHelper.ExpandType(typeof(IEvent)).ToList();
@@ -15,7 +14,7 @@ namespace Enexure.MicroBus.Tests.MessageRegistrations
 			types.First().Should().Be(typeof(IEvent));
 		}
 
-		[Test]
+		[Fact]
 		public void ExpandingAnEventWithASubType()
 		{
 			var types = MessagesHelper.ExpandType(typeof(EventB)).ToList();

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Tests.PipelineTests
 {
 	public class PipelineTests
 	{
-		[Test]
+		[Fact(Skip = "Not finished")]
 		public async Task PipelinesRunInTheCorrectOrderTest()
 		{
 			var pipeline = new Pipeline()
 				.AddHandler<PipelineHandlerA>()
 				.AddHandler<PipelineHandlerB>();
 
-			throw new InconclusiveException("This should unit test the PipelineBuilder class");
 		}
 
 		private class Command : ICommand

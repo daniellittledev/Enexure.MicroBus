@@ -120,20 +120,28 @@ namespace Enexure.MicroBus
 		private static object GetTaskResult(Task task)
 		{
 			var taskType = task.GetType();
-			if (!taskType.IsGenericType) { 
+			var typeInfo = taskType.GetTypeInfo();
+			if (!typeInfo.IsGenericType) { 
 				throw new SomehowRecievedTaskWithoutResultException();
 			}
 
-			var resultProperty = taskType.GetProperty("Result").GetMethod;
+			var resultProperty = typeInfo.GetDeclaredProperty("Result").GetMethod;
 			return resultProperty.Invoke(task, new object[] { });
 		}
 
 		private static Task CallHandleOnHandler(object handler, IMessage message)
 		{
-			var type = handler.GetType();
+			var type = handler.GetType().GetTypeInfo();
 			var messageType = message.GetType();
 
-			var handleMethod = type.GetMethod("Handle", BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.HasThis, new[] {messageType}, null);
+			//type.GetDeclaredMethods("Handle", BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.HasThis, new[] {messageType}, null);
+			var handleMethods = type.GetDeclaredMethods("Handle");
+			var handleMethod = handleMethods.Single(x => {
+				var parameterTypeIsCorrect = x.GetParameters().Single().ParameterType.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo());
+				return parameterTypeIsCorrect 
+					&& x.IsPublic 
+					&& ((x.CallingConvention & CallingConventions.HasThis) != 0);
+				});
 
 			var objectTask = handleMethod.Invoke(handler, new object[] {message});
 

@@ -2,20 +2,20 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Tests.HandlerProviderTests
 {
-	[TestFixture]
+
 	public class EventHandlerProviderTests
 	{
-		[Test]
+		[Fact]
 		public void NoRegistrationShouldBeFine()
 		{
 			var provider = HandlerProvider.Create(Enumerable.Empty<MessageRegistration>());
 		}
 
-		[Test]
+		[Fact]
 		public void RetrievalOfAMessageThatWasNotRegistered()
 		{
 			var provider = HandlerProvider.Create(Enumerable.Empty<MessageRegistration>());
@@ -26,7 +26,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 			registration.Should().BeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void BasicRegistrationAndRetrieval()
 		{
 			var provider = HandlerProvider.Create(new [] {
@@ -40,7 +40,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 			registration.Handlers.Count.Should().Be(1);
 		}
 
-		[Test]
+		[Fact]
 		public void GroupingRegistrationAndRetrieval()
 		{
 			var pipeline = new Pipeline();
@@ -57,7 +57,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 			registration.Handlers.Count.Should().Be(2);
 		}
 
-		[Test]
+		[Fact]
 		public void PolymorphicRegistrationAndPolymorphicRetrieval()
 		{
 			var pipeline = new Pipeline();
@@ -74,7 +74,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 			registration.Handlers.Count.Should().Be(1);
 		}
 
-		[Test]
+		[Fact]
 		public void PolymorphicRegistrationAndBasicRetrieval()
 		{
 			var pipeline = new Pipeline();
@@ -91,7 +91,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 			registration.Handlers.Count.Should().Be(2);
 		}
 
-		[Test]
+		[Fact]
 		public void OrderOfHandlersShouldStartWithTheLeastSpecificMessageTypeRegistration()
 		{
 			var pipeline = new Pipeline();
@@ -111,7 +111,7 @@ namespace Enexure.MicroBus.Tests.HandlerProviderTests
 			registration.Handlers.Skip(2).First().Should().Be(typeof(EventCHandler));
 		}
 
-		[Test]
+		[Fact]
 		public void RegisteringTwoDifferentPipelinesShouldThrowAnException()
 		{
 			new Action(() => { HandlerProvider.Create(new[] {

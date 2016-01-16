@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,17 +25,19 @@ namespace Enexure.MicroBus
 			if (dependancies == null) throw new ArgumentNullException(nameof(dependancies));
 			if (scopedDependancies == null) throw new ArgumentNullException(nameof(scopedDependancies));
 
-			if (!typeof(IMessage).IsAssignableFrom(messageType)) throw new ArgumentException($"Parameter {nameof(messageType)} must implement IMessage", nameof(messageType));
+			var messageTypeInfo = messageType.GetTypeInfo();
 
-			if (typeof(ICommand).IsAssignableFrom(messageType)) {
+			if (!typeof(IMessage).GetTypeInfo().IsAssignableFrom(messageTypeInfo)) throw new ArgumentException($"Parameter {nameof(messageType)} must implement IMessage", nameof(messageType));
+
+			if (typeof(ICommand).GetTypeInfo().IsAssignableFrom(messageTypeInfo)) {
 				GetValue(new[] { messageType }, messageType, handlerType, type => typeof(ICommandHandler<>).MakeGenericType(type));
 
-			} else if (typeof(IEvent).IsAssignableFrom(messageType)) {
+			} else if (typeof(IEvent).GetTypeInfo().IsAssignableFrom(messageTypeInfo)) {
 				GetValue(MessagesHelper.ExpandType(messageType).Where(x => x != typeof(IMessage)), messageType, handlerType, type => typeof(IEventHandler<>).MakeGenericType(type));
 
-			} else if (typeof(IQuery).IsAssignableFrom(messageType)) {
+			} else if (typeof(IQuery).GetTypeInfo().IsAssignableFrom(messageTypeInfo)) {
 
-				var genericArguments = messageType.GetInterfaces().Single(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IQuery<,>)).GetGenericArguments();
+				var genericArguments = messageTypeInfo.ImplementedInterfaces.Single(x => x.GetTypeInfo().IsGenericType && x.GetGenericTypeDefinition() == typeof(IQuery<,>)).GenericTypeArguments;
 				GetValue(new[] { messageType }, messageType, handlerType, type => typeof(IQueryHandler<,>).MakeGenericType(genericArguments));
 			}
 
@@ -49,7 +51,12 @@ namespace Enexure.MicroBus
 
 		private static void GetValue(IEnumerable<Type> possibleMessageTypes, Type messageType, Type handlerType, Func<Type, Type> messageToHandler)
 		{
-			var anyMatchingHandlers = possibleMessageTypes.Select(messageToHandler).Any(possibleTypeMatch => possibleTypeMatch.IsAssignableFrom(handlerType));
+			var handlerTypeInfo = handlerType.GetTypeInfo();
+			var anyMatchingHandlers = possibleMessageTypes
+				.Select(messageToHandler)
+				.Select(x => x.GetTypeInfo())
+				.Any(possibleTypeMatch => possibleTypeMatch.IsAssignableFrom(handlerTypeInfo));
+
 			if (!anyMatchingHandlers) throw new ArgumentException($"The handler {handlerType.FullName} cannot handle the message type {messageType.FullName}. Check that the handler implements the correct interface.", nameof(handlerType));
 		}
 

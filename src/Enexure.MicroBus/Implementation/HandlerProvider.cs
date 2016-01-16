@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Enexure.MicroBus
 {
@@ -27,9 +28,9 @@ namespace Enexure.MicroBus
 			foreach (var group in groups) {
 
 				var messageType = group.Key.MessageType;
-				if (!typeof(IEvent).IsAssignableFrom(messageType) && group.Skip(1).Any()) {
+				if (!typeof(IEvent).GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo()) && group.Skip(1).Any()) {
 
-					if (typeof(ICommand).IsAssignableFrom(messageType)) {
+					if (typeof(ICommand).GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo())) {
 
 						throw new MultipleRegistrationsWithTheSameCommandException(messageType);
 					} else {

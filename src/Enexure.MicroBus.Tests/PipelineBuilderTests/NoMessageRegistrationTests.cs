@@ -1,29 +1,110 @@
 ﻿using Enexure.MicroBus.Messages;
-using NSubstitute;
-using NUnit.Framework;
+using System.Reflection;
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Xunit;
+using System.Collections.Generic;
 
 namespace Enexure.MicroBus.Tests.PipelineBuilderTests
 {
-	[TestFixture]
+	class TestGlobalPipelineProvider : IGlobalPipelineProvider
+	{
+		public Pipeline GetGlobalPipeline()
+		{
+			return Pipeline.EmptyPipeline;
+		}
+	}
+
+	class TestGlobalPipelineTracker : IGlobalPipelineTracker
+	{
+		bool hasRun = false;
+
+		public bool HasRun
+		{
+			get
+			{
+				return hasRun;
+			}
+		}
+
+		public void MarkAsRun()
+		{
+			hasRun = true;
+		}
+	}
+
+	class TestDependencyScope : IDependencyScope
+	{
+		object value;
+
+		public TestDependencyScope(object value)
+		{
+			this.value = value;
+		}
+
+		public IDependencyScope BeginScope()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Dispose()
+		{
+			throw new NotImplementedException();
+		}
+
+		public object GetService(Type serviceType)
+		{
+			if (serviceType.GetTypeInfo().IsAssignableFrom(value.GetType().GetTypeInfo()))
+			{
+				return value;
+			}
+
+			throw new NotImplementedException();
+		}
+
+		public T GetService<T>()
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<object> GetServices(Type serviceType)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<T> GetServices<T>()
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	class TestEventHandler : IEventHandler<NoMatchingRegistrationEvent>
+	{
+		public int CallsToHandle { get; set; }
+
+		public Task Handle(NoMatchingRegistrationEvent @event)
+		{
+			CallsToHandle += 1;
+
+			return Task.FromResult(1);
+		}
+	}
+
 	public class NoMessageRegistrationTests
 	{
 		class TestCommand : ICommand
 		{ }
 
-		[Test]
+		[Fact]
 		public void NoMatchingRegistrationWithNoNoMatchingRegistrationEventHandler()
 		{
 			var busSettings = new BusSettings();
-			var globalPipelineProvider = Substitute.For<IGlobalPipelineProvider>();
-			var globalPipelineTracker = Substitute.For<IGlobalPipelineTracker>();
-			var dependencyScope = Substitute.For<IDependencyScope>();
+			var globalPipelineProvider = new TestGlobalPipelineProvider();
+			var globalPipelineTracker = new TestGlobalPipelineTracker();
+			var dependencyScope = new TestDependencyScope(null);
 
 			var handlerProvider = HandlerProvider.Create(new MessageRegistration[] {});
-
-			globalPipelineProvider.GetGlobalPipeline().Returns(Pipeline.EmptyPipeline);
 
 			var pipelineBuilder = new PipelineBuilder(busSettings, handlerProvider, globalPipelineProvider, globalPipelineTracker, dependencyScope);
 
@@ -32,18 +113,13 @@ namespace Enexure.MicroBus.Tests.PipelineBuilderTests
 			action.ShouldThrowExactly<NoRegistrationForMessageException>().And.MessageType.Should().Be(typeof(TestCommand));
 		}
 
-		[Test]
+		[Fact]
 		public async Task NoMatchingRegistrationWithANoMatchingRegistrationEventHandlerForAnObject() {
 
 			var busSettings = new BusSettings();
-			var globalPipelineProvider = Substitute.For<IGlobalPipelineProvider>();
-			var globalPipelineTracker = Substitute.For<IGlobalPipelineTracker>();
-			var dependencyScope = Substitute.For<IDependencyScope>();
-
-			var handler = Substitute.For<IEventHandler<NoMatchingRegistrationEvent>>();
-
-            globalPipelineProvider.GetGlobalPipeline().Returns(Pipeline.EmptyPipeline);
-            dependencyScope.GetService(typeof(IEventHandler<NoMatchingRegistrationEvent>)).Returns(handler);
+			var globalPipelineProvider = new TestGlobalPipelineProvider();
+			var globalPipelineTracker = new TestGlobalPipelineTracker();
+			var dependencyScope = new TestDependencyScope(new TestEventHandler());
 
 			var handlerProvider = HandlerProvider.Create(new[] {
 				new MessageRegistration(typeof(NoMatchingRegistrationEvent), typeof(IEventHandler<NoMatchingRegistrationEvent>))
@@ -53,23 +129,19 @@ namespace Enexure.MicroBus.Tests.PipelineBuilderTests
 
 			var runner = pipelineBuilder.GetPipelineForMessage(typeof(IMessage));
 
-			await runner(Substitute.For<IMessage>());
+			await runner(new CommandA());
 
-			await handler.Received(1).Handle(Arg.Any<NoMatchingRegistrationEvent>());
+			var handler = (TestEventHandler)dependencyScope.GetService(typeof(IEventHandler<NoMatchingRegistrationEvent>));
+			handler.CallsToHandle.Should().Be(1);
 		}
 
-		[Test]
+		[Fact]
 		public async Task NoMatchingRegistrationWithANoMatchingRegistrationEventHandlerForACommand()
 		{
 			var busSettings = new BusSettings();
-			var globalPipelineProvider = Substitute.For<IGlobalPipelineProvider>();
-			var globalPipelineTracker = Substitute.For<IGlobalPipelineTracker>();
-			var dependencyScope = Substitute.For<IDependencyScope>();
-
-			var handler = Substitute.For<IEventHandler<NoMatchingRegistrationEvent>>();
-
-		    globalPipelineProvider.GetGlobalPipeline().Returns(Pipeline.EmptyPipeline);
-            dependencyScope.GetService(typeof(IEventHandler<NoMatchingRegistrationEvent>)).Returns(handler);
+			var globalPipelineProvider = new TestGlobalPipelineProvider();
+			var globalPipelineTracker = new TestGlobalPipelineTracker();
+			var dependencyScope = new TestDependencyScope(new TestEventHandler());
 
 			var handlerProvider = HandlerProvider.Create(new[] {
 				new MessageRegistration(typeof(NoMatchingRegistrationEvent), typeof(IEventHandler<NoMatchingRegistrationEvent>))
@@ -81,7 +153,8 @@ namespace Enexure.MicroBus.Tests.PipelineBuilderTests
 
 			await runner(new TestCommand());
 
-			await handler.Received(1).Handle(Arg.Any<NoMatchingRegistrationEvent>());
+			var handler = (TestEventHandler)dependencyScope.GetService(typeof(IEventHandler<NoMatchingRegistrationEvent>));
+			handler.CallsToHandle.Should().Be(1);
 		}
 	}
 }

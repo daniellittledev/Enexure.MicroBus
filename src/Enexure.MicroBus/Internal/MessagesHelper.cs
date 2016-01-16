@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Enexure.MicroBus
 {
@@ -8,28 +9,33 @@ namespace Enexure.MicroBus
 	{
 		public static IEnumerable<Type> ExpandType(Type type)
 		{
-			var isEvent = typeof(IEvent).IsAssignableFrom(type);
-			var isCommand = typeof(ICommand).IsAssignableFrom(type);
-			var isQuery = typeof(IQuery).IsAssignableFrom(type);
+			var typeInfo = type.GetTypeInfo();
+			var isEvent = typeof(IEvent).GetTypeInfo().IsAssignableFrom(typeInfo);
+			var isCommand = typeof(ICommand).GetTypeInfo().IsAssignableFrom(typeInfo);
+			var isQuery = typeof(IQuery).GetTypeInfo().IsAssignableFrom(typeInfo);
 
-			return from subType in type.GetInterfaces().Concat(GetAllBaseTypes(type))
-			       where isEvent && typeof(IEvent).IsAssignableFrom(subType)
-			          || isCommand && typeof(ICommand).IsAssignableFrom(subType)
-			          || isQuery && typeof(IQuery).IsAssignableFrom(subType)
-			       select subType;
+			var eventInterface = typeof(IEvent).GetTypeInfo();
+			var commandInterface = typeof(ICommand).GetTypeInfo();
+			var queryInterface = typeof(IQuery).GetTypeInfo();
+
+			return from subTypeInfo in typeInfo.ImplementedInterfaces.Select(x => x.GetTypeInfo()).Concat(GetAllBaseTypes(type.GetTypeInfo()))
+			       where isEvent && eventInterface.IsAssignableFrom(subTypeInfo)
+			          || isCommand && commandInterface.IsAssignableFrom(subTypeInfo)
+			          || isQuery && queryInterface.IsAssignableFrom(subTypeInfo)
+			       select subTypeInfo.AsType();
 		}
 
-		private static IEnumerable<Type> GetAllBaseTypes(Type type)
+		private static IEnumerable<TypeInfo> GetAllBaseTypes(TypeInfo type)
 		{
 			if (type.BaseType != null)
 			{
-				foreach (var baseType in GetAllBaseTypes(type.BaseType))
+				foreach (var baseType in GetAllBaseTypes(type.BaseType.GetTypeInfo()))
 				{
 					yield return baseType;
 				}
 			}
 
-			if (type != typeof(object)) {
+			if (type.GetType() != typeof(object)) {
 				yield return type;
 			}
 		}

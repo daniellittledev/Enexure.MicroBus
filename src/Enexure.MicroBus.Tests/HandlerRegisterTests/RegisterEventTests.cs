@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 {
-	[TestFixture]
 	public class RegisterEventTests
 	{
-		[Test]
+		[Fact]
 		public void RegisterThreeHandlersToASingleMessage()
 		{
 			var register = new HandlerRegister()
@@ -19,7 +18,7 @@ namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 			register.GetMessageRegistrations().Count.Should().Be(3);
 		}
 
-		[Test]
+		[Fact]
 		public void RegisterThreeHandlersToASingleMessageIndividually()
 		{
 			var register = new HandlerRegister()
@@ -31,7 +30,7 @@ namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 			register.GetMessageRegistrations().Count.Should().Be(3);
 		}
 
-		[Test]
+		[Fact]
 		public void RegisterThreeHandlersToTheirOwnMessages()
 		{
 			var register = new HandlerRegister()
@@ -43,7 +42,7 @@ namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 			register.GetMessageRegistrations().Count.Should().Be(3);
 		}
 
-		[Test]
+		[Fact]
 		public void MixingIndividuallyAndCombinedHandlerRegistration()
 		{
 			var register = new HandlerRegister()

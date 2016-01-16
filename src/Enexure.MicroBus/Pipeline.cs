@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Linq;
 
 namespace Enexure.MicroBus
@@ -50,7 +51,7 @@ namespace Enexure.MicroBus
 		{
 			var collection = handlers as IReadOnlyCollection<Type> ?? handlers.ToList();
 
-			if (collection.Any(handler => !typeof(IPipelineHandler).IsAssignableFrom(handler))) {
+			if (collection.Any(handler => !typeof(IPipelineHandler).GetTypeInfo().IsAssignableFrom(handler.GetTypeInfo()))) {
 				throw new InvalidOperationException("Handlers must implement the IPipelineHandler interface");
 			}
 

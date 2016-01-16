@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 {
-	[TestFixture]
 	public class RegisterCommandTests
 	{
-		[Test]
+		[Fact]
 		public void RegisterASingleCommandHandlerShouldReturnOneRegistration()
 		{
 			var register = new HandlerRegister()
@@ -16,7 +15,7 @@ namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 		}
 
 
-		[Test]
+		[Fact]
 		public void RegisterTwoHandlersToTheSameCommandIsNotYetInvalid()
 		{
 			var register = new HandlerRegister()
@@ -27,7 +26,7 @@ namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 			register.GetMessageRegistrations().Count.Should().Be(2);
 		}
 
-		[Test]
+		[Fact]
 		public void RegisterPolymorphicHandlerToTheSameCommandIsNotYetInvalid()
 		{
 			var register = new HandlerRegister()
@@ -38,7 +37,7 @@ namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 			register.GetMessageRegistrations().Count.Should().Be(2);
 		}
 
-		[Test]
+		[Fact]
 		public void RegisterTwoCommandsShouldReturnTwoRegistrations()
 		{
 			var register = new HandlerRegister()

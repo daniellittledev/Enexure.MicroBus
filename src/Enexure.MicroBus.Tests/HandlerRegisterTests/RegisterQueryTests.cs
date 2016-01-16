@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 {
-	[TestFixture]
 	public class RegisterQueryTests
 	{
-		[Test]
+		[Fact]
 		public void RegisterASingleQueryHandlerShouldReturnOneRegistration()
 		{
 			var register = new HandlerRegister()
@@ -16,7 +15,7 @@ namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 		}
 
 
-		[Test]
+		[Fact]
 		public void RegisterTwoHandlersToTheSameQueryIsNotYetInvalid()
 		{
 			var register = new HandlerRegister()
