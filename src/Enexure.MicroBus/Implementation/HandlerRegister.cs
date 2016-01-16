@@ -113,7 +113,7 @@ namespace Enexure.MicroBus
 				var messageType = item.Interface.GetTypeInfo().GenericTypeArguments.First();
 
 				if (!item.Type.ImplementedInterfaces.Any(i => i.Name == "ISaga")) {
-					messageRegistrations.Add(new MessageRegistration(messageType, item.Type.GetType(), pipeline));
+					messageRegistrations.Add(new MessageRegistration(messageType, item.Type.AsType(), pipeline));
 				}
 			}
 

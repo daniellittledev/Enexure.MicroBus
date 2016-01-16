@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Autofac.Tests
 {
-	[TestFixture]
 	public class AutofacEventTests
 	{
 		class Event : IEvent
@@ -33,7 +32,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			}
 		}
 
-		[Test]
+		[Fact]
 		public async Task TestEvent()
 		{
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
@@ -50,7 +49,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			@event.Tally.Should().Be(1);
 		}
 
-		[Test]
+		[Fact]
 		public async Task TestMultipleEvents()
 		{
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {

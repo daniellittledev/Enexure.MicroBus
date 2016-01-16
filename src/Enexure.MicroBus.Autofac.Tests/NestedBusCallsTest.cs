@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using Autofac;
 using Enexure.MicroBus.Annotations;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Autofac.Tests
 {
-	[TestFixture]
 	public class NestedBusCallsTest
 	{
 		interface IPipeTestMessage
@@ -95,7 +94,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			}
 		}
 
-		[Test]
+		[Fact]
 		public async Task SendingACommandThatRaisesAnEventShouldNotThrow()
 		{
 			var pipeline = new Pipeline()
@@ -131,7 +130,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			}
 		}
 
-		[Test]
+		[Fact]
 		public async Task GlobalPipelineHandlerShouldOnlyBeRunOnce()
 		{
 			var pipeline = new Pipeline()
@@ -153,25 +152,25 @@ namespace Enexure.MicroBus.Autofac.Tests
 			command.HandlerIds.Distinct().Should().HaveCount(1, "Global pipeline handler should only be run once");
 		}
 
-        [Test]
-        public async Task GlobalPipelineHandlerShouldBeRunOnce()
-        {
-            var pipeline = new Pipeline()
-                .AddHandler<GlobalPipelineHandler>();
+		[Fact]
+		public async Task GlobalPipelineHandlerShouldBeRunOnce()
+		{
+			var pipeline = new Pipeline()
+				.AddHandler<GlobalPipelineHandler>();
 
-            var container = new ContainerBuilder().RegisterMicroBus(busBuilder => busBuilder
-                .RegisterEvent<Event>().To<EventHandler>(),
-                pipeline
-            ).Build();
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => busBuilder
+				.RegisterEvent<Event>().To<EventHandler>(),
+				pipeline
+			).Build();
 
-            var bus = container.Resolve<IMicroBus>();
+			var bus = container.Resolve<IMicroBus>();
 
-            var evt = new Event();
-            await bus.Publish(evt);
+			var evt = new Event();
+			await bus.Publish(evt);
 
-            evt.Run.Should().Be(true);
+			evt.Run.Should().Be(true);
 
-            evt.HandlerIds.Distinct().Should().HaveCount(1, "Global pipeline handler should be run");
-        }
-    }
+			evt.HandlerIds.Distinct().Should().HaveCount(1, "Global pipeline handler should be run");
+		}
+	}
 }

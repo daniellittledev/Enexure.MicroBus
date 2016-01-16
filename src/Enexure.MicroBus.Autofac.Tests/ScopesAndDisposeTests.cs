@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Enexure.MicroBus.Annotations;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Autofac.Tests
 {
-	[TestFixture]
 	public class ScopesAndDisposeTests
 	{
 		[UsedImplicitly]
@@ -87,7 +84,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			}
 		}
 
-		[Test]
+		[Fact]
 		public async Task InTheDefaultAutofacScopeCommandHandlersShouldFinishBeforeTheScopeIsDisposed()
 		{
 			var pipeline = Pipeline.EmptyPipeline;
@@ -105,7 +102,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			await bus.Send(new Command());
 		}
 
-		[Test]
+		[Fact]
 		public async Task InTheDefaultAutofacScopeEventHandlersShouldFinishBeforeTheScopeIsDisposed()
 		{
 			var pipeline = Pipeline.EmptyPipeline;
@@ -123,7 +120,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			await bus.Publish(new Event());
 		}
 
-		[Test]
+		[Fact]
 		public async Task InTheDefaultAutofacScopeQueryHandlersShouldFinishBeforeTheScopeIsDisposed()
 		{
 			var pipeline = Pipeline.EmptyPipeline;

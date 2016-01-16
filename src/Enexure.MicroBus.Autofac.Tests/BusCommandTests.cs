@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using Autofac;
 using Enexure.MicroBus.Annotations;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Autofac.Tests
 {
-	[TestFixture]
 	public class AutofacCommandTests
 	{
 		class Command : ICommand { }
@@ -21,7 +20,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			}
 		}
 
-		[Test]
+		[Fact]
 		public async Task TestCommand()
 		{
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
@@ -35,7 +34,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			await bus.Send(new Command());
 		}
 
-		[Test]
+		[Fact]
 		public void TestMissingCommand()
 		{
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => busBuilder).Build();

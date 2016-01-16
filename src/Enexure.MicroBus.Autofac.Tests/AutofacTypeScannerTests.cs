@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Reflection;
+using System.Threading.Tasks;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Enexure.MicroBus.Autofac.Tests
 {
-	[TestFixture]
 	public class AutofacTypeScannerTests
 	{
 		class Event : IEvent { }
@@ -30,13 +30,13 @@ namespace Enexure.MicroBus.Autofac.Tests
 			public Task<Result> Handle(Query @Query) { return Task.FromResult(new Result()); }
 		}
 
-		[Test]
+		[Fact]
 		public void ScanAnAssemblyForHandlersTest()
 		{
 			var register = new HandlerRegister().RegisterTypes(x => 
 				x.FullName.Contains("AutofacTypeScannerTests"),
 				Pipeline.EmptyPipeline, 
-				typeof(AutofacTypeScannerTests).Assembly);
+				typeof(AutofacTypeScannerTests).GetTypeInfo().Assembly);
 
 			register.GetMessageRegistrations().Count.Should().Be(3);
 
