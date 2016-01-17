@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Enexure.MicroBus.Autofac;
 using Enexure.MicroBus.Sagas;
-using NUnit.Framework;
+using Xunit;
 using System;
 using System.Threading.Tasks;
 using Enexure.MicroBus.Sagas.Autofac;
@@ -9,12 +9,11 @@ using FluentAssertions;
 
 namespace Enexure.MicroBus.Saga.Tests
 {
-	[TestFixture]
 	public class SagaTests
 	{
 		private readonly Guid id = Guid.NewGuid();
 
-		[Test]
+		[Fact]
 		public async Task StartingASaga()
 		{
 			var builder = new ContainerBuilder();
@@ -36,7 +35,7 @@ namespace Enexure.MicroBus.Saga.Tests
 
 		}
 
-		[Test]
+		[Fact]
 		public async Task SagaWithTwoStarters()
 		{
 			var builder = new ContainerBuilder();
@@ -59,7 +58,7 @@ namespace Enexure.MicroBus.Saga.Tests
 
 		}
 
-		[Test]
+		[Fact]
 		public void SagaHandlingAMessageBeforeItsBeenStarted()
 		{
 			var builder = new ContainerBuilder();
