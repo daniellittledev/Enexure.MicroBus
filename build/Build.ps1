@@ -34,12 +34,17 @@ task Test -depends Compile {
 
 task Compile { 
 
+	Write-Host "Running dnu restore"
 	dnu restore
 
 	$projects = ls "$solutionDir\src"
 
 	foreach($project in $projects) {
 
+		Write-Host
+		Write-Host "|-----------------------------------------"
+		Write-Host "Building $($project.FullName)" -F DarkGray
+		Write-Host
 		dnu build $project.FullName --configuration $configuration
 	}
 }
