@@ -34,13 +34,7 @@ task Test -depends Compile {
 
 task Compile { 
 
-	nuget sources add -Name "api.nuget.org" -Source "https://api.nuget.org/v3/index.json"
-	iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
-	dnvm update-self
-	dnvm upgrade
-	dnvm install 1.0.0-rc1-final
-	dnvm list
-	dnvm use 1.0.0-rc1-final
+	dnu restore
 
 	$projects = ls "$solutionDir\src"
 

@@ -1,6 +1,16 @@
 version: '{build}'
 os: Visual Studio 2015
 configuration: Release
+
+install:
+ - ps: nuget sources add -Name "api.nuget.org" -Source "https://api.nuget.org/v3/index.json"
+ - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
+ - ps: dnvm update-self
+ - ps: dnvm upgrade
+ - ps: dnvm install 1.0.0-rc1-final
+ - ps: dnvm list
+ - ps: dnvm use 1.0.0-rc1-final
+
 before_build:
 - ps: '& ".\build\runner.ps1" Package'
 build:
