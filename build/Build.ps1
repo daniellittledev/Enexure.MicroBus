@@ -34,7 +34,7 @@ task Test -depends Compile {
 
 task Compile { 
 
-	Write-Host "Running dnu restore"
+	Write-Host "Running dnu restore" -F Cyan
 	dnu restore
 
 	$projects = ls "$solutionDir\src"
@@ -43,7 +43,7 @@ task Compile {
 
 		Write-Host
 		Write-Host "|-----------------------------------------"
-		Write-Host "Building $($project.FullName)" -F DarkGray
+		Write-Host "Building $($project.FullName)" -F Cyan
 		Write-Host
 		dnu build $project.FullName --configuration $configuration
 	}

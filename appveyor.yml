@@ -5,12 +5,14 @@ configuration: Release
 install:
  - ps: $env:DNX_FEED = "https://www.nuget.org/api/v2"
  - ps: nuget sources add -Name "api.nuget.org" -Source "https://api.nuget.org/v3/index.json"
+ - ps: nuget sources add -Name "api.nuget.org" -Source "http://www.myget.org/f/aspnetwebstacknightly/"
+ - ps: nuget sources add -Name "api.nuget.org" -Source "http://www.myget.org/f/aspnetwebstacknightlyrelease/"
  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
  - ps: dnvm update-self
  - ps: dnvm upgrade
- - ps: dnvm install 1.0.0-rc1-final
- - ps: dnvm list
- - ps: dnvm use 1.0.0-rc1-final
+ - ps: dnvm install 1.0.0-rc1-update1
+# - ps: dnvm list
+ - ps: dnvm use 1.0.0-rc1-update1
 
 before_build:
 - ps: '& ".\build\runner.ps1" Package'
