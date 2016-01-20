@@ -5,8 +5,8 @@ configuration: Release
 install:
  - ps: $env:DNX_FEED = "https://www.nuget.org/api/v2"
  - ps: nuget sources add -Name "api.nuget.org" -Source "https://api.nuget.org/v3/index.json"
- - ps: nuget sources add -Name "api.nuget.org" -Source "http://www.myget.org/f/aspnetwebstacknightly/"
- - ps: nuget sources add -Name "api.nuget.org" -Source "http://www.myget.org/f/aspnetwebstacknightlyrelease/"
+ - ps: nuget sources add -Name "aspnetwebstacknightly" -Source "http://www.myget.org/f/aspnetwebstacknightly/"
+ - ps: nuget sources add -Name "aspnetwebstacknightlyrelease" -Source "http://www.myget.org/f/aspnetwebstacknightlyrelease/"
  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
  - ps: dnvm update-self
  - ps: dnvm upgrade
