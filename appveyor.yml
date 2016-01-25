@@ -3,7 +3,7 @@ os: Visual Studio 2015
 configuration: Release
 
 install:
- - ps: $env:DNX_FEED = "https://www.nuget.org/api/v2"
+# - ps: $env:DNX_FEED = "https://www.nuget.org/api/v2"
  - ps: nuget sources add -Name "api.nuget.org" -Source "https://api.nuget.org/v3/index.json"
  - ps: nuget sources add -Name "aspnetwebstacknightly" -Source "http://www.myget.org/f/aspnetwebstacknightly/"
  - ps: nuget sources add -Name "aspnetwebstacknightlyrelease" -Source "http://www.myget.org/f/aspnetwebstacknightlyrelease/"
