@@ -3,7 +3,7 @@ AssemblyVersion.cs
 
 #NuGet
 artifacts/
-#packages/
+packages/
 
 #OS junk files
 [Tt]humbs.db
