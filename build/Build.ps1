@@ -35,7 +35,7 @@ task Test -depends Compile {
 task Compile { 
 
 	Write-Host "Running dnu restore" -F Cyan
-	dnu restore
+	dnu restore $solutionDir
 
 	$projects = ls "$solutionDir\src"
 
