@@ -15,7 +15,7 @@ install:
  - ps: dnvm use 1.0.0-rc1-final -r coreclr
 
 build_script:
-- ps: & ".\build\runner.ps1" Package
+- ps: '& ".\build\runner.ps1" Package'
 
 artifacts:
 - path: artifacts\*.nupkg
