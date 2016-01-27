@@ -10,18 +10,16 @@ install:
  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
  - ps: dnvm update-self
  - ps: dnvm upgrade
- - ps: dnvm install 1.0.0-rc1-update1
-# - ps: dnvm list
- - ps: dnvm use 1.0.0-rc1-update1
+ - ps: dnvm install 1.0.0-rc1-final
+ - ps: dnvm list
+ - ps: dnvm use 1.0.0-rc1-final -r coreclr
 
-before_build:
-- ps: '& ".\build\runner.ps1" Package'
-build:
-#  publish_nuget: true
-#  publish_nuget_symbols: true
-  verbosity: minimal
+build_script:
+- ps: & ".\build\runner.ps1" Package
+
 artifacts:
 - path: artifacts\*.nupkg
+
 deploy:
 - provider: Environment
   name: Public Nuget

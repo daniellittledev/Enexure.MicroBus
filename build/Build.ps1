@@ -12,26 +12,6 @@ properties {
 
 task default -depends Package
 
-task Package -depends Test { 
-
-	$projects = ls "$solutionDir\src" | ? { -not ($_.Name -like "*Tests") }
-
-	foreach($project in $projects) {
-
-		dnu pack $project.FullName --configuration $configuration
-	}
-}
-
-task Test -depends Compile { 
-
-	$projects = ls "$solutionDir\src" | ? { $_.Name -like "*Tests" }
-
-	foreach($project in $projects) {
-
-		ls "$($project.FullName)\bin\$configuration\net45" | ? { $_.Name -like "*Tests.dll" } | % { & $nunit $_.FullName }
-	}
-}
-
 task Compile { 
 
 	Write-Host "Running dnu restore" -F Cyan
@@ -46,6 +26,28 @@ task Compile {
 		Write-Host "Building $($project.FullName)" -F Cyan
 		Write-Host
 		dnu build $project.FullName --configuration $configuration
+	}
+}
+
+task Test -depends Compile { 
+
+	$projects = ls "$solutionDir\src" | ? { $_.Name -like "*Tests" }
+
+	foreach($project in $projects) {
+
+		Write-Host "Running tests for $project" -F Cyan
+		dnx -p "$($project.FullName)" test
+
+	}
+}
+
+task Package -depends Test { 
+
+	$projects = ls "$solutionDir\src" | ? { -not ($_.Name -like "*Tests") }
+
+	foreach($project in $projects) {
+
+		dnu pack $project.FullName --configuration $configuration
 	}
 }
 
