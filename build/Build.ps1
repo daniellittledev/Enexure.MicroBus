@@ -14,6 +14,9 @@ task default -depends Package
 
 task Compile { 
 
+	Write-Host "Compiling"
+	Write-Host "|-----------------------------------------"
+
 	Write-Host "Running dnu restore" -F Cyan
 	dnu restore $solutionDir
 
@@ -21,15 +24,15 @@ task Compile {
 
 	foreach($project in $projects) {
 
-		Write-Host
-		Write-Host "|-----------------------------------------"
 		Write-Host "Building $($project.FullName)" -F Cyan
-		Write-Host
-		dnu build $project.FullName --configuration $configuration
+		exec { dnu build $project.FullName --configuration $configuration }
 	}
 }
 
 task Test -depends Compile { 
+
+	Write-Host "Testing"
+	Write-Host "|-----------------------------------------"
 
 	$projects = ls "$solutionDir\src" | ? { $_.Name -like "*Tests" }
 
@@ -43,10 +46,13 @@ task Test -depends Compile {
 
 task Package -depends Test { 
 
+	Write-Host "Packaging"
+
 	$projects = ls "$solutionDir\src" | ? { -not ($_.Name -like "*Tests") }
 
 	foreach($project in $projects) {
 
+	Write-Host "Packing $project" -F Cyan
 		dnu pack $project.FullName --configuration $configuration
 	}
 }

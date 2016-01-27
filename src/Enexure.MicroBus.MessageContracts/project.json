@@ -18,11 +18,12 @@
 	"dependencies": {
 	},
 	"frameworks": {
-		"net40": {
+		"dnx451": {
 			"frameworkAssemblies": {
+				"System.Runtime": ""
 			}
 		},
-		"dnxcore5.0": {
+		"dnxcore50": {
 			"dependencies": {
 				"System.Runtime": "4.0.21-beta-23516"
 			}

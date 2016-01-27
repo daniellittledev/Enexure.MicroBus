@@ -10,9 +10,10 @@ install:
  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))
  - ps: dnvm update-self
  - ps: dnvm upgrade
- - ps: dnvm install 1.0.0-rc1-final
+ - ps: dnvm install 1.0.0-rc1-update1
+ - ps: dnvm use 1.0.0-rc1-update1
  - ps: dnvm list
- - ps: dnvm use 1.0.0-rc1-final -r coreclr
+ #1.0.0-rc1-final -r coreclr
 
 build_script:
 - ps: '& ".\build\runner.ps1" Package'

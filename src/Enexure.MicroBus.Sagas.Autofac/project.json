@@ -23,7 +23,7 @@
 		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" }
 	},
 	"frameworks": {
-		"net45": {
+		"dnx451": {
 			"dependencies": {
 				"Microsoft.Bcl": "1.1.9",
 				"Autofac": "3.5.2"
@@ -33,7 +33,7 @@
 				"System.Core": "4.0.0.0"
 			}
 		},
-		"dnxcore5.0": {
+		"dnxcore50": {
 			"dependencies": {
 				"Autofac": "4.0.0-rc1-177",
 				"System.Linq": "4.0.1-beta-23516",

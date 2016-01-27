@@ -19,14 +19,15 @@
 		"Enexure.MicroBus.MessageContracts": { "target": "project" }
 	},
 	"frameworks": {
-		"net40": {
-			"frameworkAssemblies": {
-			},
+		"dnx451": {
 			"dependencies": {
 				"Microsoft.Bcl": "1.1.9"
+			},
+			"frameworkAssemblies": {
+				"System.Runtime": ""
 			}
 		},
-		"dnxcore5.0": {
+		"dnxcore50": {
 			"dependencies": {
 				"System.Runtime": "4.0.21-beta-23516",
 				"System.Threading": "4.0.11-beta-23516"
