@@ -14,6 +14,8 @@ task default -depends Package
 
 task Compile { 
 
+	dnvm use 1.0.0-rc1-update1 -r clr
+
 	Write-Host "Compiling"
 	Write-Host "|-----------------------------------------"
 
@@ -31,6 +33,8 @@ task Compile {
 
 task Test -depends Compile { 
 
+	dnvm use 1.0.0-rc1-final -r coreclr
+
 	Write-Host "Testing"
 	Write-Host "|-----------------------------------------"
 
@@ -45,6 +49,8 @@ task Test -depends Compile {
 }
 
 task Package -depends Test { 
+
+	dnvm use 1.0.0-rc1-update1 -r clr
 
 	Write-Host "Packaging"
 
