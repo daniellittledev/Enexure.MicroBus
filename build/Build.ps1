@@ -10,7 +10,7 @@ properties {
 	$nunit = "$PSScriptRoot\nunit\nunit-console.exe"
 }
 
-task default -depends Package
+task default -depends Package, Test
 
 task Compile { 
 
@@ -31,7 +31,7 @@ task Compile {
 	}
 }
 
-task Test -depends Compile { 
+task Test { 
 
 	dnvm use 1.0.0-rc1-final -r coreclr
 
@@ -48,7 +48,7 @@ task Test -depends Compile {
 	}
 }
 
-task Package -depends Test { 
+task Package { 
 
 	dnvm use 1.0.0-rc1-update1 -r clr
 

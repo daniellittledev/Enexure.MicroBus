@@ -18,6 +18,9 @@ install:
 build_script:
 - ps: '& ".\build\runner.ps1" Package'
 
+test_script: 
+- ps: '& ".\build\runner.ps1" Test'
+
 artifacts:
 - path: artifacts\*.nupkg
 
