@@ -1,5 +1,5 @@
 {
-	"version": "2.0.3",
+	"version": "2.1.0",
 	"authors": [ "Daniel Little" ],
 	"owners": [ "lavinski" ],
 	"tags": [ "MicroBus", "Mediator", "Saga", "Autofac", "Bus" ],
@@ -9,7 +9,7 @@
 	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
 	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
 	"description": "Contains the Autofac verion of MicroBus.Sagas",
-	
+
 	"compilationOptions": {
 	},
 	"compile": [
