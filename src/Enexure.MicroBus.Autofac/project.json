@@ -27,7 +27,6 @@
 				"Autofac": "3.5.2"
 			},
 			"frameworkAssemblies": {
-				"System.Runtime": "",
 				"mscorlib": "4.0.0.0",
 				"System.Core": "4.0.0.0"
 			}

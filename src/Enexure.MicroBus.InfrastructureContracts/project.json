@@ -24,7 +24,6 @@
 				"Microsoft.Bcl": "1.1.9"
 			},
 			"frameworkAssemblies": {
-				"System.Runtime": ""
 			}
 		},
 		"dotnet5.4": {
