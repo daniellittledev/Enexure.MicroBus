@@ -20,7 +20,7 @@
 		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" }
 	},
 	"frameworks": {
-		"dnx451": {
+		"net451": {
 			"dependencies": {
 				"Microsoft.Bcl": "1.1.9"
 			},
@@ -30,7 +30,7 @@
 				"System.Core": "4.0.0.0"
 			}
 		},
-		"dnxcore50": {
+		"dotnet5.4": {
 			"dependencies": {
 				"System.Runtime": "4.0.21-beta-23516",
 				"System.Reflection": "4.1.0-beta-23516",
