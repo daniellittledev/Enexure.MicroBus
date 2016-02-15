@@ -43,7 +43,7 @@ task Test {
 	foreach($project in $projects) {
 
 		Write-Host "Running tests for $project" -F Cyan
-		dnx -p "$($project.FullName)" test
+		exec { dnx -p "$($project.FullName)" test }
 
 	}
 }
@@ -59,7 +59,7 @@ task Package -depends Compile {
 	foreach($project in $projects) {
 
 	Write-Host "Packing $project" -F Cyan
-		dnu pack $project.FullName --configuration $configuration
+		exec { dnu pack $project.FullName --configuration $configuration }
 	}
 }
 

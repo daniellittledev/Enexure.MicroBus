@@ -131,7 +131,7 @@ namespace Enexure.MicroBus
 
 		private static Task CallHandleOnHandler(object handler, IMessage message)
 		{
-			var type = handler.GetType().GetTypeInfo();
+            var type = handler.GetType();
 			var messageType = message.GetType();
 
 			//type.GetDeclaredMethods("Handle", BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.HasThis, new[] {messageType}, null);
