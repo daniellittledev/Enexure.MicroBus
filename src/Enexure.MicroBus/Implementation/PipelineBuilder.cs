@@ -135,7 +135,7 @@ namespace Enexure.MicroBus
 			var messageType = message.GetType();
 
 			//type.GetDeclaredMethods("Handle", BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.HasThis, new[] {messageType}, null);
-			var handleMethods = type.GetRuntimeMethods("Handle");
+			var handleMethods = type.GetRuntimeMethods().Where(m => m.Name == "Handle");
 			var handleMethod = handleMethods.Single(x => {
 				var parameterTypeIsCorrect = x.GetParameters().Single().ParameterType.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo());
 				return parameterTypeIsCorrect 
