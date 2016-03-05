@@ -6,21 +6,20 @@ MicroBus is a simple in process mediator for .NET
 
 > PM> Install-Package [Enexure.MicroBus](https://www.nuget.org/packages/Enexure.MicroBus/)
 
-I wanted a super simple mediator with great interceptor support. With MicroBus  handlers and interceptors are first class citizens making it easy to get started. 
+I wanted a super simple mediator with great interceptor support. With MicroBus handlers and interceptors are first class citizens making it easy to get started. After creating your handlers and interceptors register them and start sending messages.
 
     var busBuilder = new BusBuilder()
+        
+        // Interceptors run in order so these are explicitly registered
         .RegisterInterceptor<LoggingInterceptor>()
         .RegisterInterceptor<SecurityInterceptor>()
         .RegisterInterceptor<ValidationInterceptor>()
         .RegisterInterceptor<TransactionInterceptor>()
+        
+        // Scan an assembly to find all the handlers
+        .RegisterHandlers(assembly);
 
-        .RegisterHandlers(assembly)        
-
-	    .RegisterCommandHandler<Command, CommandHandler>()
-	    .RegisterEventHandler<Event, EventHandler>()
-	    .RegisterMessageHandler<Message, MessageHandler>();
-
-After your registrations are sorted out then it's just a matter of registering MicroBus with a DI container. Here is now we register MicroBus to autofac.
+Once your registrations are sorted out then it's just a matter of adding MicroBus to your DI container. Here is now we register MicroBus to Autofac.
 
     autofacContainerBuilder.RegisterMicroBus(busBuilder);
 
