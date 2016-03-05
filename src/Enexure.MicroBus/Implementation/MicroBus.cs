@@ -1,5 +1,6 @@
 ﻿using Enexure.MicroBus.Annotations;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Enexure.MicroBus
@@ -15,38 +16,37 @@ namespace Enexure.MicroBus
 			this.dependencyResolver = dependencyResolver;
 		}
 
-		public async Task Send(ICommand busCommand)
+		public async Task SendAsync(ICommand busCommand)
 		{
 			if (busCommand == null) throw new ArgumentNullException(nameof(busCommand));
 
 			using (var scope = dependencyResolver.BeginScope()) {
-				var builder = scope.GetService<IPipelineBuilder>();
-				var messageProcessor = builder.GetPipelineForMessage(busCommand.GetType());
-				await messageProcessor(busCommand);
+				var builder = scope.GetService<IPipelineRunBuilder>();
+				var messageProcessor = builder.GetRunnerForPipeline(busCommand.GetType());
+				await messageProcessor.Handle(busCommand);
 			}
 		}
 
-		public async Task Publish(IEvent busEvent)
+		public async Task PublishAsync(IEvent busEvent)
 		{
 			if (busEvent == null) throw new ArgumentNullException(nameof(busEvent));
 
 			using (var scope = dependencyResolver.BeginScope()) {
-				var builder = scope.GetService<IPipelineBuilder>();
-				var messageProcessor = builder.GetPipelineForMessage(busEvent.GetType());
-				await messageProcessor(busEvent);
+				var builder = scope.GetService<IPipelineRunBuilder>();
+				var messageProcessor = builder.GetRunnerForPipeline(busEvent.GetType());
+				await messageProcessor.Handle(busEvent);
 			}
 		}
 
-		public async Task<TResult> Query<TQuery, TResult>(IQuery<TQuery, TResult> busQuery)
+		public async Task<TResult> QueryAsync<TQuery, TResult>(IQuery<TQuery, TResult> busQuery)
 			where TQuery : IQuery<TQuery, TResult>
-			where TResult : IResult
 		{
 			if (busQuery == null) throw new ArgumentNullException(nameof(busQuery));
 
 			using (var scope = dependencyResolver.BeginScope()) {
-				var builder = scope.GetService<IPipelineBuilder>();
-				var messageProcessor = builder.GetPipelineForMessage(busQuery.GetType());
-				return (TResult) await messageProcessor(busQuery);
+				var builder = scope.GetService<IPipelineRunBuilder>();
+				var messageProcessor = builder.GetRunnerForPipeline(busQuery.GetType());
+				return (TResult) (await messageProcessor.Handle(busQuery)).Single();
 			}
 		}
 	}

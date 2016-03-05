@@ -1,5 +1,5 @@
 {
-	"version": "0.3.0",
+	"version": "3.0.0",
 	"authors": [ "Daniel Little" ],
 	"owners": [ "lavinski" ],
 	"tags": [ "MicroBus", "Mediator", "Saga", "Bus" ],
@@ -32,12 +32,12 @@
 		},
 		"dotnet5.4": {
 			"dependencies": {
-				"System.Linq.Expressions": "4.0.11-beta-23516",
-				"System.Runtime": "4.0.21-beta-23516",
-				"System.Reflection": "4.1.0-beta-23516",
-				"System.Linq": "4.0.1-beta-23516",
-				"System.Collections": "4.0.11-beta-23516",
-				"System.Linq.Queryable": "4.0.1-beta-23516"
+				"System.Linq.Expressions": "4.0.11-*",
+				"System.Runtime": "4.0.21-*",
+				"System.Reflection": "4.1.0-*",
+				"System.Linq": "4.0.1-*",
+				"System.Collections": "4.0.11-*",
+				"System.Linq.Queryable": "4.0.1-*"
 			}
 		}
 	}

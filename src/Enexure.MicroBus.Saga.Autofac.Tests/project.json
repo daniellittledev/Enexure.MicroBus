@@ -1,5 +1,5 @@
 {
-	"version": "2.1.0",
+	"version": "3.0.0",
 	"authors": [ "Daniel Little" ],
 	"owners": [ "lavinski" ],
 	"tags": [ "MicroBus", "Mediator", "Saga", "Autofac", "Bus" ],
@@ -16,15 +16,15 @@
 		"**/*.cs"
 	],
 	"dependencies": {
-		"Enexure.MicroBus.Sagas": { "target": "project" },
-		"Enexure.MicroBus.Sagas.Autofac": { "target": "project" },
+		"Autofac": "4.0.0-*",
 		"Enexure.MicroBus": { "target": "project" },
-		"Enexure.MicroBus.MessageContracts": { "target": "project" },
+		"Enexure.MicroBus.Autofac": { "target": "project" },
 		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" },
-		
+		"Enexure.MicroBus.MessageContracts": { "target": "project" },
+		"Enexure.MicroBus.Sagas": { "target": "project" },
+		"FluentAssertions": "4.1.1",
 		"xunit": "2.1.0",
-		"xunit.runner.dnx": "2.1.0-rc1-build204",
-		"FluentAssertions": "4.1.1"
+		"xunit.runner.dnx": "2.1.0-*"
 	},
 	"frameworks": {
 		"dnxcore50": { }

@@ -64,7 +64,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			public async Task Handle(Command command)
 			{
 				var @event = new Event();
-				await bus.Publish(@event);
+				await bus.PublishAsync(@event);
 				command.Run = @event.Run;
 				command.HandlerIds.AddRange(@event.HandlerIds);
 			}
@@ -97,35 +97,40 @@ namespace Enexure.MicroBus.Autofac.Tests
 		[Fact]
 		public async Task SendingACommandThatRaisesAnEventShouldNotThrow()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<PipelineHandler>();
+			var busBuilder = new BusBuilder()
+				.RegisterCommandHandler<Command, CommandHandler>()
+				.RegisterEventHandler<Event, EventHandler>();
 
-			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => busBuilder
-				.RegisterCommand<Command>().To<CommandHandler>(pipeline)
-				.RegisterEvent<Event>().To<EventHandler>(pipeline)
-			).Build();
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
 			var command = new Command();
-			await bus.Send(command);
+			await bus.SendAsync(command);
 
 			command.Run.Should().Be(true);
-
-			command.HandlerIds.Distinct().Should().HaveCount(1, "There should have been only one instance of the pipeline handler");
 		}
 
 		[UsedImplicitly]
 		class GlobalPipelineHandler : IPipelineHandler
 		{
+			readonly IOuterPipelineDetector detector;
+
+			public GlobalPipelineHandler(IOuterPipelineDetector detector)
+			{
+				this.detector = detector;
+			}
+
 			public Task<object> Handle(Func<IMessage, Task<object>> next, IMessage message)
 			{
-				var pipeMessage = message as IPipeTestMessage;
-				if (pipeMessage != null)
+				if (detector.IsOuterPipeline)
 				{
-					pipeMessage.HandlerIds.Add(Guid.NewGuid());
+					var pipeMessage = message as IPipeTestMessage;
+					if (pipeMessage != null)
+					{
+						pipeMessage.HandlerIds.Add(Guid.NewGuid());
+					}
 				}
-
 				return next(message);
 			}
 		}
@@ -133,19 +138,17 @@ namespace Enexure.MicroBus.Autofac.Tests
 		[Fact]
 		public async Task GlobalPipelineHandlerShouldOnlyBeRunOnce()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<GlobalPipelineHandler>();
+			var busBuilder = new BusBuilder()
+				.RegisterCommandHandler<Command, CommandHandler>()
+				.RegisterEventHandler<Event, EventHandler>()
+				.RegisterPipelineHandler<GlobalPipelineHandler>();
 
-			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => busBuilder
-				.RegisterCommand<Command>().To<CommandHandler>()
-				.RegisterEvent<Event>().To<EventHandler>(),
-				pipeline
-			).Build();
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
 			var command = new Command();
-			await bus.Send(command);
+			await bus.SendAsync(command);
 
 			command.Run.Should().Be(true);
 
@@ -155,18 +158,16 @@ namespace Enexure.MicroBus.Autofac.Tests
 		[Fact]
 		public async Task GlobalPipelineHandlerShouldBeRunOnce()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<GlobalPipelineHandler>();
+			var busBuilder = new BusBuilder()
+				.RegisterEventHandler<Event, EventHandler>()
+				.RegisterPipelineHandler<GlobalPipelineHandler>();
 
-			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => busBuilder
-				.RegisterEvent<Event>().To<EventHandler>(),
-				pipeline
-			).Build();
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
 			var evt = new Event();
-			await bus.Publish(evt);
+			await bus.PublishAsync(evt);
 
 			evt.Run.Should().Be(true);
 

@@ -7,13 +7,13 @@ namespace Enexure.MicroBus.Autofac.Tests
 {
 	public class AutofacQueryTests
 	{
-		class Query : IQuery<Query, Result> { }
+		class QueryAsync : IQuery<QueryAsync, Result> { }
 
-		class Result : IResult { }
+		class Result { }
 
-		class QueryHandler : IQueryHandler<Query, Result>
+		class QueryHandler : IQueryHandler<QueryAsync, Result>
 		{
-			public Task<Result> Handle(Query query)
+			public Task<Result> Handle(QueryAsync query)
 			{
 				return Task.FromResult(new Result());
 			}
@@ -22,16 +22,16 @@ namespace Enexure.MicroBus.Autofac.Tests
 		[Fact]
 		public async Task TestQuery()
 		{
-			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
+			var busBuilder = new BusBuilder()
+				.RegisterQueryHandler<QueryAsync, Result, QueryHandler>();
 
-				return busBuilder
-					.RegisterQuery<Query, Result>().To<QueryHandler>();
-
-			}).Build();
+			var container = new ContainerBuilder()
+				.RegisterMicroBus(busBuilder)
+				.Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
-			var result = await bus.Query(new Query());
+			var result = await bus.QueryAsync(new QueryAsync());
 
 			result.Should().NotBeNull();
 

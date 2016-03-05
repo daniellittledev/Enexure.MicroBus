@@ -2,48 +2,36 @@
 using System.Linq;
 using FluentAssertions;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace Enexure.MicroBus.Tests.HandlerProviderTests
 {
 	public class QueryHandlerProviderTests
 	{
 		[Fact]
-		public void RetrievalOfAMessageThatWasNotRegistered()
+		public void RegisteringTwoQueriesToTheSameMessageShouldFail()
 		{
-			var provider = HandlerProvider.Create(Enumerable.Empty<MessageRegistration>());
+			new Action(() =>
+			{
 
-			GroupedMessageRegistration registration;
-			provider.GetRegistrationForMessage(typeof(QueryA), out registration);
+				var busBuilder = new BusBuilder()
+				.RegisterQueryHandler<QueryA, object, QueryAHandler>()
+				.RegisterQueryHandler<QueryA, object, OtherQueryAHandler>();
 
-			registration.Should().BeNull();
+				var piplineBuilder = new PipelineBuilder(busBuilder);
+				piplineBuilder.Validate();
+
+			}).ShouldThrow<InvalidDuplicateRegistrationsException>();
 		}
 
-		[Fact]
-		public void BasicRegistrationAndRetrieval()
+		public class QueryA : IQuery<QueryA, object> { }
+		class QueryAHandler : IQueryHandler<QueryA, object>
 		{
-			var provider = HandlerProvider.Create(new [] {
-				new MessageRegistration(typeof(QueryA), typeof(QueryAHandler), new Pipeline()), 
-			});
-
-			GroupedMessageRegistration registration;
-			provider.GetRegistrationForMessage(typeof(QueryA), out registration);
-
-			registration.Should().NotBeNull();
-			registration.Handlers.Count.Should().Be(1);
+			public Task<object> Handle(QueryA Command)
+			{
+				throw new NotSupportedException();
+			}
 		}
-
-		[Fact]
-		public void RegisteringTwoQuerysToTheSameMessageShouldFail()
-		{
-			var pipeline = new Pipeline();
-
-			new Action(() => {
-				HandlerProvider.Create(new[] {
-					new MessageRegistration(typeof(QueryA), typeof(QueryAHandler), pipeline),
-					new MessageRegistration(typeof(QueryA), typeof(OtherQueryAHandler), pipeline),
-				});
-			}).ShouldThrow<MultipleRegistrationsWithTheSameQueryException>();
-		}
-
+		class OtherQueryAHandler : QueryAHandler { }
 	}
 }

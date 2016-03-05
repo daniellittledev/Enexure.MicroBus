@@ -2,155 +2,65 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using Enexure.MicroBus.Annotations;
-using Enexure.MicroBus.Messages;
-using Result = System.Object;
 
 namespace Enexure.MicroBus
 {
 	public class PipelineBuilder : IPipelineBuilder
 	{
-		private readonly IHandlerProvider handlerProvider;
-		private readonly IGlobalPipelineProvider globalPipelineProvider;
-		private readonly IGlobalPipelineTracker tracker;
-		private readonly IDependencyScope dependencyScope;
-		private readonly BusSettings busSettings;
+		private readonly IReadOnlyCollection<Type> interceptorTypes;
+		private readonly IDictionary<Type, IReadOnlyCollection<Type>> handlerLookup;
 
-		public PipelineBuilder(
-			[NotNull]BusSettings busSettings,
-			[NotNull]IHandlerProvider handlerProvider,
-			[NotNull]IGlobalPipelineProvider globalPipelineProvider,
-			[NotNull]IGlobalPipelineTracker tracker,
-			[NotNull]IDependencyScope dependencyScope)
+		public PipelineBuilder(BusBuilder busBuilder)
 		{
-			if (handlerProvider == null) throw new ArgumentNullException(nameof(handlerProvider));
-			if (globalPipelineProvider == null) throw new ArgumentNullException(nameof(globalPipelineProvider));
-			if (tracker == null) throw new ArgumentNullException(nameof(tracker));
-			if (dependencyScope == null) throw new ArgumentNullException(nameof(dependencyScope));
-			if (busSettings == null) throw new ArgumentNullException(nameof(busSettings));
-
-			this.handlerProvider = handlerProvider;
-			this.globalPipelineProvider = globalPipelineProvider;
-			this.tracker = tracker;
-			this.dependencyScope = dependencyScope;
-			this.busSettings = busSettings;
+			interceptorTypes = busBuilder.Interceptors.Select(x => x.InterceptorType).ToArray();
+			handlerLookup = busBuilder.Registrations
+				.ToLookup(x => x.MessageType, x => x.HandlerType)
+				.Select(x => new { Key = x.Key, Handlers = x.Distinct() })
+				.ToDictionary(x => x.Key, x => (IReadOnlyCollection<Type>)x.Handlers.ToArray());
 		}
 
-		public Func<IMessage, Task<Result>> GetPipelineForMessage(Type messageType)
+		private IEnumerable<HandlerRegistration> ExpandInheritedHandlers(HandlerRegistration registration)
 		{
-			GroupedMessageRegistration registration;
-			if (!handlerProvider.GetRegistrationForMessage(messageType, out registration)) {
-				if (messageType == typeof(NoMatchingRegistrationEvent)) {
-					throw new NoRegistrationForMessageException(messageType);
-				}
-
-				try {
-					var runner = GetPipelineForMessage(typeof(NoMatchingRegistrationEvent));
-
-					return message => {
-						return runner(new NoMatchingRegistrationEvent(message));
-					};
-
-				} catch (NoRegistrationForMessageException) {
-					throw new NoRegistrationForMessageException(messageType);
-				}
-			}
-
-			var completePipeline = tracker.HasRun 
-				? registration.Pipeline.ToList() 
-				: globalPipelineProvider.GetGlobalPipeline().Concat(registration.Pipeline).ToList();
-
-			tracker.MarkAsRun();
-
-			return message => GenerateNext(busSettings, dependencyScope, completePipeline, registration.Handlers)(message);
+			return ReflectionExtensions
+				.ExpandType(registration.MessageType)
+				.Select(x => new HandlerRegistration(x, registration.HandlerType));
 		}
 
-		private static Func<IMessage, Task<object>> GenerateNext(
-			BusSettings busSettings,
-			IDependencyScope dependencyScope,
-			IReadOnlyCollection<Type> pipelineHandlerTypes,
-			IEnumerable<Type> leftHandlerTypes
-			)
+		public Pipeline GetPipeline(Type messageType)
 		{
-			return (async message => {
+			var raisedMessageTypes = ReflectionExtensions.ExpandType(messageType);
 
-				if (message == null) {
-					throw new NullMessageTypeException();
+			var handlers = new List<Type>();
+			foreach (var raisedMessageType in raisedMessageTypes)
+			{
+				if (handlerLookup.ContainsKey(raisedMessageType))
+				{
+					handlers.AddRange(handlerLookup[raisedMessageType]);
 				}
-
-				if (!pipelineHandlerTypes.Any()) {
-					return await RunLeafHandlers(busSettings, dependencyScope, leftHandlerTypes, message);
-				}
-
-				var head = pipelineHandlerTypes.First();
-				var nextHandler = (IPipelineHandler)dependencyScope.GetService(head);
-
-				var tail = pipelineHandlerTypes.Skip(1).ToList();
-				var nextFunction = GenerateNext(busSettings, dependencyScope, tail, leftHandlerTypes);
-
-				return await nextHandler.Handle(nextFunction, message);
-			});
+			}
+			return new Pipeline(interceptorTypes, handlers);
 		}
 
-		private static async Task<Result> RunLeafHandlers(
-			BusSettings busSettings,
-			IDependencyScope dependencyScope,
-			IEnumerable<Type> leftHandlerTypes,
-			IMessage message)
+		public void Validate()
 		{
-			Task lastTask = null;
-			var handlers = leftHandlerTypes.Select(dependencyScope.GetService);
+			var allCommands = handlerLookup
+				.Where(x => typeof(ICommand).GetTypeInfo().IsAssignableFrom(x.Key.GetTypeInfo()))
+				.Select(x => new { MessageType = x.Key, Count = x.Value.Count() })
+				.Where(x => x.Count >= 2)
+				.Select(x => x.MessageType);
 
-			if (busSettings.DisableParallelHandlers) {
-				foreach (var leafHandler in handlers) {
-					await (lastTask = CallHandleOnHandler(leafHandler, message));
-				}
-			} else {
-				await Task.WhenAll(handlers.Select(handler => (lastTask = CallHandleOnHandler(handler, message))));
+			var allQueriers = handlerLookup
+				.Where(x => typeof(IQuery).GetTypeInfo().IsAssignableFrom(x.Key.GetTypeInfo()))
+				.Select(x => new { MessageType = x.Key, Count = x.Value.Count() })
+				.Where(x => x.Count >= 2)
+				.Select(x => x.MessageType);
+
+			var invalidDuplicateRegistrations = allCommands.Concat(allQueriers).ToList();
+
+			if (invalidDuplicateRegistrations.Any())
+			{
+				throw new InvalidDuplicateRegistrationsException(invalidDuplicateRegistrations);
 			}
-
-			if (lastTask == null) {
-				throw new NullReferenceException("Sanity Check fail: while running leaf handlers the last task was null, but an instance was expected.");
-			}
-
-			return GetTaskResult(lastTask);
-		}
-
-		private static object GetTaskResult(Task task)
-		{
-			var taskType = task.GetType();
-			var typeInfo = taskType.GetTypeInfo();
-			if (!typeInfo.IsGenericType) { 
-				throw new SomehowRecievedTaskWithoutResultException();
-			}
-
-			var resultProperty = typeInfo.GetDeclaredProperty("Result").GetMethod;
-			return resultProperty.Invoke(task, new object[] { });
-		}
-
-		private static Task CallHandleOnHandler(object handler, IMessage message)
-		{
-            var type = handler.GetType();
-			var messageType = message.GetType();
-
-			//type.GetDeclaredMethods("Handle", BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.HasThis, new[] {messageType}, null);
-			var handleMethods = type.GetRuntimeMethods().Where(m => m.Name == "Handle");
-			var handleMethod = handleMethods.Single(x => {
-				var parameterTypeIsCorrect = x.GetParameters().Single().ParameterType.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo());
-				return parameterTypeIsCorrect 
-					&& x.IsPublic 
-					&& ((x.CallingConvention & CallingConventions.HasThis) != 0);
-				});
-
-			var objectTask = handleMethod.Invoke(handler, new object[] {message});
-
-			if (objectTask == null) {
-				throw new NullReferenceException(string.Format("Handler for message of type '{0}' returned null.{1}To Resolve you can try{1} 1) Return a task instead", messageType, Environment.NewLine));
-			}
-
-			return (Task)objectTask;
 		}
 	}
-
 }

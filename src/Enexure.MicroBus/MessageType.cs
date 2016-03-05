@@ -4,6 +4,6 @@
 	{
 		Command,
 		Event,
-		Query
+		QueryAsync
 	}
 }

@@ -19,7 +19,7 @@ namespace Enexure.MicroBus
 			} else if (typeInfo.ImplementedInterfaces
 				.Where(i => i.GetTypeInfo().IsGenericType)
 				.Any(i => i.GetGenericTypeDefinition() == typeof(IQuery<,>))) {
-				return MessageType.Query;
+				return MessageType.QueryAsync;
 
 			} else {
 				throw new NotSupportedException(string.Format("The message type {0} is not supported", messageType));

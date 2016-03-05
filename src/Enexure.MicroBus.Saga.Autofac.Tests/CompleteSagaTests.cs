@@ -4,10 +4,9 @@ using Enexure.MicroBus.Sagas;
 using Xunit;
 using System;
 using System.Threading.Tasks;
-using Enexure.MicroBus.Sagas.Autofac;
 using FluentAssertions;
 
-namespace Enexure.MicroBus.Saga.Tests
+namespace Enexure.MicroBus.Saga.Autofac.Tests
 {
 	public class SagaTests
 	{
@@ -18,20 +17,20 @@ namespace Enexure.MicroBus.Saga.Tests
 		{
 			var builder = new ContainerBuilder();
 
+			builder.RegisterType<TestSagaRepository>().AsImplementedInterfaces().SingleInstance();
+
+			var busBuilder = new BusBuilder()
+				.RegisterSaga<TestSaga>();
+
 			var container = builder
-				.RegisterSagas()
-				.RegisterMicroBus(busBuilder => busBuilder.RegisterSaga<TestSaga>(new FinderList()
-					.AddSagaFinder<FinderA>()
-					.AddSagaFinder<FinderB>()
-					.AddSagaFinder<FinderC>()
-				))
+				.RegisterMicroBus(busBuilder)
 				.Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
-			await bus.Publish(new SagaStartingAEvent() { Identifier = id });
+			await bus.PublishAsync(new SagaStartingAEvent() { CorrelationId = id });
 
-			await bus.Publish(new SagaEndingEvent() { Identifier = id });
+			await bus.PublishAsync(new SagaEndingEvent() { CorrelationId = id });
 
 		}
 
@@ -40,21 +39,22 @@ namespace Enexure.MicroBus.Saga.Tests
 		{
 			var builder = new ContainerBuilder();
 
+			builder.RegisterType<TestSagaRepository>().AsImplementedInterfaces().SingleInstance();
+
+			var busBuilder = new BusBuilder()
+				.RegisterSaga<TestSaga>();
+
 			var container = builder
-				.RegisterSagas()
-				.RegisterMicroBus(busBuilder => busBuilder.RegisterSaga<TestSaga>())
-				.RegisterSagaFinder<FinderA>()
-				.RegisterSagaFinder<FinderB>()
-				.RegisterSagaFinder<FinderC>()
+				.RegisterMicroBus(busBuilder)
 				.Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
-			await bus.Publish(new SagaStartingBEvent() { Identifier = id });
+			await bus.PublishAsync(new SagaStartingBEvent() { CorrelationId = id });
 
-			await bus.Publish(new SagaStartingAEvent() { Identifier = id });
+			await bus.PublishAsync(new SagaStartingAEvent() { CorrelationId = id });
 
-			await bus.Publish(new SagaEndingEvent() { Identifier = id });
+			await bus.PublishAsync(new SagaEndingEvent() { CorrelationId = id });
 
 		}
 
@@ -63,17 +63,18 @@ namespace Enexure.MicroBus.Saga.Tests
 		{
 			var builder = new ContainerBuilder();
 
+			builder.RegisterType<TestSagaRepository>().AsImplementedInterfaces().SingleInstance();
+
+			var busBuilder = new BusBuilder()
+				.RegisterSaga<TestSaga>();
+
 			var container = builder
-				.RegisterSagas()
-				.RegisterMicroBus(busBuilder => busBuilder.RegisterSaga<TestSaga>())
-				.RegisterSagaFinder<FinderA>()
-				.RegisterSagaFinder<FinderB>()
-				.RegisterSagaFinder<FinderC>()
+				.RegisterMicroBus(busBuilder)
 				.Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
-			Func<Task> func = () => bus.Publish(new SagaEndingEvent() { Identifier = id });
+			Func<Task> func = () => bus.PublishAsync(new SagaEndingEvent() { CorrelationId = id });
 
 			func.ShouldThrowExactly<NoSagaFoundException>();
 

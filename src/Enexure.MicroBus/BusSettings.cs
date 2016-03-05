@@ -4,6 +4,12 @@ namespace Enexure.MicroBus
 {
 	public class BusSettings
 	{
-		public bool DisableParallelHandlers { get; set; }
+		public Concurrency HanlderConcurrency { get; set; }
+	}
+
+	public enum Concurrency
+	{
+		Syncronous,
+		Asyncronous
 	}
 }

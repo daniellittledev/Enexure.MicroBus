@@ -1,5 +1,5 @@
 {
-	"version": "2.1.0",
+	"version": "3.0.0",
 	"authors": [ "Daniel Little" ],
 	"owners": [ "lavinski" ],
 	"tags": [ "MicroBus", "Mediator", "Saga", "Autofac", "Bus" ],
@@ -8,7 +8,7 @@
 	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
 	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
 	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
-	"description": "Contains the Autofac verion of MicroBus.Sagas",
+	"description": "[Obsolete] Contains the Autofac verion of MicroBus.Sagas",
 
 	"compilationOptions": {
 	},
@@ -16,28 +16,16 @@
 		"**/*.cs"
 	],
 	"dependencies": {
-		"Enexure.MicroBus.Sagas": { "target": "project" },
-		"Enexure.MicroBus": { "target": "project" },
-		"Enexure.MicroBus.Autofac": { "target": "project" },
-		"Enexure.MicroBus.MessageContracts": { "target": "project" },
-		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" }
 	},
 	"frameworks": {
 		"net451": {
-			"dependencies": {
-				"Microsoft.Bcl": "1.1.9",
-				"Autofac": "3.5.2"
-			},
-			"frameworkAssemblies": {
-				"mscorlib": "4.0.0.0",
-				"System.Core": "4.0.0.0"
+			"frameworkAssemblies":{ 
+				"mscorlib": "4.0.0.0"
 			}
 		},
 		"dotnet5.4": {
 			"dependencies": {
-				"Autofac": "4.0.0-rc1-177",
-				"System.Linq": "4.0.1-beta-23516",
-				"System.Collections": "4.0.11-beta-23516"
+				"System.Runtime": "4.0.21-*"
 			}
 		}
 	}

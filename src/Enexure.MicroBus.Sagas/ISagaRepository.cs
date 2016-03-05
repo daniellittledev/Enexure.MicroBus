@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 
 namespace Enexure.MicroBus.Sagas
 {
-	public interface ISagaRepository
+	public interface ISagaRepository<TSaga>
+		where TSaga : class, ISaga
 	{
-		Task<ISaga> GetAsync(Guid sagaId);
-		Task<ISaga> FindAsync(Expression<Func<ISaga, bool>> predicate);
+		Task CreateAsync(TSaga saga);
+		Task UpdateAsync(TSaga saga);
+		Task CompleteAsync(TSaga saga);
 
-		Task CreateAsync(ISaga saga);
-		Task UpdateAsync(ISaga saga);
-		Task CompleteAsync(ISaga saga);
+		TSaga NewSaga();
+		Task<TSaga> FindAsync(IEvent message);
 	}
 }

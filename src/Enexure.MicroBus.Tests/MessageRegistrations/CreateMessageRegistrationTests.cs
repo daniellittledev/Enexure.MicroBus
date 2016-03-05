@@ -2,32 +2,32 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Enexure.MicroBus.Tests.MessageRegistrations
+namespace Enexure.MicroBus.Tests.HandlerRegistrations
 {
-	public class CreateMessageRegistrationTests
+	public class CreateHandlerRegistrationTests
 	{
 		[Fact]
-		public void MatchingEventAndHandlerShouldBeAbleToBeCreated()
+		public void MatchingMessageAndHandlerShouldBeAbleToBeCreated()
 		{
-			new MessageRegistration(typeof(EventA), typeof(EventAHandler));
+			new HandlerRegistration(typeof(MessageA), typeof(MessageAHandler));
 		}
 
 		[Fact]
-		public void SuperTypeEventAndSubTypeHandlerShouldBeAbleToBeCreated()
+		public void SuperTypeMessageAndSubTypeHandlerShouldBeAbleToBeCreated()
 		{
-			new MessageRegistration(typeof(EventB), typeof(EventAHandler));
-		}
-
-		[Fact]
-		public void ExtraSuperTypeEventAndSubTypeHandlerShouldBeAbleToBeCreated()
-		{
-			new MessageRegistration(typeof(EventC), typeof(EventAHandler));
+			new HandlerRegistration(typeof(MessageB), typeof(MessageAHandler));
 		}
 
 		[Fact]
 		public void HandlerWhichCannotSupportEventShouldThrow()
 		{
-			new Action(() => new MessageRegistration(typeof(EventA), typeof(EventBHandler))).ShouldThrow<ArgumentException>();
+			new Action(() => new HandlerRegistration(typeof(MessageA), typeof(MessageXHandler))).ShouldThrow<ArgumentException>();
 		}
+
+		class MessageA { }
+		class MessageB : MessageA { }
+		class MessageX { }
+		class MessageAHandler : MessageHandler<MessageA> { }
+		class MessageXHandler : MessageHandler<MessageX> { }
 	}
 }

@@ -60,12 +60,12 @@ namespace Enexure.MicroBus.Autofac.Tests
 			}
 		}
 
-		class Query : IQuery<Query, Result> { }
+		class QueryAsync : IQuery<QueryAsync, Result> { }
 
-		private class Result : IResult { }
+		private class Result { }
 
 		[UsedImplicitly]
-		private class QueryHandler : IQueryHandler<Query, Result>
+		private class QueryHandler : IQueryHandler<QueryAsync, Result>
 		{
 			private readonly DisposableObject disposable;
 
@@ -74,7 +74,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 				this.disposable = disposable;
 			}
 
-			public async Task<Result> Handle(Query Query)
+			public async Task<Result> Handle(QueryAsync QueryAsync)
 			{
 				await Task.Delay(1);
 
@@ -87,55 +87,52 @@ namespace Enexure.MicroBus.Autofac.Tests
 		[Fact]
 		public async Task InTheDefaultAutofacScopeCommandHandlersShouldFinishBeforeTheScopeIsDisposed()
 		{
-			var pipeline = Pipeline.EmptyPipeline;
-
 			var containerBuilder = new ContainerBuilder();
 
-			containerBuilder.RegisterType<DisposableObject>().AsSelf();
+			var busBuilder = new BusBuilder()
+				.RegisterCommandHandler<Command, CommandHandler>();
 
-			var container = containerBuilder.RegisterMicroBus(busBuilder => busBuilder
-				.RegisterCommand<Command>().To<CommandHandler>(pipeline)
-			).Build();
+			containerBuilder.RegisterMicroBus(busBuilder);
+			containerBuilder.RegisterType<DisposableObject>().AsSelf();
+			var container = containerBuilder.Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
-			await bus.Send(new Command());
+			await bus.SendAsync(new Command());
 		}
 
 		[Fact]
 		public async Task InTheDefaultAutofacScopeEventHandlersShouldFinishBeforeTheScopeIsDisposed()
 		{
-			var pipeline = Pipeline.EmptyPipeline;
-
 			var containerBuilder = new ContainerBuilder();
 
-			containerBuilder.RegisterType<DisposableObject>().AsSelf();
+			var busBuilder = new BusBuilder()
+				.RegisterEventHandler<Event, EventHandler>();
 
-			var container = containerBuilder.RegisterMicroBus(busBuilder => busBuilder
-				.RegisterEvent<Event>().To<EventHandler>(pipeline)
-			).Build();
+			containerBuilder.RegisterMicroBus(busBuilder);
+			containerBuilder.RegisterType<DisposableObject>().AsSelf();
+			var container = containerBuilder.Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
-			await bus.Publish(new Event());
+			await bus.PublishAsync(new Event());
 		}
 
 		[Fact]
 		public async Task InTheDefaultAutofacScopeQueryHandlersShouldFinishBeforeTheScopeIsDisposed()
 		{
-			var pipeline = Pipeline.EmptyPipeline;
-
 			var containerBuilder = new ContainerBuilder();
 
-			containerBuilder.RegisterType<DisposableObject>().AsSelf();
+			var busBuilder = new BusBuilder()
+				.RegisterQueryHandler<QueryAsync, Result, QueryHandler>();
 
-			var container = containerBuilder.RegisterMicroBus(busBuilder => busBuilder
-				.RegisterQuery<Query, Result>().To<QueryHandler>(pipeline)
-			).Build();
+			containerBuilder.RegisterMicroBus(busBuilder);
+			containerBuilder.RegisterType<DisposableObject>().AsSelf();
+			var container = containerBuilder.Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
-			await bus.Query(new Query());
+			await bus.QueryAsync(new QueryAsync());
 		}
 	}
 }

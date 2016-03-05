@@ -7,12 +7,9 @@ namespace Enexure.MicroBus.Tests.PipelineTests
 {
 	public class PipelineTests
 	{
-		[Fact(Skip = "Not finished")]
-		public async Task PipelinesRunInTheCorrectOrderTest()
+		//[Fact(Skip = "Not finished")]
+		public void PipelinesRunInTheCorrectOrderTest()
 		{
-			var pipeline = new Pipeline()
-				.AddHandler<PipelineHandlerA>()
-				.AddHandler<PipelineHandlerB>();
 
 		}
 

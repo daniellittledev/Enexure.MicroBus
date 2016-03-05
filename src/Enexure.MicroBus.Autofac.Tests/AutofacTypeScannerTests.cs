@@ -21,24 +21,23 @@ namespace Enexure.MicroBus.Autofac.Tests
 			public Task Handle(Command @event) { return Task.FromResult(0); }
 		}
 
-		class Result : IResult { }
+		class Result { }
 
-		class Query : IQuery<Query, Result> { }
+		class QueryAsync : IQuery<QueryAsync, Result> { }
 
-		class QueryHandler : IQueryHandler<Query, Result>
+		class QueryHandler : IQueryHandler<QueryAsync, Result>
 		{
-			public Task<Result> Handle(Query @Query) { return Task.FromResult(new Result()); }
+			public Task<Result> Handle(QueryAsync @QueryAsync) { return Task.FromResult(new Result()); }
 		}
 
 		[Fact]
 		public void ScanAnAssemblyForHandlersTest()
 		{
-			var register = new HandlerRegister().RegisterTypes(x => 
-				x.FullName.Contains("AutofacTypeScannerTests"),
-				Pipeline.EmptyPipeline, 
-				typeof(AutofacTypeScannerTests).GetTypeInfo().Assembly);
+			var register = new BusBuilder().RegisterHandlers(
+				typeof(AutofacTypeScannerTests).GetTypeInfo().Assembly,
+				x => x.FullName.Contains("AutofacTypeScannerTests"));
 
-			register.GetMessageRegistrations().Count.Should().Be(3);
+			register.Registrations.Count.Should().Be(3);
 
 		}
 	}

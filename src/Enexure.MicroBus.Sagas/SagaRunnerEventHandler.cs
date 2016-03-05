@@ -1,16 +1,17 @@
 ﻿using System.Threading.Tasks;
 using System.Reflection;
+using System.Linq;
 
 namespace Enexure.MicroBus.Sagas
 {
 	public class SagaRunnerEventHandler<TSaga, TEvent> : IEventHandler<TEvent>
 		where TEvent : IEvent
-		where TSaga : ISaga
+		where TSaga : class, ISaga
 	{
-		private readonly ISagaRepository sagaRepository;
+		private readonly ISagaRepository<TSaga> sagaRepository;
 		private readonly IDependencyScope scope;
 
-		public SagaRunnerEventHandler(ISagaRepository sagaRepository, IDependencyScope scope)
+		public SagaRunnerEventHandler(ISagaRepository<TSaga> sagaRepository, IDependencyScope scope)
 		{
 			this.scope = scope;
 			this.sagaRepository = sagaRepository;
@@ -18,18 +19,31 @@ namespace Enexure.MicroBus.Sagas
 
 		public async Task Handle(TEvent @event)
 		{
-			var saga = await GetSagaForAsync(@event);
-			var isNew = (saga == null);
+			var isNew = false;
+			var isStartable = typeof(ISagaStartedBy<TEvent>).GetTypeInfo().IsAssignableFrom(typeof(TSaga).GetTypeInfo());
+			var sagaFinder = scope.GetServices<ISagaFinder<TSaga, TEvent>>().FirstOrDefault();
 
-			if (isNew) {
-				saga = scope.GetService<TSaga>();
-			} 
+			TSaga saga;
+			if (isStartable) {
+				saga = await FindSaga(@event, sagaFinder);
+
+				if (saga == null)
+				{
+					isNew = true;
+					saga = sagaRepository.NewSaga();
+				}
+			} else {
+				saga = await FindSaga(@event, sagaFinder);
+
+				if (saga == null) {
+					throw new NoSagaFoundException(typeof(TSaga), typeof(TEvent));
+				}
+			}
 
 			// ReSharper disable once SuspiciousTypeConversion.Global
-			var sagaHandle = (IEventHandler<TEvent>)saga;
-			await sagaHandle.Handle(@event);
+			await ((IEventHandler<TEvent>)saga).Handle(@event);
 
-			if (isNew) {
+			if (!saga.IsCompleted && isNew) {
 				await sagaRepository.CreateAsync(saga);
 
 			} else if (saga.IsCompleted) {
@@ -40,30 +54,9 @@ namespace Enexure.MicroBus.Sagas
 			}
 		}
 
-		private async Task<ISaga> GetSagaForAsync(TEvent message)
+		private Task<TSaga> FindSaga(TEvent @event, ISagaFinder<TSaga, TEvent> sagaFinder)
 		{
-			var isStartable = typeof(ISagaStartedBy<TEvent>).GetTypeInfo().IsAssignableFrom(typeof(TSaga).GetTypeInfo());
-
-			var finder = scope.GetService<ISagaFinder<TSaga, TEvent>>();
-
-			if (finder == null && !isStartable)
-			{
-				throw new NoSagaFinderRegisteredException(typeof(TSaga), typeof(TEvent));
-			}
-
-			if (finder == null)
-			{
-				return null;
-			}
-
-			var saga = await finder.FindByAsync(message);
-
-			if (saga == null && !isStartable)
-			{
-				throw new NoSagaFoundException(typeof(TSaga), typeof(TEvent));
-			}
-
-			return saga;
+			return sagaFinder != null ? sagaFinder.FindByAsync(@event) : sagaRepository.FindAsync(@event);
 		}
 	}
 }

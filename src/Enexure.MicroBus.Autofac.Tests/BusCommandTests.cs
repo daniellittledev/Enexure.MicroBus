@@ -23,25 +23,23 @@ namespace Enexure.MicroBus.Autofac.Tests
 		[Fact]
 		public async Task TestCommand()
 		{
-			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
+			var busBuilder = new BusBuilder()
+				.RegisterCommandHandler<Command, CommandHandler>();
 
-				return busBuilder
-					.RegisterCommand<Command>().To<CommandHandler>();
-
-			}).Build();
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
 
 			var bus = container.Resolve<IMicroBus>();
-			await bus.Send(new Command());
+			await bus.SendAsync(new Command());
 		}
 
 		[Fact]
 		public void TestMissingCommand()
 		{
-			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => busBuilder).Build();
+			var container = new ContainerBuilder().RegisterMicroBus(new BusBuilder()).Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
-			new Func<Task>(() => bus.Send(new Command()))
+			new Func<Task>(() => bus.SendAsync(new Command()))
 				.ShouldThrow<NoRegistrationForMessageException>();
 
 		}

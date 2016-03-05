@@ -2,14 +2,14 @@
 {
 	public class NoMatchingRegistrationEvent : IEvent
 	{
-		private readonly IMessage message;
+		private readonly object message;
 
-		public NoMatchingRegistrationEvent(IMessage message)
+		public NoMatchingRegistrationEvent(object message)
 		{
 			this.message = message;
 		}
 
-		public IMessage Message
+		public object Message
 		{
 			get { return message; }
 		}

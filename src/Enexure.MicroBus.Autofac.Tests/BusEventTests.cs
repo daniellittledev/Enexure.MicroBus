@@ -35,16 +35,15 @@ namespace Enexure.MicroBus.Autofac.Tests
 		[Fact]
 		public async Task TestEvent()
 		{
-			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
+			var busBuilder = new BusBuilder()
+				.RegisterEventHandler<Event, EventHandler>();
 
-				return busBuilder
-					.RegisterEvent<Event>().To(x => x.Handler<EventHandler>());
-			}).Build();
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
 			var @event = new Event();
-			await bus.Publish(@event);
+			await bus.PublishAsync(@event);
 			
 			@event.Tally.Should().Be(1);
 		}
@@ -52,20 +51,16 @@ namespace Enexure.MicroBus.Autofac.Tests
 		[Fact]
 		public async Task TestMultipleEvents()
 		{
-			var container = new ContainerBuilder().RegisterMicroBus(busBuilder => {
+			var busBuilder = new BusBuilder()
+				.RegisterEventHandler<Event, EventHandler>()
+				.RegisterEventHandler<Event, EventHandler2>();
 
-				return busBuilder
-					.RegisterEvent<Event>().To(x => {
-						x.Handler<EventHandler>();
-						x.Handler<EventHandler2>();
-					});
-
-			}).Build();
+			var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
 
 			var bus = container.Resolve<IMicroBus>();
 
 			var @event = new Event();
-			await bus.Publish(@event);
+			await bus.PublishAsync(@event);
 
 			@event.Tally.Should().Be(2);
 		}
