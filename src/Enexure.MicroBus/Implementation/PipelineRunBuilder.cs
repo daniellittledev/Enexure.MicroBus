@@ -96,7 +96,7 @@ namespace Enexure.MicroBus
 
 			var handlers = leftHandlerTypes.Select(dependencyScope.GetService);
 
-			if (busSettings.HanlderConcurrency == Concurrency.Syncronous) {
+			if (busSettings.HandlerSynchronization == Synchronization.Syncronous) {
 
 				foreach (var leafHandler in handlers) {
 					Task task;

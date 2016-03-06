@@ -138,10 +138,12 @@ namespace Enexure.MicroBus.Autofac.Tests
 		[Fact]
 		public async Task GlobalPipelineHandlerShouldOnlyBeRunOnce()
 		{
+#pragma warning disable CS0618 // Type or member is obsolete
 			var busBuilder = new BusBuilder()
 				.RegisterCommandHandler<Command, CommandHandler>()
 				.RegisterEventHandler<Event, EventHandler>()
 				.RegisterPipelineHandler<GlobalPipelineHandler>();
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
 
@@ -158,9 +160,11 @@ namespace Enexure.MicroBus.Autofac.Tests
 		[Fact]
 		public async Task GlobalPipelineHandlerShouldBeRunOnce()
 		{
+#pragma warning disable CS0618 // Type or member is obsolete
 			var busBuilder = new BusBuilder()
 				.RegisterEventHandler<Event, EventHandler>()
 				.RegisterPipelineHandler<GlobalPipelineHandler>();
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
 

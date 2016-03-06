@@ -24,16 +24,11 @@ namespace Enexure.MicroBus
 			using (var scope = dependencyResolver.BeginScope()) {
 				var builder = scope.GetService<IPipelineRunBuilder>();
 				var messageProcessor = builder.GetRunnerForPipeline(message.GetType());
-				await messageProcessor.Handle(message);
+				(await messageProcessor.Handle(message)).Single();
 			}
 		}
 
-		public async Task<TResult> QueryAsync<TResult>(object message)
-		{
-			return (await QueryAllAsync<TResult>(message)).Single();
-		}
-
-		public async Task<IReadOnlyCollection<TResult>> QueryAllAsync<TResult>(object message)
+		public async Task PublishAsync(object message)
 		{
 			if (message == null) throw new ArgumentNullException(nameof(message));
 
@@ -41,7 +36,19 @@ namespace Enexure.MicroBus
 			{
 				var builder = scope.GetService<IPipelineRunBuilder>();
 				var messageProcessor = builder.GetRunnerForPipeline(message.GetType());
-				return (await messageProcessor.Handle(message)).Cast<TResult>().ToArray();
+				await messageProcessor.Handle(message);
+			}
+		}
+
+		public async Task<TResult> QueryAsync<TResult>(object message)
+		{
+			if (message == null) throw new ArgumentNullException(nameof(message));
+
+			using (var scope = dependencyResolver.BeginScope())
+			{
+				var builder = scope.GetService<IPipelineRunBuilder>();
+				var messageProcessor = builder.GetRunnerForPipeline(message.GetType());
+				return (await messageProcessor.Handle(message)).Cast<TResult>().Single();
 			}
 		}
 	}

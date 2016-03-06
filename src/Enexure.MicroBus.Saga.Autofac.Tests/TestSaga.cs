@@ -4,32 +4,32 @@ using Enexure.MicroBus.Sagas;
 
 namespace Enexure.MicroBus.Saga.Autofac.Tests
 {
-	public class TestSaga : ISaga, ISagaStartedBy<SagaStartingAEvent>, ISagaStartedBy<SagaStartingBEvent>, IEventHandler<SagaEndingEvent>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+	public class TestSaga : ISaga, 
+		ISagaStartedBy<SagaStartingAEvent>, 
+		ISagaStartedBy<SagaStartingBEvent>, 
+		IEventHandler<SagaEndingEvent>
 	{
 		public Guid Id { get; protected set; }
 		public bool IsCompleted { get; protected set; }
 
-		public Task Handle(SagaStartingAEvent @event)
+		public async Task Handle(SagaStartingAEvent @event)
 		{
 			Id = @event.CorrelationId;
-
-			return Task.FromResult(0);
 		}
 
-		public Task Handle(SagaStartingBEvent @event)
+		public async Task Handle(SagaStartingBEvent @event)
 		{
 			Id = @event.CorrelationId;
-
-			return Task.FromResult(0);
 		}
 
-		public Task Handle(SagaEndingEvent @event)
-		{
-			IsCompleted = true; 
 
-			return Task.FromResult(0);
+		public async Task Handle(SagaEndingEvent @event)
+		{
+			IsCompleted = true;
 		}
 	}
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 
 	public interface IHaveCorrelationId
 	{

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Xunit;
 using System.Reflection;
-using System;
 using System.Collections.Generic;
 
 namespace Enexure.MicroBus.Autofac.Tests
