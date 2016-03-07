@@ -2,9 +2,9 @@
 
 namespace Enexure.MicroBus
 {
-	internal class TypeIsNotAnInterceptorException : Exception
+	internal class TypeIsNotDelegatingHandlerException : Exception
 	{
-		public TypeIsNotAnInterceptorException(Type type)
+		public TypeIsNotDelegatingHandlerException(Type type)
 			: base ($"The type {type.FullName} is not an interceptor")
 		{
 		}

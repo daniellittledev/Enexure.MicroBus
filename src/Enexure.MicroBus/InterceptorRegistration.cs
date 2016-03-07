@@ -4,22 +4,22 @@ using System.Reflection;
 
 namespace Enexure.MicroBus
 {
-	public class InterceptorRegistration
+	public class GlobalHandlerRegistration
 	{
-		public Type InterceptorType { get; }
+		public Type HandlerType { get; }
 		public IEnumerable<Type> Dependencies { get; }
 
-		public InterceptorRegistration(Type interceptorType)
+		public GlobalHandlerRegistration(Type delegatingHandlerType)
 		{
-			this.InterceptorType = interceptorType;
+			this.HandlerType = delegatingHandlerType;
 			this.Dependencies = new Type[] { };
 
 			Validate();
 		}
 
-		public InterceptorRegistration(Type interceptorType, IEnumerable<Type> dependencies)
+		public GlobalHandlerRegistration(Type delegatingHandlerType, IEnumerable<Type> dependencies)
 		{
-			this.InterceptorType = interceptorType;
+			this.HandlerType = delegatingHandlerType;
 			this.Dependencies = dependencies;
 
 			Validate();
@@ -27,8 +27,8 @@ namespace Enexure.MicroBus
 
 		private void Validate()
 		{
-			if (!typeof(IInterceptor).GetTypeInfo().IsAssignableFrom(InterceptorType.GetTypeInfo())) {
-				throw new TypeIsNotAnInterceptorException(InterceptorType);
+			if (!typeof(IDelegatingHandler).GetTypeInfo().IsAssignableFrom(HandlerType.GetTypeInfo())) {
+				throw new TypeIsNotDelegatingHandlerException(HandlerType);
 			}
 		}
 	}

@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Enexure.MicroBus.Tests.HandlerRegisterTests
@@ -13,7 +11,7 @@ namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 			var register = new BusBuilder()
 				.RegisterCommandHandler<CommandB, CommandBHandler>();
 
-			register.Registrations.Count.Should().Be(1);
+			register.MessageHandlerRegistrations.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -23,7 +21,7 @@ namespace Enexure.MicroBus.Tests.HandlerRegisterTests
 				.RegisterCommandHandler<CommandA, CommandAHandler>()
 				.RegisterCommandHandler<CommandB, CommandBHandler>();
 
-			register.Registrations.Count.Should().Be(2);
+			register.MessageHandlerRegistrations.Count.Should().Be(2);
 		}
 
 		public class CommandA : ICommand { }

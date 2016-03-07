@@ -46,7 +46,7 @@ namespace Enexure.MicroBus
 			using (var scope = dependencyResolver.BeginScope()) {
 				var builder = scope.GetService<IPipelineRunBuilder>();
 				var messageProcessor = builder.GetRunnerForPipeline(busQuery.GetType());
-				return (TResult) (await messageProcessor.Handle(busQuery)).Single();
+				return (TResult)(await messageProcessor.Handle(busQuery));
 			}
 		}
 	}

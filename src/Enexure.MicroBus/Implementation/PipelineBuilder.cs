@@ -7,13 +7,13 @@ namespace Enexure.MicroBus
 {
 	public class PipelineBuilder : IPipelineBuilder
 	{
-		private readonly IReadOnlyCollection<Type> interceptorTypes;
+		private readonly IReadOnlyCollection<Type> delegatingHandlerTypes;
 		private readonly IDictionary<Type, IReadOnlyCollection<Type>> handlerLookup;
 
 		public PipelineBuilder(BusBuilder busBuilder)
 		{
-			interceptorTypes = busBuilder.Interceptors.Select(x => x.InterceptorType).ToArray();
-			handlerLookup = busBuilder.Registrations
+			delegatingHandlerTypes = busBuilder.GlobalHandlerRegistrations.Select(x => x.HandlerType).ToArray();
+			handlerLookup = busBuilder.MessageHandlerRegistrations
 				.ToLookup(x => x.MessageType, x => x.HandlerType)
 				.Select(x => new { Key = x.Key, Handlers = x.Distinct() })
 				.ToDictionary(x => x.Key, x => (IReadOnlyCollection<Type>)x.Handlers.ToArray());
@@ -38,7 +38,7 @@ namespace Enexure.MicroBus
 					handlers.AddRange(handlerLookup[raisedMessageType]);
 				}
 			}
-			return new Pipeline(interceptorTypes, handlers);
+			return new Pipeline(delegatingHandlerTypes, handlers);
 		}
 
 		public void Validate()

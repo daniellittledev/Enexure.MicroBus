@@ -24,7 +24,7 @@ namespace Enexure.MicroBus
 			using (var scope = dependencyResolver.BeginScope()) {
 				var builder = scope.GetService<IPipelineRunBuilder>();
 				var messageProcessor = builder.GetRunnerForPipeline(message.GetType());
-				(await messageProcessor.Handle(message)).Single();
+				await messageProcessor.Handle(message);
 			}
 		}
 
@@ -48,7 +48,7 @@ namespace Enexure.MicroBus
 			{
 				var builder = scope.GetService<IPipelineRunBuilder>();
 				var messageProcessor = builder.GetRunnerForPipeline(message.GetType());
-				return (await messageProcessor.Handle(message)).Cast<TResult>().Single();
+				return (TResult)(await messageProcessor.Handle(message));
 			}
 		}
 	}

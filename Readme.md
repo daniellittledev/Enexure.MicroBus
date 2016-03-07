@@ -6,15 +6,17 @@ MicroBus is a simple in process mediator for .NET
 
 > PM> Install-Package [Enexure.MicroBus.Autofac](https://www.nuget.org/packages/Enexure.MicroBus.Autofac/)
 
-I wanted a super simple mediator with great interceptor support. With MicroBus handlers and interceptors are first class citizens making it easy to get started. After creating your handlers and interceptors register them and start sending messages.
+I wanted a super simple mediator with great support for global handlers. With MicroBus message handlers and global handlers are first class citizens making it easy to get started.
+
+Registering a set of handlers takes a few just lines of code and is fairly terse.
 
     var busBuilder = new BusBuilder()
         
-        // Interceptors run in order so these are explicitly registered
-        .RegisterInterceptor<LoggingInterceptor>()
-        .RegisterInterceptor<SecurityInterceptor>()
-        .RegisterInterceptor<ValidationInterceptor>()
-        .RegisterInterceptor<TransactionInterceptor>()
+        // Global Handlers run in order so these are explicitly registered
+        .RegisterGlobalHandler<LoggingHandler>()
+        .RegisterGlobalHandler<SecurityHandler>()
+        .RegisterGlobalHandler<ValidationHandler>()
+        .RegisterGlobalHandler<TransactionHandler>()
         
         // Scan an assembly to find all the handlers
         .RegisterHandlers(assembly);
@@ -51,11 +53,11 @@ Commands are the typical entry point for an application. A command is something 
         }
     }
 
-One of the most important things an application needs is a way to deal with cross cutting concerns. In MicroBus this is where interceptors come in. They provide a great way to do work before messages get to the handlers. They also use the nested Russian Doll style approach so each interceptor will internally call the next interceptor or handler in the chain. 
+One of the most important things an application needs is a way to deal with cross cutting concerns. In MicroBus this is where global handlers come in. They provide a great way to do work before messages get to the handlers. They also use the nested Russian Doll style approach so each handler will internally call the next handler or handler in the chain. 
 
-    public class CrossCuttingInterceptor : IInterceptor
+    public class CrossCuttingHandler : IDelegatingHandler
     {
-        public async Task<IReadOnlyCollection<object>> Handle(IInterceptorChain next, IMessage message)
+        public async Task<IReadOnlyCollection<object>> Handle(INextHandler next, IMessage message)
         {
             using (var transaction = unitOfWork.NewTransaction()) {
                 return await next.Handle(message);

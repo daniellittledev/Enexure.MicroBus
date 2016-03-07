@@ -5,6 +5,6 @@ namespace Enexure.MicroBus
 {
 	public interface IPipelineRunBuilder
 	{
-		IInterceptorChain GetRunnerForPipeline(Type messageType);
+		INextHandler GetRunnerForPipeline(Type messageType);
 	}
 }

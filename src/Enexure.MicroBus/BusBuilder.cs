@@ -9,16 +9,16 @@ namespace Enexure.MicroBus
 	public class BusBuilder
 	{
 		private readonly List<HandlerRegistration> registrations = new List<HandlerRegistration>();
-		private readonly List<InterceptorRegistration> interceptors =  new List<InterceptorRegistration>();
+		private readonly List<GlobalHandlerRegistration> globalHandlers =  new List<GlobalHandlerRegistration>();
 
-		public List<HandlerRegistration> Registrations
+		public List<HandlerRegistration> MessageHandlerRegistrations
 		{
 			get { return registrations; }
 		}
 
-		public List<InterceptorRegistration> Interceptors
+		public List<GlobalHandlerRegistration> GlobalHandlerRegistrations
 		{
-			get { return interceptors; }
+			get { return globalHandlers; }
 		}
 
 		public BusBuilder RegisterCommandHandler<TCommand, TCommandHandler>()
@@ -92,10 +92,10 @@ namespace Enexure.MicroBus
 			return this;
 		}
 
-		[Obsolete("Use RegisterInterceptor instead")]
+		[Obsolete("Use RegisterGlobalHandler instead")]
 		public BusBuilder RegisterPipelineHandler<T>()
 		{
-			interceptors.Add(new InterceptorRegistration(typeof(PipelineHandlerToInterceptorConverter<>).MakeGenericType(typeof(T)), new[] { typeof(T) }));
+			globalHandlers.Add(new GlobalHandlerRegistration(typeof(PipelineHandlerToDelegatingHandlerConverter<>).MakeGenericType(typeof(T)), new[] { typeof(T) }));
 			return this;
 		}
 
@@ -118,27 +118,27 @@ namespace Enexure.MicroBus
 			return assembly.DefinedTypes;
 		}
 
-		public BusBuilder RegisterInterceptor<TInterceptor>()
-			where TInterceptor : IInterceptor
+		public BusBuilder RegisterGlobalHandler<THandler>()
+			where THandler : IDelegatingHandler
 		{
-			interceptors.Add(new InterceptorRegistration(typeof(TInterceptor)));
+			globalHandlers.Add(new GlobalHandlerRegistration(typeof(THandler)));
 			return this;
 		}
 	}
 
-	internal class PipelineHandlerToInterceptorConverter<T> : IInterceptor
+	internal class PipelineHandlerToDelegatingHandlerConverter<T> : IDelegatingHandler
 		where T : IPipelineHandler
 	{
 		private readonly IPipelineHandler handler;
 
-		public PipelineHandlerToInterceptorConverter(T handler)
+		public PipelineHandlerToDelegatingHandlerConverter(T handler)
 		{
 			this.handler = handler;
 		}
 
-		public async Task<IReadOnlyCollection<object>> Handle(IInterceptorChain next, object message)
+		public Task<object> Handle(INextHandler next, object message)
 		{
-			return (IReadOnlyCollection<object>)await handler.Handle(async x => await next.Handle(x), message as IMessage);
+			return handler.Handle(async x => await next.Handle(x), message as IMessage);
 		}
 	}
 

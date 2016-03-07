@@ -31,7 +31,7 @@ namespace Enexure.MicroBus
 			this.busSettings = busSettings;
 		}
 
-		public IInterceptorChain GetRunnerForPipeline(Type messageType)
+		public INextHandler GetRunnerForPipeline(Type messageType)
 		{
 			var pipeline = pipelineBuilder.GetPipeline(messageType);
 			if (!pipeline.HandlerTypes.Any())
@@ -39,10 +39,10 @@ namespace Enexure.MicroBus
 				return NoHandlersForMessage(messageType);
 			}
 
-			return new InterceptorChain(message => BuildNextInterceptor(pipeline.InterceptorTypes, pipeline.HandlerTypes).Handle(message));
+			return new NextHandlerRunner(message => BuildNextHandler(pipeline.DelegatingHandlerTypes, pipeline.HandlerTypes).Handle(message));
 		}
 
-		private IInterceptorChain NoHandlersForMessage(Type messageType)
+		private INextHandler NoHandlersForMessage(Type messageType)
 		{
 			if (messageType == typeof(NoMatchingRegistrationEvent))
 			{
@@ -52,7 +52,7 @@ namespace Enexure.MicroBus
 			try
 			{
 				var runner = GetRunnerForPipeline(typeof(NoMatchingRegistrationEvent));
-				return new InterceptorChain(message => runner.Handle(new NoMatchingRegistrationEvent(message)));
+				return new NextHandlerRunner(message => runner.Handle(new NoMatchingRegistrationEvent(message)));
 			}
 			catch (NoRegistrationForMessageException)
 			{
@@ -60,35 +60,35 @@ namespace Enexure.MicroBus
 			}
 		}
 
-		private IInterceptorChain BuildNextInterceptor(
-			IReadOnlyCollection<Type> interceptorTypes,
+		private INextHandler BuildNextHandler(
+			IReadOnlyCollection<Type> delegatingHandlerTypes,
 			IReadOnlyCollection<Type> handlerTypes
 			)
 		{
-			return new InterceptorChain(async message => {
+			return new NextHandlerRunner(async message => {
 
 				if (message == null) {
 					throw new NullMessageTypeException();
 				}
 
-				if (!interceptorTypes.Any()) {
+				if (!delegatingHandlerTypes.Any()) {
 					updater.PushMarker();
 					var result = await RunHandlers(handlerTypes, message);
 					updater.PopMarker();
 					return result;
 				}
 
-				var head = interceptorTypes.First();
-				var tail = interceptorTypes.Skip(1).ToList();
+				var head = delegatingHandlerTypes.First();
+				var tail = delegatingHandlerTypes.Skip(1).ToList();
 
-				var nextHandler = (IInterceptor)dependencyScope.GetService(head);
-				var nextFunction = BuildNextInterceptor(tail, handlerTypes);
+				var nextHandler = (IDelegatingHandler)dependencyScope.GetService(head);
+				var nextFunction = BuildNextHandler(tail, handlerTypes);
 
 				return await nextHandler.Handle(nextFunction, message);
 			});
 		}
 
-		private async Task<IReadOnlyCollection<object>> RunHandlers(
+		private async Task<object> RunHandlers(
 			IReadOnlyCollection<Type> leftHandlerTypes,
 			object message)
 		{
@@ -109,10 +109,11 @@ namespace Enexure.MicroBus
 				await Task.WhenAll(tasks);
 			}
 
-			return tasks.Select(ReflectionExtensions.GetTaskResult).ToArray();
+			if (tasks.Count == 1) {
+				return tasks.Select(ReflectionExtensions.GetTaskResult).Single();
+			}
+
+			return Unit.Unit;
 		}
-
-		
 	}
-
 }

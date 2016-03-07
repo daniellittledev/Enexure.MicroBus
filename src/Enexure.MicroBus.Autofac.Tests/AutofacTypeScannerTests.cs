@@ -37,7 +37,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 				typeof(AutofacTypeScannerTests).GetTypeInfo().Assembly,
 				x => x.FullName.Contains("AutofacTypeScannerTests"));
 
-			register.Registrations.Count.Should().Be(3);
+			register.MessageHandlerRegistrations.Count.Should().Be(3);
 
 		}
 	}

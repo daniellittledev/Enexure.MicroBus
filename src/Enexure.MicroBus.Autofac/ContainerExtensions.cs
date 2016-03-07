@@ -32,17 +32,17 @@ namespace Enexure.MicroBus.Autofac
 
 		private static void RegisterHandlersWithAutofac(ContainerBuilder containerBuilder, BusBuilder busBuilder)
 		{
-			foreach (var interceptorRegistration in busBuilder.Interceptors)
+			foreach (var GlobalHandlerRegistration in busBuilder.GlobalHandlerRegistrations)
 			{
-				containerBuilder.RegisterType(interceptorRegistration.InterceptorType).AsSelf();
+				containerBuilder.RegisterType(GlobalHandlerRegistration.HandlerType).AsSelf();
 
-				foreach (var dependency in interceptorRegistration.Dependencies)
+				foreach (var dependency in GlobalHandlerRegistration.Dependencies)
 				{
 					containerBuilder.RegisterType(dependency).AsSelf();
 				}
 			}
 
-			foreach (var registration in busBuilder.Registrations)
+			foreach (var registration in busBuilder.MessageHandlerRegistrations)
 			{
 				containerBuilder.RegisterType(registration.HandlerType).AsSelf();
 

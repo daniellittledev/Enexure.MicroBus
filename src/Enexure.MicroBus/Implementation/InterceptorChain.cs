@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Enexure.MicroBus
 {
-	internal class InterceptorChain : IInterceptorChain
+	internal class NextHandlerRunner : INextHandler
 	{
-		private Func<object, Task<IReadOnlyCollection<object>>> handle;
+		private Func<object, Task<object>> handle;
 
-		public InterceptorChain(Func<object, Task<IReadOnlyCollection<object>>> handle)
+		public NextHandlerRunner(Func<object, Task<object>> handle)
 		{
 			this.handle = handle;
 		}
 
-		public Task<IReadOnlyCollection<object>> Handle(object message)
+		public Task<object> Handle(object message)
 		{
 			return handle(message);
 		}

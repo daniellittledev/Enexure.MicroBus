@@ -14,8 +14,8 @@ namespace Enexure.MicroBus.Autofac.Tests
 			var assembly = GetType().GetTypeInfo().Assembly;
 			var containerBuilder = new ContainerBuilder();
 			var busBuilder = new BusBuilder()
-				.RegisterInterceptor<OuterInterceptor>()
-				.RegisterInterceptor<InnerInterceptor>()
+				.RegisterGlobalHandler<OuterHandler>()
+				.RegisterGlobalHandler<InnerHandler>()
 				.RegisterHandlers(assembly, x => x.FullName.Contains("BusMessageTests"));
 
 			containerBuilder.RegisterMicroBus(busBuilder);
@@ -53,9 +53,9 @@ namespace Enexure.MicroBus.Autofac.Tests
 			}
 		}
 
-		class OuterInterceptor : IInterceptor
+		class OuterHandler : IDelegatingHandler
 		{
-			public async Task<IReadOnlyCollection<object>> Handle(IInterceptorChain next, object message)
+			public async Task<object> Handle(INextHandler next, object message)
 			{
 				(message as Message).AssertStage("Outer-In");
 
@@ -67,9 +67,9 @@ namespace Enexure.MicroBus.Autofac.Tests
 			}
 		}
 
-		class InnerInterceptor : IInterceptor
+		class InnerHandler : IDelegatingHandler
 		{
-			public async Task<IReadOnlyCollection<object>> Handle(IInterceptorChain next, object message)
+			public async Task<object> Handle(INextHandler next, object message)
 			{
 				(message as Message).AssertStage("Inner-In");
 
