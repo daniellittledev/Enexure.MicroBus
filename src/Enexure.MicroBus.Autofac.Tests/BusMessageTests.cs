@@ -16,7 +16,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			var busBuilder = new BusBuilder()
 				.RegisterGlobalHandler<OuterHandler>()
 				.RegisterGlobalHandler<InnerHandler>()
-				.RegisterHandlers(assembly, x => x.FullName.Contains("BusMessageTests"));
+				.RegisterHandlers(x => x.FullName.Contains("BusMessageTests"), assembly);
 
 			containerBuilder.RegisterMicroBus(busBuilder);
 

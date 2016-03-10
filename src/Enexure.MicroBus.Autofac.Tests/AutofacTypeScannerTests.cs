@@ -34,8 +34,8 @@ namespace Enexure.MicroBus.Autofac.Tests
 		public void ScanAnAssemblyForHandlersTest()
 		{
 			var register = new BusBuilder().RegisterHandlers(
-				typeof(AutofacTypeScannerTests).GetTypeInfo().Assembly,
-				x => x.FullName.Contains("AutofacTypeScannerTests"));
+				x => x.FullName.Contains("AutofacTypeScannerTests"),
+				typeof(AutofacTypeScannerTests).GetTypeInfo().Assembly);
 
 			register.MessageHandlerRegistrations.Count.Should().Be(3);
 

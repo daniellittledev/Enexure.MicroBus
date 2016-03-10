@@ -67,20 +67,25 @@ namespace Enexure.MicroBus
 
 		public BusBuilder RegisterHandlers(Assembly assembly)
 		{
-			return RegisterHandlers(new[] { assembly }, x => true);
-		}
-
-		public BusBuilder RegisterHandlers(Assembly assembly, Func<Type, bool> predicate)
-		{
-			return RegisterHandlers(new[] { assembly }, predicate);
+			return RegisterHandlers(x => true, (IEnumerable<Assembly>)new[] { assembly });
 		}
 
 		public BusBuilder RegisterHandlers(IEnumerable<Assembly> assemblies)
 		{
-			return RegisterHandlers(assemblies, x => true);
+			return RegisterHandlers(x => true, (IEnumerable<Assembly>)assemblies);
 		}
 
-		public BusBuilder RegisterHandlers(IEnumerable<Assembly> assemblies, Func<Type, bool> predicate)
+		public BusBuilder RegisterHandlers(params Assembly[] assemblies)
+		{
+			return RegisterHandlers(x => true, (IEnumerable<Assembly>)assemblies);
+		}
+
+		public BusBuilder RegisterHandlers(Func<Type, bool> predicate, params Assembly[] assemblies)
+		{
+			return RegisterHandlers(predicate, (IEnumerable<Assembly>)assemblies);
+		}
+
+		public BusBuilder RegisterHandlers(Func<Type, bool> predicate, IEnumerable<Assembly> assemblies)
 		{
 			var handlerRegistrations = assemblies
 				.SelectMany(AllTheTypes)
