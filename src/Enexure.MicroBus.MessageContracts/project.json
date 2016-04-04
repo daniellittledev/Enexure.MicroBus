@@ -4,7 +4,7 @@
 	"owners": [ "lavinski" ],
 	"tags": [ "MicroBus", "Mediator", "Contracts", "Bus" ],
 	"releaseNotes": "core-clr support (rc1)",
-	"copyright": "Copyright © Daniel Little 2015",
+	"copyright": "Copyright Â© Daniel Little 2015",
 	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
 	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
 	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
@@ -18,6 +18,10 @@
 	"dependencies": {
 	},
 	"frameworks": {
+		"net40-client": {
+			"frameworkAssemblies": {
+			}
+		},
 		"net45": {
 			"frameworkAssemblies": {
 			}
