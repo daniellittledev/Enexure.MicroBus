@@ -1,5 +1,5 @@
 {
-  "version": "3.2.0",
+  "version": "3.2.2",
   "authors": [ "Daniel Little" ],
   "description": "Contains the core infrastructure contracts for MicroBus which includes the handler and main MicroBus interfaces",
 
