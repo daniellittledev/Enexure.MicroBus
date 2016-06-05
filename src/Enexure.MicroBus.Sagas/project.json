@@ -1,6 +1,8 @@
 {
 	"version": "3.2.1",
 	"authors": [ "Daniel Little" ],
+	"description": "Contains Saga addons for MicroBus",
+
 	"packOptions": {
 		"owners": [ "lavinski" ],
 		"copyright": "Copyright © Daniel Little 2015",
@@ -8,18 +10,17 @@
 		"releaseNotes": "core-clr support (rc1)",
 		"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
 		"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
-		"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
-		"description": "Contains Saga addons for MicroBus"
+		"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png"
 	},
 	"buildOptions": {
 	},
-  "dependencies": {
-    "Microsoft.NETCore.Platforms": "1.0.1-rc2-24027",
-    "Microsoft.NETCore.Runtime": "1.0.2-rc2-24027",
-    "Enexure.MicroBus": { "target": "project" },
-    "Enexure.MicroBus.MessageContracts": { "target": "project" },
-    "Enexure.MicroBus.InfrastructureContracts": { "target": "project" }
-  },
+	"dependencies": {
+		"Microsoft.NETCore.Platforms": "1.0.1-rc2-24027",
+		"Microsoft.NETCore.Runtime": "1.0.2-rc2-24027",
+		"Enexure.MicroBus": { "target": "project" },
+		"Enexure.MicroBus.MessageContracts": { "target": "project" },
+		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" }
+	},
 	"frameworks": {
 		"net451": {
 			"dependencies": {

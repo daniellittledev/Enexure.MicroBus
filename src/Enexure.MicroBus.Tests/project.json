@@ -1,6 +1,8 @@
 {
 	"version": "3.2.1",
 	"authors": [ "Daniel Little" ],
+	"description": "Enexure.MicroBus.Tests",
+
 	"packOptions": {
 		"owners": [ "lavinski" ],
 		"copyright": "Copyright © Daniel Little 2015",
@@ -8,8 +10,7 @@
 		"releaseNotes": "core-clr support (rc1)",
 		"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
 		"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
-		"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
-		"description": "Enexure.MicroBus.Tests"
+		"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png"
 	},
 	"buildOptions": {
 	},
