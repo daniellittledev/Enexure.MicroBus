@@ -9,15 +9,9 @@ namespace Enexure.MicroBus.Sagas
 
 	public class FinderList : IEnumerable<Type>
 	{
-		List<Type> sagaFinders = new List<Type>();
+		readonly List<Type> sagaFinders = new List<Type>();
 
-		public static FinderList Empty
-		{
-			get
-			{
-				return new FinderList();
-			}
-		}
+		public static FinderList Empty => new FinderList();
 
 		public FinderList AddSagaFinder<TSagaFinder>()
 		{

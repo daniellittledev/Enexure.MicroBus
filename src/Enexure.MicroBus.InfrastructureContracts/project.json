@@ -1,33 +1,35 @@
 {
-	"version": "3.2.0",
-	"authors": [ "Daniel Little" ],
-	"owners": [ "lavinski" ],
-	"tags": [ "MicroBus", "Mediator", "Contracts", "Bus" ],
-	"releaseNotes": "core-clr support (rc1)",
-	"copyright": "Copyright © Daniel Little 2015",
-	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
-	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
-	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
-	"description": "Contains the core infrastructure contracts for MicroBus which includes the handler and main MicroBus interfaces",
+  "version": "3.2.0",
+  "authors": [ "Daniel Little" ],
+  "description": "Contains the core infrastructure contracts for MicroBus which includes the handler and main MicroBus interfaces",
 
-	"compilationOptions": {
-	},
-	"compile": [
-		"**/*.cs"
-	],
-	"dependencies": {
-		"Enexure.MicroBus.MessageContracts": { "target": "project" }
-	},
-	"frameworks": {
-		"net451": {
-			"frameworkAssemblies": {
-			}
-		},
-		"dotnet5.4": {
-			"dependencies": {
-				"System.Runtime": "4.0.21-*",
-				"System.Threading": "4.0.11-*"
-			}
-		}
-	}
+  "packOptions": {
+    "owners": [ "lavinski" ],
+    "copyright": "Copyright © Daniel Little 2015",
+    "tags": [ "MicroBus", "Mediator", "Contracts", "Bus" ],
+    "releaseNotes": "core-clr support (rc1)",
+    "licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
+    "projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
+    "iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png"
+  },
+  "buildOptions": {
+  },
+  "dependencies": {
+    "Enexure.MicroBus.MessageContracts": { "target": "project" }
+  },
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+      }
+    },
+    "netstandard1.1": {
+      "dependencies": {
+        "System.Runtime": "4.1.0-rc2-24027",
+        "System.Threading": "4.0.11-rc2-24027"
+      },
+      "imports": [
+        "dotnet5.2"
+      ]
+    }
+  }
 }

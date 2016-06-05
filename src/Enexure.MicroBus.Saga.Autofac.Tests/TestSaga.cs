@@ -23,7 +23,6 @@ namespace Enexure.MicroBus.Saga.Autofac.Tests
 			Id = @event.CorrelationId;
 		}
 
-
 		public async Task Handle(SagaEndingEvent @event)
 		{
 			IsCompleted = true;

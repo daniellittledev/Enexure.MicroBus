@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Reflection;
 using System.Linq;
 
@@ -21,8 +22,27 @@ namespace Enexure.MicroBus.Sagas
 		{
 			var isNew = false;
 			var isStartable = typeof(ISagaStartedBy<TEvent>).GetTypeInfo().IsAssignableFrom(typeof(TSaga).GetTypeInfo());
-			var sagaFinder = scope.GetServices<ISagaFinder<TSaga, TEvent>>().FirstOrDefault();
 
+
+			var finders = ReflectionExtensions.ExpandType(typeof(TEvent))
+				.Select(x => typeof(ISagaFinder<,>).MakeGenericType(typeof(TSaga), x))
+
+
+
+				.ToList();
+
+			var sagaFinder = finders
+				.Select(x => scope.GetServices(x).FirstOrDefault())
+				.Where(x => x != null)
+				.Select(x =>
+				{
+					var finderType = x.GetType();
+					var findByAsync = RuntimeReflectionExtensions.GetRuntimeMethods(finderType).First(m => m.Name == "FindByAsync");
+					return new Func<TEvent, Task<TSaga>>(e => (Task<TSaga>)findByAsync.Invoke(x, new object[] { e }));
+				})
+				.FirstOrDefault();
+
+			
 			TSaga saga;
 			if (isStartable) {
 				saga = await FindSaga(@event, sagaFinder);
@@ -54,9 +74,9 @@ namespace Enexure.MicroBus.Sagas
 			}
 		}
 
-		private Task<TSaga> FindSaga(TEvent @event, ISagaFinder<TSaga, TEvent> sagaFinder)
+		private Task<TSaga> FindSaga(TEvent @event, Func<TEvent, Task<TSaga>> sagaFinder)
 		{
-			return sagaFinder != null ? sagaFinder.FindByAsync(@event) : sagaRepository.FindAsync(@event);
+			return sagaFinder != null ? sagaFinder(@event) : sagaRepository.FindAsync(@event);
 		}
 	}
 }

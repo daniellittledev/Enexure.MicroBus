@@ -1,25 +1,25 @@
 {
 	"version": "3.2.1",
 	"authors": [ "Daniel Little" ],
-	"owners": [ "lavinski" ],
-	"tags": [ "MicroBus", "Mediator", "Saga", "Bus" ],
-	"releaseNotes": "core-clr support (rc1)",
-	"copyright": "Copyright � Daniel Little 2015",
-	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
-	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
-	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
-	"description": "Contains Saga addons for MicroBus",
-
-	"compilationOptions": {
+	"packOptions": {
+		"owners": [ "lavinski" ],
+		"copyright": "Copyright © Daniel Little 2015",
+		"tags": [ "MicroBus", "Mediator", "Saga", "Bus" ],
+		"releaseNotes": "core-clr support (rc1)",
+		"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
+		"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
+		"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
+		"description": "Contains Saga addons for MicroBus"
 	},
-	"compile": [
-		"**/*.cs"
-	],
-	"dependencies": {
-		"Enexure.MicroBus": { "target": "project" },
-		"Enexure.MicroBus.MessageContracts": { "target": "project" },
-		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" }
+	"buildOptions": {
 	},
+  "dependencies": {
+    "Microsoft.NETCore.Platforms": "1.0.1-rc2-24027",
+    "Microsoft.NETCore.Runtime": "1.0.2-rc2-24027",
+    "Enexure.MicroBus": { "target": "project" },
+    "Enexure.MicroBus.MessageContracts": { "target": "project" },
+    "Enexure.MicroBus.InfrastructureContracts": { "target": "project" }
+  },
 	"frameworks": {
 		"net451": {
 			"dependencies": {
@@ -30,14 +30,14 @@
 				"System.Core": "4.0.0.0"
 			}
 		},
-		"dotnet5.4": {
+		"netstandard1.1": {
 			"dependencies": {
-				"System.Linq.Expressions": "4.0.11-*",
-				"System.Runtime": "4.0.21-*",
-				"System.Reflection": "4.1.0-*",
-				"System.Linq": "4.0.1-*",
-				"System.Collections": "4.0.11-*",
-				"System.Linq.Queryable": "4.0.1-*"
+				"System.Threading.Tasks": "4.0.11-rc2-24027",
+				"System.Linq.Expressions": "4.0.11-rc2-24027",
+				"System.Runtime": "4.1.0-rc2-24027",
+				"System.Reflection": "4.1.0-rc2-24027",
+				"System.Linq": "4.1.0-rc2-24027",
+				"System.Collections": "4.0.11-rc2-24027"
 			}
 		}
 	}

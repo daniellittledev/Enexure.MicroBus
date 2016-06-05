@@ -72,7 +72,7 @@ namespace Enexure.MicroBus
 
 		public BusBuilder RegisterHandlers(IEnumerable<Assembly> assemblies)
 		{
-			return RegisterHandlers(x => true, (IEnumerable<Assembly>)assemblies);
+			return RegisterHandlers(x => true, assemblies);
 		}
 
 		public BusBuilder RegisterHandlers(params Assembly[] assemblies)

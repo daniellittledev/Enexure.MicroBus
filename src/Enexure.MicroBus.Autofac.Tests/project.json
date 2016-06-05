@@ -10,27 +10,36 @@
 	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
 	"description": "Enexure.MicroBus.Autofac.Tests",
 
-	"compilationOptions": {
+	"buildOptions": {
 	},
 	"compile": [
 		"**/*.cs"
 	],
-	"dependencies": {
-		"System.Reflection": "4.1.0-*",
+  "dependencies": {
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.0-rc2-*"
+    },
 
-		"Enexure.MicroBus": { "target": "project" },
-		"Enexure.MicroBus.MessageContracts": { "target": "project" },
-		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" },
-		"Enexure.MicroBus.Autofac": { "target": "project" },
+    "System.Reflection": "4.1.0-rc2-24027",
 
-		"xunit": "2.1.0",
-		"xunit.runner.dnx": "2.1.0-*",
-		"FluentAssertions": "4.1.1"
-	},
-	"frameworks": {
-		"dnxcore50": { }
-	},
-	"commands": {
-		"test": "xunit.runner.dnx"
-	}
+    "Enexure.MicroBus": { "target": "project" },
+    "Enexure.MicroBus.MessageContracts": { "target": "project" },
+    "Enexure.MicroBus.InfrastructureContracts": { "target": "project" },
+    "Enexure.MicroBus.Autofac": { "target": "project" },
+
+    "xunit": "2.1.0-rc2-*",
+    "dotnet-test-xunit": "1.0.0-rc2-*",
+    "FluentAssertions": "4.1.1"
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": [
+        "dotnet5.4",
+        "portable-net451+win8"
+      ]
+    }
+  },
+  "testRunner": "xunit"
 }

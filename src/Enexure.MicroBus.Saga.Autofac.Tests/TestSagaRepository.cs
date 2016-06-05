@@ -25,14 +25,15 @@ namespace Enexure.MicroBus.Saga.Autofac.Tests
 		{
 			var correlatedMessage = message as IHaveCorrelationId;
 			if (correlatedMessage != null) {
-				if (sagas.ContainsKey(correlatedMessage.CorrelationId)) {
-					return Task.FromResult(sagas[correlatedMessage.CorrelationId]);
-				} else {
-					return Task.FromResult<TestSaga>(null);
-				}
+				return FindById(correlatedMessage.CorrelationId);
 			}
 
-			throw new Exception("This should never happen");
+			throw new Exception("message must inherit from the interface IHaveCorrelationId");
+		}
+
+		public Task<TestSaga> FindById(Guid id)
+		{
+			return Task.FromResult(sagas.ContainsKey(id) ? sagas[id] : null);
 		}
 
 		public TestSaga NewSaga()

@@ -1,33 +1,40 @@
 {
 	"version": "3.2.1",
 	"authors": [ "Daniel Little" ],
-	"owners": [ "lavinski" ],
-	"tags": [ "MicroBus", "Mediator", "Saga", "Bus" ],
-	"releaseNotes": "core-clr support (rc1)",
-	"copyright": "Copyright © Daniel Little 2015",
-	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
-	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
-	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
-	"description": "Enexure.MicroBus.Tests",
-
-	"compilationOptions": {
+	"packOptions": {
+		"owners": [ "lavinski" ],
+		"copyright": "Copyright © Daniel Little 2015",
+		"tags": [ "MicroBus", "Mediator", "Saga", "Bus" ],
+		"releaseNotes": "core-clr support (rc1)",
+		"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
+		"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
+		"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
+		"description": "Enexure.MicroBus.Tests"
 	},
-	"compile": [
-		"**/*.cs"
-	],
+	"buildOptions": {
+	},
 	"dependencies": {
+		"Microsoft.NETCore.App": {
+			"type": "platform",
+			"version": "1.0.0-rc2-*"
+		},
+
 		"Enexure.MicroBus": { "target": "project" },
 		"Enexure.MicroBus.MessageContracts": { "target": "project" },
 		"Enexure.MicroBus.InfrastructureContracts": { "target": "project" },
 
-		"xunit": "2.1.0",
-		"xunit.runner.dnx": "2.1.0-*",
+		"xunit": "2.1.0-rc2-*",
+		"dotnet-test-xunit": "1.0.0-rc2-*",
 		"FluentAssertions": "4.1.1"
 	},
+
 	"frameworks": {
-		"dnxcore50": { }
+		"netcoreapp1.0": {
+			"imports": [
+				"dotnet5.4",
+				"portable-net451+win8"
+			]
+		}
 	},
-	"commands": {
-		"test": "xunit.runner.dnx"
-	}
+	"testRunner": "xunit"
 }

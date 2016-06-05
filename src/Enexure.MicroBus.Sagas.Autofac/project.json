@@ -1,32 +1,32 @@
 {
-	"version": "3.2.1",
-	"authors": [ "Daniel Little" ],
-	"owners": [ "lavinski" ],
-	"tags": [ "MicroBus", "Mediator", "Saga", "Autofac", "Bus" ],
-	"releaseNotes": "core-clr support (rc1)",
-	"copyright": "Copyright © Daniel Little 2015",
-	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
-	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
-	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
-	"description": "[Obsolete] Contains the Autofac verion of MicroBus.Sagas",
+  "version": "3.2.1",
+  "authors": [ "Daniel Little" ],
+  "copyright": "Copyright © Daniel Little 2015",
+  "description": "[Obsolete] Contains the Autofac verion of MicroBus.Sagas",
 
-	"compilationOptions": {
-	},
-	"compile": [
-		"**/*.cs"
-	],
-	"dependencies": {
-	},
-	"frameworks": {
-		"net451": {
-			"frameworkAssemblies":{ 
-				"mscorlib": "4.0.0.0"
-			}
-		},
-		"dotnet5.4": {
-			"dependencies": {
-				"System.Runtime": "4.0.21-*"
-			}
-		}
-	}
+  "owners": [ "lavinski" ],
+  "tags": [ "MicroBus", "Mediator", "Saga", "Autofac", "Bus" ],
+  "releaseNotes": "core-clr support (rc1)",
+  "licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
+  "projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
+  "iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png",
+
+  "buildOptions": {
+  },
+  "dependencies": {
+    "Microsoft.NETCore.Platforms": "1.0.1-rc2-24027",
+    "Microsoft.NETCore.Runtime": "1.0.2-rc2-24027"
+  },
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+        "mscorlib": "4.0.0.0"
+      }
+    },
+    "netstandard1.1": {
+      "dependencies": {
+        "System.Runtime": "4.1.0-rc2-24027"
+      }
+    }
+  }
 }

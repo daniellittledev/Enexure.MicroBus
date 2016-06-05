@@ -24,7 +24,7 @@ namespace Enexure.MicroBus.Tests
 
 		public object GetService(Type serviceType)
 		{
-			return objects.Where(x => x.GetType() == serviceType).Single();
+			return objects.Single(x => x.GetType() == serviceType);
 		}
 
 		public T GetService<T>()
