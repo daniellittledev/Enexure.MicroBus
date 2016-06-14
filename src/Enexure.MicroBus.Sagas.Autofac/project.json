@@ -1,5 +1,5 @@
 {
-	"version": "3.2.2",
+	"version": "3.2.3",
 	"authors": [ "Daniel Little" ],
 	"description": "[Obsolete] Contains the Autofac verion of MicroBus.Sagas",
 
@@ -16,8 +16,6 @@
 	"buildOptions": {
 	},
 	"dependencies": {
-		"Microsoft.NETCore.Platforms": "1.0.1-rc2-24027",
-		"Microsoft.NETCore.Runtime": "1.0.2-rc2-24027"
 	},
 	"frameworks": {
 		"net451": {

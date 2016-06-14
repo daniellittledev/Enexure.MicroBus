@@ -19,7 +19,7 @@
   "frameworks": {
     "net40-client": {
       "frameworkAssemblies": {
-      },
+      }
     },
     "net45": {
       "frameworkAssemblies": {
