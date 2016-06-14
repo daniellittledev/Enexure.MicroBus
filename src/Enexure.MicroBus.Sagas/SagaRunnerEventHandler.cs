@@ -23,21 +23,14 @@ namespace Enexure.MicroBus.Sagas
 			var isNew = false;
 			var isStartable = typeof(ISagaStartedBy<TEvent>).GetTypeInfo().IsAssignableFrom(typeof(TSaga).GetTypeInfo());
 
-
-			var finders = ReflectionExtensions.ExpandType(typeof(TEvent))
+			var sagaFinder = ReflectionExtensions.ExpandType(typeof(TEvent))
 				.Select(x => typeof(ISagaFinder<,>).MakeGenericType(typeof(TSaga), x))
-
-
-
-				.ToList();
-
-			var sagaFinder = finders
 				.Select(x => scope.GetServices(x).FirstOrDefault())
 				.Where(x => x != null)
 				.Select(x =>
 				{
 					var finderType = x.GetType();
-					var findByAsync = RuntimeReflectionExtensions.GetRuntimeMethods(finderType).First(m => m.Name == "FindByAsync");
+					var findByAsync = finderType.GetRuntimeMethods().First(m => m.Name == "FindByAsync");
 					return new Func<TEvent, Task<TSaga>>(e => (Task<TSaga>)findByAsync.Invoke(x, new object[] { e }));
 				})
 				.FirstOrDefault();
