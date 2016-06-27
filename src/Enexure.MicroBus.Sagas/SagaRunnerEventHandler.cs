@@ -60,8 +60,9 @@ namespace Enexure.MicroBus.Sagas
 				await sagaRepository.CreateAsync(saga);
 
 			} else if (saga.IsCompleted) {
-				await sagaRepository.CompleteAsync(saga);
-
+				if (!isNew) {
+					await sagaRepository.CompleteAsync(saga);
+				}
 			} else {
 				await sagaRepository.UpdateAsync(saga);
 			}
