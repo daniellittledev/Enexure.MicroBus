@@ -25,6 +25,7 @@ task Compile {
 	foreach($project in $projects) {
 
 		Write-Host "Building $($project.FullName)" -F Cyan
+		exec { dotnet restore $project.FullName }
 		exec { dotnet build $project.FullName --configuration $configuration }
 	}
 }
