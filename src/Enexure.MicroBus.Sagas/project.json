@@ -1,5 +1,5 @@
 {
-	"version": "3.2.6",
+	"version": "3.2.7",
 	"authors": [ "Daniel Little" ],
 	"description": "Contains Saga addons for MicroBus",
 
@@ -7,7 +7,7 @@
 		"owners": [ "lavinski" ],
 		"copyright": "Copyright © Daniel Little 2015",
 		"tags": [ "MicroBus", "Mediator", "Saga", "Bus" ],
-		"releaseNotes": "core-clr support (rc1)",
+		"releaseNotes": "",
 		"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
 		"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
 		"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png"

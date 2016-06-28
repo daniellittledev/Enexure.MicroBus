@@ -9,11 +9,18 @@ if (!$build) {
 	exit
 }
 
-Write-Host "PSake target: $target"
-Write-Host "Build number: $build"
+Write-Host "PSake target: $target" -F Gray
+Write-Host "Build number: $build" -F Gray
 
 $ErrorActionPreference = "Stop"
 
 Import-Module "$PSScriptRoot\modules\psake\psake.psm1"
 
-Invoke-Psake "$PSScriptRoot\Build.ps1" -Parameters @{ "target" = $target; "buildNumber" = $build }  
+Invoke-Psake "$PSScriptRoot\Build.ps1" $target -Parameters @{ "buildNumber" = $build }
+
+if ($psake.build_success -eq $false) {
+	Write-Host "Build Failed"
+	exit 1 
+} else { 
+	exit 0 
+}

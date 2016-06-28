@@ -27,11 +27,13 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Autofac", 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Sagas.Autofac", "src\Enexure.MicroBus.Sagas.Autofac\Enexure.MicroBus.Sagas.Autofac.xproj", "{8E179892-BBEA-4F18-889A-ECBDBFD372EC}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Sagas.Autofac.Tests", "src\Enexure.MicroBus.Saga.Autofac.Tests\Enexure.MicroBus.Sagas.Autofac.Tests.xproj", "{8653A272-5329-43DF-9BA5-CF90477241A9}"
-EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.MessageContracts", "src\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.xproj", "{07713AE6-D7E2-46D8-991F-F2F4969DF319}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.InfrastructureContracts", "src\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.xproj", "{9C639EBE-F047-46DE-9E2E-6378B142B9CF}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Saga.Autofac.Tests", "src\Enexure.MicroBus.Saga.Autofac.Tests\Enexure.MicroBus.Saga.Autofac.Tests.xproj", "{0E8FB702-2652-46B2-BCC4-4D7D3FE72B17}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Sagas.Tests", "src\Enexure.MicroBus.Sagas.Tests\Enexure.MicroBus.Sagas.Tests.xproj", "{69B08C80-01A4-4ED7-B319-61C476D25F24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,10 +65,6 @@ Global
 		{8E179892-BBEA-4F18-889A-ECBDBFD372EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E179892-BBEA-4F18-889A-ECBDBFD372EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E179892-BBEA-4F18-889A-ECBDBFD372EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8653A272-5329-43DF-9BA5-CF90477241A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8653A272-5329-43DF-9BA5-CF90477241A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8653A272-5329-43DF-9BA5-CF90477241A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8653A272-5329-43DF-9BA5-CF90477241A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{07713AE6-D7E2-46D8-991F-F2F4969DF319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{07713AE6-D7E2-46D8-991F-F2F4969DF319}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07713AE6-D7E2-46D8-991F-F2F4969DF319}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,6 +73,14 @@ Global
 		{9C639EBE-F047-46DE-9E2E-6378B142B9CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C639EBE-F047-46DE-9E2E-6378B142B9CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C639EBE-F047-46DE-9E2E-6378B142B9CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E8FB702-2652-46B2-BCC4-4D7D3FE72B17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E8FB702-2652-46B2-BCC4-4D7D3FE72B17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E8FB702-2652-46B2-BCC4-4D7D3FE72B17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E8FB702-2652-46B2-BCC4-4D7D3FE72B17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69B08C80-01A4-4ED7-B319-61C476D25F24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69B08C80-01A4-4ED7-B319-61C476D25F24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69B08C80-01A4-4ED7-B319-61C476D25F24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69B08C80-01A4-4ED7-B319-61C476D25F24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,8 +95,9 @@ Global
 		{5F84E447-8716-415D-A79B-4EA5C89AB76A} = {4F28E015-19FF-44B7-B24A-2766765F0692}
 		{6473A166-6808-4FD8-981B-10C24CA29E97} = {4F28E015-19FF-44B7-B24A-2766765F0692}
 		{8E179892-BBEA-4F18-889A-ECBDBFD372EC} = {C97FCBDF-3FB2-4ABE-A4AD-0BE1C6F47948}
-		{8653A272-5329-43DF-9BA5-CF90477241A9} = {C97FCBDF-3FB2-4ABE-A4AD-0BE1C6F47948}
 		{07713AE6-D7E2-46D8-991F-F2F4969DF319} = {3D61E0F8-481D-4CEB-B53B-757C0EDD56B8}
 		{9C639EBE-F047-46DE-9E2E-6378B142B9CF} = {3D61E0F8-481D-4CEB-B53B-757C0EDD56B8}
+		{0E8FB702-2652-46B2-BCC4-4D7D3FE72B17} = {C97FCBDF-3FB2-4ABE-A4AD-0BE1C6F47948}
+		{69B08C80-01A4-4ED7-B319-61C476D25F24} = {8E9E13DB-C081-4207-9CD3-04A6EB34A39F}
 	EndGlobalSection
 EndGlobal

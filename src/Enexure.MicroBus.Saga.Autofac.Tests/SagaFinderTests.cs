@@ -60,6 +60,11 @@ namespace Enexure.MicroBus.Saga.Autofac.Tests
 				this.tracker = tracker;
 			}
 
+			public Task<TestSaga> FindByAsync(int message)
+			{
+				return null;
+			}
+
 			public Task<TestSaga> FindByAsync(IHaveCorrelationId message)
 			{
 				tracker.RecordCall();

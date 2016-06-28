@@ -9,7 +9,11 @@ properties {
 	$nuget = "$PSScriptRoot\nuget.exe"
 }
 
-task default -depends Package, Test
+task default -depends Fail 
+
+task Fail {
+	throw "Try calling Test or Package"
+}
 
 task Compile { 
 

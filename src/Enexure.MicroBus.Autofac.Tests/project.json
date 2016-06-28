@@ -6,7 +6,7 @@
 	"packOptions": {
 		"owners": [ "lavinski" ],
 		"tags": [ "MicroBus", "Mediator", "Saga", "Bus" ],
-		"releaseNotes": "core-clr support (rc1)",
+		"releaseNotes": "",
 		"copyright": "Copyright © Daniel Little 2015",
 		"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
 		"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
@@ -18,7 +18,7 @@
 	"dependencies": {
 		"Microsoft.NETCore.App": {
 			"type": "platform",
-			"version": "1.0.0-rc2-*"
+			"version": "1.0.0-rc2-3002702"
 		},
 
 		"System.Reflection": "4.1.0-rc2-24027",
