@@ -30,7 +30,14 @@ namespace Enexure.MicroBus.Sagas
 				.Select(x =>
 				{
 					var finderType = x.GetType();
-					var findByAsync = finderType.GetRuntimeMethods().First(m => m.Name == "FindByAsync");
+					var findByAsync = finderType.GetRuntimeMethods()
+						.First(m => {
+							var nameIsCorrect  = m.Name == "FindByAsync";
+							var param = m.GetParameters();
+
+							if (param.Length != 1) return false;
+							return param.All(arg => arg.ParameterType == typeof(TEvent));
+						});
 					return new Func<TEvent, Task<TSaga>>(e => (Task<TSaga>)findByAsync.Invoke(x, new object[] { e }));
 				})
 				.FirstOrDefault();
