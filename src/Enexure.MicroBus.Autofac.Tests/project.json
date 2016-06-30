@@ -18,10 +18,10 @@
 	"dependencies": {
 		"Microsoft.NETCore.App": {
 			"type": "platform",
-			"version": "1.0.0-rc2-3002702"
+			"version": "1.0.0"
 		},
 
-		"System.Reflection": "4.1.0-rc2-24027",
+		"System.Reflection": "4.1.0",
 
 		"Enexure.MicroBus": { "target": "project" },
 		"Enexure.MicroBus.MessageContracts": { "target": "project" },

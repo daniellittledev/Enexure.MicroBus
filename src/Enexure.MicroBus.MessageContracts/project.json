@@ -27,7 +27,7 @@
     },
     "netstandard1.1": {
       "dependencies": {
-        "System.Runtime": "4.1.0-rc2-24027"
+        "System.Runtime": "4.1.0"
       },
       "imports": [
         "dotnet5.2"

@@ -18,7 +18,7 @@
 	"dependencies": {
 		"Microsoft.NETCore.App": {
 			"type": "platform",
-			"version": "1.0.0-rc2-3002702"
+			"version": "1.0.0"
 		},
 
 		"Autofac": "4.0.0-rc2-240",
