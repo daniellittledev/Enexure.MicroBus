@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{3D61E0F8-481D-4CEB-B53B-757C0EDD56B8}"
 EndProject
@@ -34,6 +34,11 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Saga.Autofac.Tests", "src\Enexure.MicroBus.Saga.Autofac.Tests\Enexure.MicroBus.Saga.Autofac.Tests.xproj", "{0E8FB702-2652-46B2-BCC4-4D7D3FE72B17}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Sagas.Tests", "src\Enexure.MicroBus.Sagas.Tests\Enexure.MicroBus.Sagas.Tests.xproj", "{69B08C80-01A4-4ED7-B319-61C476D25F24}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{6A0C66AC-AA7A-4760-83BB-3C9AD09B7744}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

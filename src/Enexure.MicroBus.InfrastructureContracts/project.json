@@ -1,5 +1,5 @@
 {
-  "version": "3.2.2",
+  "version": "3.3.0",
   "authors": [ "Daniel Little" ],
   "description": "Contains the core infrastructure contracts for MicroBus which includes the handler and main MicroBus interfaces",
 
@@ -26,10 +26,7 @@
       "dependencies": {
         "System.Runtime": "4.1.0",
         "System.Threading": "4.0.11"
-      },
-      "imports": [
-        "dotnet5.2"
-      ]
+      }
     }
   }
 }

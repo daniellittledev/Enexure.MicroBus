@@ -1,5 +1,5 @@
 {
-  "version": "3.0.1",
+  "version": "3.1.0",
   "authors": [ "Daniel Little" ],
   "description": "Contains the core message contracts for MicroBus which includes the command, query and event interfaces",
 
@@ -12,10 +12,14 @@
     "projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
     "iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png"
   },
+
   "buildOptions": {
+    "warningsAsErrors": true
   },
+
   "dependencies": {
   },
+
   "frameworks": {
     "net40-client": {
       "frameworkAssemblies": {
@@ -28,10 +32,7 @@
     "netstandard1.1": {
       "dependencies": {
         "System.Runtime": "4.1.0"
-      },
-      "imports": [
-        "dotnet5.2"
-      ]
+      }
     }
   }
 }
