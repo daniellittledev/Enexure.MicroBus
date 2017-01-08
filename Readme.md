@@ -67,6 +67,6 @@ One of the most important things an application needs is a way to deal with cros
 
 Currently MicroBus only comes with built in [support for Autofac](https://www.nuget.org/packages/Enexure.MicroBus.Autofac/).
 
-For more examples check out the [Enexure.MicroBus.Tests](https://github.com/Lavinski/Enexure.MicroBus/tree/master/src/Enexure.MicroBus.Tests) project.
+For more examples check out the [Enexure.MicroBus.Tests](https://github.com/Lavinski/Enexure.MicroBus/tree/master/src/Enexure.MicroBus.Tests) project or this [sample WebApi project](https://github.com/Lavinski/Website.MicroBus.Sample).
 
     
