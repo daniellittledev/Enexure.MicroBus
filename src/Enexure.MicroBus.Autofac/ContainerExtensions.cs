@@ -20,23 +20,22 @@ namespace Enexure.MicroBus.Autofac
 
 			containerBuilder.RegisterInstance(pipelineBuilder).AsImplementedInterfaces().SingleInstance();
 			containerBuilder.RegisterType<OuterPipelineDetector>().AsImplementedInterfaces().InstancePerLifetimeScope();
-			containerBuilder.RegisterType<PipelineRunBuilder>().As<IPipelineRunBuilder>();
-			containerBuilder.RegisterType<AutofacDependencyResolver>().As<IDependencyResolver>();
-			containerBuilder.RegisterType<AutofacDependencyScope>().As<IDependencyScope>();
+			containerBuilder.RegisterType<PipelineRunBuilder>().AsImplementedInterfaces();
+			containerBuilder.RegisterType<AutofacDependencyScope>().AsImplementedInterfaces();
 
-			containerBuilder.RegisterType<MicroBus>().As<IMicroBus>();
-			containerBuilder.RegisterType<MicroMediator>().As<IMicroMediator>();
+			containerBuilder.RegisterType<MicroBus>().AsImplementedInterfaces();
+			containerBuilder.RegisterType<MicroMediator>().AsImplementedInterfaces();
 
 			return containerBuilder;
 		}
 
 		private static void RegisterHandlersWithAutofac(ContainerBuilder containerBuilder, BusBuilder busBuilder)
 		{
-			foreach (var GlobalHandlerRegistration in busBuilder.GlobalHandlerRegistrations)
+			foreach (var globalHandlerRegistration in busBuilder.GlobalHandlerRegistrations)
 			{
-				containerBuilder.RegisterType(GlobalHandlerRegistration.HandlerType).AsSelf();
+				containerBuilder.RegisterType(globalHandlerRegistration.HandlerType).AsSelf();
 
-				foreach (var dependency in GlobalHandlerRegistration.Dependencies)
+				foreach (var dependency in globalHandlerRegistration.Dependencies)
 				{
 					containerBuilder.RegisterType(dependency).AsSelf();
 				}

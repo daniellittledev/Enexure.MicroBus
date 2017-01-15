@@ -2,7 +2,7 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Enexure.MicroBus.Tests.HandlerRegistrations
+namespace Enexure.MicroBus.Tests.UnitTests.MessageRegistrations
 {
 	public class CreateHandlerRegistrationTests
 	{

@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 
 namespace Enexure.MicroBus
 {
+	using System.Threading;
+
 	public static class ReflectionExtensions
 	{
 		public static TypeInfo GetTypeInfo<T>()
@@ -23,7 +25,7 @@ namespace Enexure.MicroBus
 
 		public static bool ImplementsGenericType(this Type type, Type genericType)
 		{
-			return ImplementsGenericType(type, genericType);
+			return ImplementsGenericType(type.GetTypeInfo(), genericType);
 		}
 
 		public static bool ImplementsGenericType(this TypeInfo type, Type genericType)
@@ -37,17 +39,67 @@ namespace Enexure.MicroBus
 			return type.ImplementedInterfaces.Any(x => x.GetTypeInfo().IsGenericType && x.GetGenericTypeDefinition() == genericType);
 		}
 
+		public static IEnumerable<Type> ExpandType(Type type)
+		{
+			var typeInfo = type.GetTypeInfo();
+			return GetAllImplementedTypes(type).Concat(typeInfo.ImplementedInterfaces);
+		}
+
+		public static object GetTaskResult(Task task)
+		{
+			var taskType = task.GetType();
+			var typeInfo = taskType.GetTypeInfo();
+			if (!typeInfo.IsGenericType)
+			{
+				throw new SomehowRecievedTaskWithoutResultException();
+			}
+
+			var resultProperty = typeInfo.GetDeclaredProperty("Result").GetMethod;
+			return resultProperty.Invoke(task, new object[] { });
+		}
+
+		public static Task CallHandleOnHandler(object handler, object message, CancellationToken cancellation)
+		{
+			var type = handler.GetType();
+			var messageType = message.GetType();
+
+			var handleMethods = type.GetRuntimeMethods().Where(m => m.Name == "Handle");
+
+			var handleMethod = handleMethods.Single(x =>
+			{
+				var parameters = x.GetParameters();
+				if (parameters.Length > 2) return false;
+
+				var parameterType = parameters[0].ParameterType.GetTypeInfo();
+				var parameterTypeIsCorrect = parameterType.IsAssignableFrom(messageType.GetTypeInfo());
+				if (!parameterTypeIsCorrect) return false;
+
+				if (parameters.Length == 2 && !parameters[1].ParameterType.GetTypeInfo().IsAssignableFrom(typeof(CancellationToken).GetTypeInfo()))
+				{
+					return false;
+				}
+
+				return x.IsPublic && ((x.CallingConvention & CallingConventions.HasThis) != 0);
+			});
+
+			var parameterCount = handleMethod.GetParameters().Length;
+			var objectTask = (parameterCount == 1) 
+				? handleMethod.Invoke(handler, new[] { message })
+				: handleMethod.Invoke(handler, new[] { message, cancellation });
+
+			if (objectTask == null)
+			{
+				throw new NullReferenceException(string.Format("Handler for message of type '{0}' returned null.{1}To Resolve you can try{1} 1) Return a task instead", messageType, Environment.NewLine));
+			}
+
+			return (Task)objectTask;
+		}
+
 		internal static IEnumerable<GenericMatch> GetGenericMatches(this TypeInfo typeInfo, Type genericType)
 		{
 			return typeInfo.ImplementedInterfaces
 				.Where(x => x.GetTypeInfo().IsGenericType && x.GetGenericTypeDefinition() == genericType)
 				.Select(x => new GenericMatch(x.GenericTypeArguments.First(), typeInfo.AsType()));
-		}
-
-		public static IEnumerable<Type> ExpandType(Type type)
-		{
-			var typeInfo = type.GetTypeInfo();
-			return GetAllImplementedTypes(type).Concat(typeInfo.ImplementedInterfaces);
 		}
 
 		private static IEnumerable<Type> GetAllImplementedTypes(Type type)
@@ -64,40 +116,5 @@ namespace Enexure.MicroBus
 			}
 		}
 
-		public static object GetTaskResult(Task task)
-		{
-			var taskType = task.GetType();
-			var typeInfo = taskType.GetTypeInfo();
-			if (!typeInfo.IsGenericType)
-			{
-				throw new SomehowRecievedTaskWithoutResultException();
-			}
-
-			var resultProperty = typeInfo.GetDeclaredProperty("Result").GetMethod;
-			return resultProperty.Invoke(task, new object[] { });
-		}
-
-		public static Task CallHandleOnHandler(object handler, object message)
-		{
-			var type = handler.GetType();
-			var messageType = message.GetType();
-
-			var handleMethods = type.GetRuntimeMethods().Where(m => m.Name == "Handle");
-			var handleMethod = handleMethods.Single(x => {
-				var parameterTypeIsCorrect = x.GetParameters().Single().ParameterType.GetTypeInfo().IsAssignableFrom(messageType.GetTypeInfo());
-				return parameterTypeIsCorrect
-					&& x.IsPublic
-					&& ((x.CallingConvention & CallingConventions.HasThis) != 0);
-			});
-
-			var objectTask = handleMethod.Invoke(handler, new object[] { message });
-
-			if (objectTask == null)
-			{
-				throw new NullReferenceException(string.Format("Handler for message of type '{0}' returned null.{1}To Resolve you can try{1} 1) Return a task instead", messageType, Environment.NewLine));
-			}
-
-			return (Task)objectTask;
-		}
 	}
 }

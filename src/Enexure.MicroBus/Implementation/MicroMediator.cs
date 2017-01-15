@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Enexure.MicroBus
 {
-	public class MicroMediator : IMicroMediator
+	using System.Threading;
+
+	public class MicroMediator : IMicroMediator, ICancelableMicroMediator
 	{
 		private readonly IDependencyResolver dependencyResolver;
 
@@ -17,38 +19,47 @@ namespace Enexure.MicroBus
 			this.dependencyResolver = dependencyResolver;
 		}
 
-		public async Task SendAsync(object message)
+		public Task SendAsync(object message)
 		{
-			if (message == null) throw new ArgumentNullException(nameof(message));
-
-			using (var scope = dependencyResolver.BeginScope()) {
-				var builder = scope.GetService<IPipelineRunBuilder>();
-				var messageProcessor = builder.GetRunnerForPipeline(message.GetType());
-				await messageProcessor.Handle(message);
-			}
+			return RunPipelineAsync(message);
 		}
 
-		public async Task PublishAsync(object message)
+		public Task PublishAsync(object message)
 		{
-			if (message == null) throw new ArgumentNullException(nameof(message));
-
-			using (var scope = dependencyResolver.BeginScope())
-			{
-				var builder = scope.GetService<IPipelineRunBuilder>();
-				var messageProcessor = builder.GetRunnerForPipeline(message.GetType());
-				await messageProcessor.Handle(message);
-			}
+			return RunPipelineAsync(message);
 		}
 
 		public async Task<TResult> QueryAsync<TResult>(object message)
 		{
+			return (TResult)await RunPipelineAsync(message);
+		}
+
+		public Task SendAsync(object message, CancellationToken cancellation)
+		{
+			return RunPipelineAsync(message, cancellation);
+		}
+
+		public Task PublishAsync(object message, CancellationToken cancellation)
+		{
+			return RunPipelineAsync(message, cancellation);
+		}
+
+		public async Task<TResult> QueryAsync<TResult>(object message, CancellationToken cancellation)
+		{
+			return (TResult)await RunPipelineAsync(message, cancellation);
+		}
+
+		private async Task<object> RunPipelineAsync(
+			object message,
+			CancellationToken cancellation = default(CancellationToken))
+		{
 			if (message == null) throw new ArgumentNullException(nameof(message));
 
 			using (var scope = dependencyResolver.BeginScope())
 			{
 				var builder = scope.GetService<IPipelineRunBuilder>();
-				var messageProcessor = builder.GetRunnerForPipeline(message.GetType());
-				return (TResult)(await messageProcessor.Handle(message));
+				var messageProcessor = builder.GetRunnerForPipeline(message.GetType(), cancellation);
+				return await messageProcessor.Handle(message);
 			}
 		}
 	}

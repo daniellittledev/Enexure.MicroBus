@@ -6,26 +6,30 @@ using System.Threading.Tasks;
 
 namespace Enexure.MicroBus
 {
+	using System.Threading;
+
 	public class BusBuilder
 	{
 		private readonly List<HandlerRegistration> registrations = new List<HandlerRegistration>();
 		private readonly List<GlobalHandlerRegistration> globalHandlers =  new List<GlobalHandlerRegistration>();
 
-		public List<HandlerRegistration> MessageHandlerRegistrations
-		{
-			get { return registrations; }
-		}
+		public List<HandlerRegistration> MessageHandlerRegistrations => registrations;
 
-		public List<GlobalHandlerRegistration> GlobalHandlerRegistrations
-		{
-			get { return globalHandlers; }
-		}
+		public List<GlobalHandlerRegistration> GlobalHandlerRegistrations => globalHandlers;
 
 		public BusBuilder RegisterCommandHandler<TCommand, TCommandHandler>()
 			where TCommand : ICommand
 			where TCommandHandler : ICommandHandler<TCommand>
 		{
 			registrations.Add(HandlerRegistration.New<TCommand, CommandHandlerShim<TCommand, TCommandHandler>>(new[] { typeof(TCommandHandler) }));
+			return this;
+		}
+
+		public BusBuilder RegisterCancelableCommandHandler<TCommand, TCommandHandler>()
+			where TCommand : ICommand
+			where TCommandHandler : ICancelableCommandHandler<TCommand>
+		{
+			registrations.Add(HandlerRegistration.New<TCommand, CancelableCommandHandlerShim<TCommand, TCommandHandler>>(new[] { typeof(TCommandHandler) }));
 			return this;
 		}
 
@@ -37,11 +41,27 @@ namespace Enexure.MicroBus
 			return this;
 		}
 
+		public BusBuilder RegisterCancelableEventHandler<TEvent, TEventHandler>()
+			where TEvent : IEvent
+			where TEventHandler : ICancelableEventHandler<TEvent>
+		{
+			registrations.Add(HandlerRegistration.New<TEvent, CancelableEventHandlerShim<TEvent, TEventHandler>>(new[] { typeof(TEventHandler) }));
+			return this;
+		}
+
 		public BusBuilder RegisterQueryHandler<TQuery, TResult, TQueryHandler>()
 			where TQuery : IQuery<TQuery, TResult>
 			where TQueryHandler : IQueryHandler<TQuery, TResult>
 		{
 			registrations.Add(HandlerRegistration.New<TQuery, QueryHandlerShim<TQuery, TResult, TQueryHandler>>(new[] { typeof(TQueryHandler) }));
+			return this;
+		}
+
+		public BusBuilder RegisterCancelableQueryHandler<TQuery, TResult, TQueryHandler>()
+			where TQuery : IQuery<TQuery, TResult>
+			where TQueryHandler : ICancelableQueryHandler<TQuery, TResult>
+		{
+			registrations.Add(HandlerRegistration.New<TQuery, CancelableQueryHandlerShim<TQuery, TResult, TQueryHandler>>(new[] { typeof(TQueryHandler) }));
 			return this;
 		}
 
@@ -60,6 +80,20 @@ namespace Enexure.MicroBus
 
 		public BusBuilder RegisterHandler<TMessage, TResult, TMessageHandler>()
 			where TMessageHandler : IMessageHandler<TMessage, TResult>
+		{
+			registrations.Add(HandlerRegistration.New<TMessage, TMessageHandler>());
+			return this;
+		}
+
+		public BusBuilder RegisterCancelableHandler<TMessage, TMessageHandler>()
+			where TMessageHandler : ICancelableMessageHandler<TMessage, Unit>
+		{
+			registrations.Add(HandlerRegistration.New<TMessage, TMessageHandler>());
+			return this;
+		}
+
+		public BusBuilder RegisterCancelableHandler<TMessage, TResult, TMessageHandler>()
+			where TMessageHandler : ICancelableMessageHandler<TMessage, TResult>
 		{
 			registrations.Add(HandlerRegistration.New<TMessage, TMessageHandler>());
 			return this;
@@ -111,11 +145,17 @@ namespace Enexure.MicroBus
 
 		private IEnumerable<GenericMatch> HandlersOnTheTypes(TypeInfo type)
 		{
-			return ReflectionExtensions.GetGenericMatches(type, typeof(ICommandHandler<>))
-				.Concat(ReflectionExtensions.GetGenericMatches(type, typeof(IEventHandler<>)))
-				.Concat(ReflectionExtensions.GetGenericMatches(type, typeof(IQueryHandler<,>)))
-				.Concat(ReflectionExtensions.GetGenericMatches(type, typeof(IMessageHandler<,>)))
-				;
+			var types = new[] {
+				type.GetGenericMatches(typeof(ICommandHandler<>)),
+				type.GetGenericMatches(typeof(IEventHandler<>)),
+				type.GetGenericMatches(typeof(IQueryHandler<,>)),
+				type.GetGenericMatches(typeof(ICancelableCommandHandler<>)),
+				type.GetGenericMatches(typeof(ICancelableEventHandler<>)),
+				type.GetGenericMatches(typeof(ICancelableQueryHandler<,>)),
+				type.GetGenericMatches(typeof(IMessageHandler<,>)),
+				type.GetGenericMatches(typeof(ICancelableMessageHandler<,>))
+			};
+			return types.SelectMany(x => x);
 		}
 
 		private IEnumerable<TypeInfo> AllTheTypes(Assembly assembly)
@@ -125,6 +165,13 @@ namespace Enexure.MicroBus
 
 		public BusBuilder RegisterGlobalHandler<THandler>()
 			where THandler : IDelegatingHandler
+		{
+			globalHandlers.Add(new GlobalHandlerRegistration(typeof(THandler)));
+			return this;
+		}
+
+		public BusBuilder RegisterCancelableGlobalHandler<THandler>()
+			where THandler : ICancelableDelegatingHandler
 		{
 			globalHandlers.Add(new GlobalHandlerRegistration(typeof(THandler)));
 			return this;
@@ -197,6 +244,59 @@ namespace Enexure.MicroBus
 		public async Task<TResult> Handle(TQuery query)
 		{
 			return await handler.Handle(query);
+		}
+	}
+
+	internal class CancelableCommandHandlerShim<TCommand, TCommandHandler> : ICancelableMessageHandler<TCommand, Unit>
+	where TCommandHandler : ICancelableCommandHandler<TCommand>
+	where TCommand : ICommand
+	{
+		private readonly TCommandHandler handler;
+
+		public CancelableCommandHandlerShim(TCommandHandler handler)
+		{
+			this.handler = handler;
+		}
+
+		public async Task<Unit> Handle(TCommand message, CancellationToken cancellation)
+		{
+			await handler.Handle(message, cancellation);
+			return Unit.Unit;
+		}
+	}
+
+	internal class CancelableEventHandlerShim<TEvent, TEventHandler> : ICancelableMessageHandler<TEvent, Unit>
+		where TEventHandler : ICancelableEventHandler<TEvent>
+		where TEvent : IEvent
+	{
+		private readonly TEventHandler handler;
+
+		public CancelableEventHandlerShim(TEventHandler handler)
+		{
+			this.handler = handler;
+		}
+
+		public async Task<Unit> Handle(TEvent message, CancellationToken cancellation)
+		{
+			await handler.Handle(message, cancellation);
+			return Unit.Unit;
+		}
+	}
+
+	internal class CancelableQueryHandlerShim<TQuery, TResult, TQueryHandler> : ICancelableMessageHandler<TQuery, TResult>
+		where TQueryHandler : ICancelableQueryHandler<TQuery, TResult>
+		where TQuery : IQuery<TQuery, TResult>
+	{
+		private readonly TQueryHandler handler;
+
+		public CancelableQueryHandlerShim(TQueryHandler handler)
+		{
+			this.handler = handler;
+		}
+
+		public async Task<TResult> Handle(TQuery query, CancellationToken cancellation)
+		{
+			return await handler.Handle(query, cancellation);
 		}
 	}
 }

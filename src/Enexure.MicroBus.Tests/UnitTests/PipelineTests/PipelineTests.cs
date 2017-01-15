@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Xunit;
 
-namespace Enexure.MicroBus.Tests.PipelineTests
+namespace Enexure.MicroBus.Tests.UnitTests.PipelineTests
 {
 	public class PipelineTests
 	{

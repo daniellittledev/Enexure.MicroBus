@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Enexure.MicroBus.Tests
+namespace Enexure.MicroBus.Tests.UnitTests
 {
 	class CommandHandler<T> : ICommandHandler<T>
 			where T : ICommand

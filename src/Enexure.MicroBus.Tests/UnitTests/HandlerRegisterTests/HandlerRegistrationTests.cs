@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Xunit;
 
-namespace Enexure.MicroBus.Tests.HandlerRegisterTests
+namespace Enexure.MicroBus.Tests.UnitTests.HandlerRegisterTests
 {
 	public class HandlerRegistrationTests
 	{

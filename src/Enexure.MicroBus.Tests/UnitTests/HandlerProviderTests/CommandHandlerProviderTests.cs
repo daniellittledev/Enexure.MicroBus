@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
-using System.Threading.Tasks;
 
-namespace Enexure.MicroBus.Tests.HandlerProviderTests
+namespace Enexure.MicroBus.Tests.UnitTests.HandlerProviderTests
 {
 	public class CommandHandlerProviderTests
 	{

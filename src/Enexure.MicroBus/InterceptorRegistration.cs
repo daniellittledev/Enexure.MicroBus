@@ -27,7 +27,10 @@ namespace Enexure.MicroBus
 
 		private void Validate()
 		{
-			if (!typeof(IDelegatingHandler).GetTypeInfo().IsAssignableFrom(HandlerType.GetTypeInfo())) {
+			var handlerType = HandlerType.GetTypeInfo();
+
+			if (!typeof(IDelegatingHandler).GetTypeInfo().IsAssignableFrom(handlerType)
+				&& !typeof(ICancelableDelegatingHandler).GetTypeInfo().IsAssignableFrom(handlerType)) {
 				throw new TypeIsNotDelegatingHandlerException(HandlerType);
 			}
 		}

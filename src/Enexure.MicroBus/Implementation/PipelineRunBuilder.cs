@@ -7,6 +7,8 @@ using Enexure.MicroBus.Messages;
 
 namespace Enexure.MicroBus
 {
+	using System.Threading;
+
 	public class PipelineRunBuilder : IPipelineRunBuilder
 	{
 		private readonly IPipelineBuilder pipelineBuilder;
@@ -31,18 +33,23 @@ namespace Enexure.MicroBus
 			this.busSettings = busSettings;
 		}
 
-		public INextHandler GetRunnerForPipeline(Type messageType)
+		public INextHandler GetRunnerForPipeline(Type messageType, CancellationToken cancellation)
 		{
+			if (cancellation == null) throw new ArgumentNullException(nameof(cancellation));
+
 			var pipeline = pipelineBuilder.GetPipeline(messageType);
 			if (!pipeline.HandlerTypes.Any())
 			{
-				return NoHandlersForMessage(messageType);
+				return NoHandlersForMessage(messageType, cancellation);
 			}
 
-			return new NextHandlerRunner(message => BuildNextHandler(pipeline.DelegatingHandlerTypes, pipeline.HandlerTypes).Handle(message));
+			return new NextHandlerRunner(message => {
+				var firstHandler = BuildNextHandler(pipeline.DelegatingHandlerTypes, pipeline.HandlerTypes, cancellation);
+				return firstHandler.Handle(message);
+			});
 		}
 
-		private INextHandler NoHandlersForMessage(Type messageType)
+		private INextHandler NoHandlersForMessage(Type messageType, CancellationToken cancellation)
 		{
 			if (messageType == typeof(NoMatchingRegistrationEvent))
 			{
@@ -51,7 +58,7 @@ namespace Enexure.MicroBus
 
 			try
 			{
-				var runner = GetRunnerForPipeline(typeof(NoMatchingRegistrationEvent));
+				var runner = GetRunnerForPipeline(typeof(NoMatchingRegistrationEvent), cancellation);
 				return new NextHandlerRunner(message => runner.Handle(new NoMatchingRegistrationEvent(message)));
 			}
 			catch (NoRegistrationForMessageException)
@@ -62,8 +69,8 @@ namespace Enexure.MicroBus
 
 		private INextHandler BuildNextHandler(
 			IReadOnlyCollection<Type> delegatingHandlerTypes,
-			IReadOnlyCollection<Type> handlerTypes
-			)
+			IReadOnlyCollection<Type> handlerTypes,
+			CancellationToken cancellation)
 		{
 			return new NextHandlerRunner(async message => {
 
@@ -73,7 +80,7 @@ namespace Enexure.MicroBus
 
 				if (!delegatingHandlerTypes.Any()) {
 					updater.PushMarker();
-					var result = await RunHandlers(handlerTypes, message);
+					var result = await RunHandlers(handlerTypes, message, cancellation);
 					updater.PopMarker();
 					return result;
 				}
@@ -81,39 +88,61 @@ namespace Enexure.MicroBus
 				var head = delegatingHandlerTypes.First();
 				var tail = delegatingHandlerTypes.Skip(1).ToList();
 
-				var nextHandler = (IDelegatingHandler)dependencyScope.GetService(head);
-				var nextFunction = BuildNextHandler(tail, handlerTypes);
+				var nextFunction = BuildNextHandler(tail, handlerTypes, cancellation);
 
-				return await nextHandler.Handle(nextFunction, message);
+				var pipelineHanlder = dependencyScope.GetService(head);
+				if (pipelineHanlder is IDelegatingHandler) {
+
+					var nextHandler = pipelineHanlder as IDelegatingHandler;
+					return await nextHandler.Handle(nextFunction, message);
+
+				} else if (pipelineHanlder is ICancelableDelegatingHandler) {
+
+					var nextHandler = pipelineHanlder as ICancelableDelegatingHandler;
+					return await nextHandler.Handle(nextFunction, message, cancellation);
+
+				} else {
+					
+					throw new AskedForDelegatingHandlerButDidNotGetADelegatingHandlerException();
+				}
 			});
 		}
 
 		private async Task<object> RunHandlers(
 			IReadOnlyCollection<Type> leftHandlerTypes,
-			object message)
+			object message,
+			CancellationToken cancellation)
 		{
-			List<Task> tasks = new List<Task>();
-
 			var handlers = leftHandlerTypes.Select(dependencyScope.GetService);
 
-			if (busSettings.HandlerSynchronization == Synchronization.Syncronous) {
+			var tasks = handlers.Select(handler => ReflectionExtensions.CallHandleOnHandler(handler, message, cancellation));
 
-				foreach (var leafHandler in handlers) {
-					Task task;
-					await (task = ReflectionExtensions.CallHandleOnHandler(leafHandler, message));
-					tasks.Add(task);
-				}
+			var taskList = await RunTasks(tasks, busSettings.HandlerSynchronization);
 
-			} else {
-				tasks.AddRange(handlers.Select(handler => ReflectionExtensions.CallHandleOnHandler(handler, message)));
-				await Task.WhenAll(tasks);
-			}
-
-			if (tasks.Count == 1) {
-				return tasks.Select(ReflectionExtensions.GetTaskResult).Single();
+			if (taskList.Count == 1) {
+				return taskList.Select(ReflectionExtensions.GetTaskResult).Single();
 			}
 
 			return Unit.Unit;
+		}
+
+		private async Task<IReadOnlyCollection<Task>> RunTasks(IEnumerable<Task> tasks, Synchronization synchronization)
+		{
+			var taskList = new List<Task>();
+			if (synchronization == Synchronization.Syncronous)
+			{
+				foreach (var task in tasks)
+				{
+					taskList.Add(task);
+					await task;
+				}
+			}
+			else
+			{
+				taskList.AddRange(tasks);
+				await Task.WhenAll(taskList);
+			}
+			return taskList;
 		}
 	}
 }
