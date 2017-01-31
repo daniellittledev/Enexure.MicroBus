@@ -57,7 +57,7 @@ One of the most important things an application needs is a way to deal with cros
 
     public class CrossCuttingHandler : IDelegatingHandler
     {
-        public async Task<IReadOnlyCollection<object>> Handle(INextHandler next, IMessage message)
+        public async Task<object> Handle(INextHandler next, object message)
         {
             using (var transaction = unitOfWork.NewTransaction()) {
                 return await next.Handle(message);
