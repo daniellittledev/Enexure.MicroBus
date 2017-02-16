@@ -4,35 +4,35 @@
   "description": "Contains the core message contracts for MicroBus which includes the command, query and event interfaces",
 
   "packOptions": {
-    "owners": [ "lavinski" ],
-    "copyright": "Copyright � Daniel Little 2015",
-    "tags": [ "MicroBus", "Mediator", "Contracts", "Bus" ],
-    "releaseNotes": "",
-    "licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
-    "projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
-    "iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png"
+	"owners": [ "lavinski" ],
+	"copyright": "Copyright � Daniel Little 2015",
+	"tags": [ "MicroBus", "Mediator", "Contracts", "Bus" ],
+	"releaseNotes": "",
+	"licenseUrl": "https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md",
+	"projectUrl": "https://github.com/Lavinski/Enexure.MicroBus/",
+	"iconUrl": "https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png"
   },
 
   "buildOptions": {
-    "warningsAsErrors": true
+	"warningsAsErrors": true
   },
 
   "dependencies": {
   },
 
   "frameworks": {
-    "net40-client": {
-      "frameworkAssemblies": {
-      }
-    },
-    "net45": {
-      "frameworkAssemblies": {
-      }
-    },
-    "netstandard1.1": {
-      "dependencies": {
-        "System.Runtime": "4.1.0"
-      }
-    }
+	"net40-client": {
+	  "frameworkAssemblies": {
+	  }
+	},
+	"net45": {
+	  "frameworkAssemblies": {
+	  }
+	},
+	"netstandard1.1": {
+	  "dependencies": {
+		"System.Runtime": "4.1.0"
+	  }
+	}
   }
 }
