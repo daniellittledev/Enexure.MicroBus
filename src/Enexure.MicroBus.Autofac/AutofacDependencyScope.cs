@@ -8,11 +8,20 @@ namespace Enexure.MicroBus.Autofac
 {
 	internal class AutofacDependencyScope : AutofacDependencyResolver, IDependencyScope
 	{
+		private readonly bool ownsLifetimeScope;
 		private readonly ILifetimeScope lifetimeScope;
 
 		public AutofacDependencyScope(ILifetimeScope lifetimeScope)
+					: base(lifetimeScope)
+		{
+			this.ownsLifetimeScope = false;
+			this.lifetimeScope = lifetimeScope;
+		}
+
+		public AutofacDependencyScope(ILifetimeScope lifetimeScope, bool ownsLifetimeScope)
 			: base(lifetimeScope)
 		{
+			this.ownsLifetimeScope = ownsLifetimeScope;
 			this.lifetimeScope = lifetimeScope;
 		}
 
@@ -38,7 +47,10 @@ namespace Enexure.MicroBus.Autofac
 
 		public void Dispose()
 		{
-			lifetimeScope.Dispose();
+			if (this.ownsLifetimeScope)
+			{
+				lifetimeScope.Dispose();
+			}
 		}
 	}
 }
