@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{3D61E0F8-481D-4CEB-B53B-757C0EDD56B8}"
 EndProject
@@ -15,30 +15,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{4F28E015-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saga", "Saga", "{C97FCBDF-3FB2-4ABE-A4AD-0BE1C6F47948}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus", "src\Enexure.MicroBus\Enexure.MicroBus.xproj", "{C6DCC744-47C4-4EB5-A734-604FDDF8A030}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Sagas", "src\Enexure.MicroBus.Sagas\Enexure.MicroBus.Sagas.xproj", "{B7A54026-DE9C-43C4-A48C-3332C85DF3A8}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Tests", "src\Enexure.MicroBus.Tests\Enexure.MicroBus.Tests.xproj", "{F6E6BC4E-0132-42A8-88CD-D19AAB883E89}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Autofac.Tests", "src\Enexure.MicroBus.Autofac.Tests\Enexure.MicroBus.Autofac.Tests.xproj", "{5F84E447-8716-415D-A79B-4EA5C89AB76A}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Autofac", "src\Enexure.MicroBus.Autofac\Enexure.MicroBus.Autofac.xproj", "{6473A166-6808-4FD8-981B-10C24CA29E97}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Sagas.Autofac", "src\Enexure.MicroBus.Sagas.Autofac\Enexure.MicroBus.Sagas.Autofac.xproj", "{8E179892-BBEA-4F18-889A-ECBDBFD372EC}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.MessageContracts", "src\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.xproj", "{07713AE6-D7E2-46D8-991F-F2F4969DF319}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.InfrastructureContracts", "src\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.xproj", "{9C639EBE-F047-46DE-9E2E-6378B142B9CF}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Saga.Autofac.Tests", "src\Enexure.MicroBus.Saga.Autofac.Tests\Enexure.MicroBus.Saga.Autofac.Tests.xproj", "{0E8FB702-2652-46B2-BCC4-4D7D3FE72B17}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Enexure.MicroBus.Sagas.Tests", "src\Enexure.MicroBus.Sagas.Tests\Enexure.MicroBus.Sagas.Tests.xproj", "{69B08C80-01A4-4ED7-B319-61C476D25F24}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{6A0C66AC-AA7A-4760-83BB-3C9AD09B7744}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus", "src\Enexure.MicroBus\Enexure.MicroBus.csproj", "{C6DCC744-47C4-4EB5-A734-604FDDF8A030}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.Sagas", "src\Enexure.MicroBus.Sagas\Enexure.MicroBus.Sagas.csproj", "{B7A54026-DE9C-43C4-A48C-3332C85DF3A8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.Tests", "src\Enexure.MicroBus.Tests\Enexure.MicroBus.Tests.csproj", "{F6E6BC4E-0132-42A8-88CD-D19AAB883E89}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.Autofac.Tests", "src\Enexure.MicroBus.Autofac.Tests\Enexure.MicroBus.Autofac.Tests.csproj", "{5F84E447-8716-415D-A79B-4EA5C89AB76A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.Autofac", "src\Enexure.MicroBus.Autofac\Enexure.MicroBus.Autofac.csproj", "{6473A166-6808-4FD8-981B-10C24CA29E97}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.Sagas.Autofac", "src\Enexure.MicroBus.Sagas.Autofac\Enexure.MicroBus.Sagas.Autofac.csproj", "{8E179892-BBEA-4F18-889A-ECBDBFD372EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.MessageContracts", "src\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.csproj", "{07713AE6-D7E2-46D8-991F-F2F4969DF319}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.InfrastructureContracts", "src\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.csproj", "{9C639EBE-F047-46DE-9E2E-6378B142B9CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.Saga.Autofac.Tests", "src\Enexure.MicroBus.Saga.Autofac.Tests\Enexure.MicroBus.Saga.Autofac.Tests.csproj", "{0E8FB702-2652-46B2-BCC4-4D7D3FE72B17}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.Sagas.Tests", "src\Enexure.MicroBus.Sagas.Tests\Enexure.MicroBus.Sagas.Tests.csproj", "{69B08C80-01A4-4ED7-B319-61C476D25F24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

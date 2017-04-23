@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>[Obsolete] Contains the Autofac verion of MicroBus.Sagas</Description>
+    <VersionPrefix>3.3.0</VersionPrefix>
+    <Authors>Daniel Little</Authors>
+    <TargetFrameworks>net451;netstandard1.1</TargetFrameworks>
+    <AssemblyName>Enexure.MicroBus.Sagas.Autofac</AssemblyName>
+    <PackageId>Enexure.MicroBus.Sagas.Autofac</PackageId>
+    <PackageTags>MicroBus;Mediator;Saga;Autofac;Bus</PackageTags>
+    <PackageIconUrl>https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Lavinski/Enexure.MicroBus/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <PackageReference Include="System.Runtime" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>

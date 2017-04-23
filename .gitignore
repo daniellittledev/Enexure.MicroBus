@@ -5,6 +5,9 @@ AssemblyVersion.cs
 artifacts/
 packages/
 
+#Backup
+[Bb]ackup/
+
 #OS junk files
 [Tt]humbs.db
 *.DS_Store

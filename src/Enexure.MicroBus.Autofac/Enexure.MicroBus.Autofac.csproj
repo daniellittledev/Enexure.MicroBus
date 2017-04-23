@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Contains the Autofac verion of MicroBus</Description>
+    <VersionPrefix>3.5.1</VersionPrefix>
+    <Authors>Daniel Little</Authors>
+    <TargetFrameworks>net451;netstandard1.1</TargetFrameworks>
+    <AssemblyName>Enexure.MicroBus.Autofac</AssemblyName>
+    <PackageId>Enexure.MicroBus.Autofac</PackageId>
+    <PackageTags>MicroBus;Mediator;Autofac;Bus</PackageTags>
+    <PackageIconUrl>https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Lavinski/Enexure.MicroBus/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Enexure.MicroBus\Enexure.MicroBus.csproj" />
+    <ProjectReference Include="..\Enexure.MicroBus.MessageContracts\Enexure.MicroBus.MessageContracts.csproj" />
+    <ProjectReference Include="..\Enexure.MicroBus.InfrastructureContracts\Enexure.MicroBus.InfrastructureContracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <PackageReference Include="Autofac" Version="3.5.2" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System.Core" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <PackageReference Include="Autofac" Version="4.0.0-rc2-240" />
+    <PackageReference Include="System.Reflection" Version="4.1.0" />
+    <PackageReference Include="System.Linq" Version="4.1.0" />
+    <PackageReference Include="System.Collections" Version="4.0.11" />
+  </ItemGroup>
+
+</Project>

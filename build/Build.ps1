@@ -20,7 +20,7 @@ task Compile {
 	Write-Host "Compiling"
 	Write-Host "|-----------------------------------------"
 
-	$projects = ls "$solutionDir\src"
+	$projects = ls "$solutionDir\src\**\*.csproj"
 
 	foreach($project in $projects) {
 
@@ -34,11 +34,12 @@ task Test {
 	Write-Host "Testing"
 	Write-Host "|-----------------------------------------"
 
-	$projects = ls "$solutionDir\src" | ? { $_.Name -like "*Tests" }
+	$projects = ls "$solutionDir\src\**\*.csproj" | ? { $_.Name -like "*Tests*" }
 
 	foreach($project in $projects) {
 
 		Write-Host "Running tests for $project" -F Cyan
+		Write-Host "dotnet test '$($project.FullName)'" -F Cyan
 		exec { dotnet test "$($project.FullName)" }
 
 	}
@@ -48,7 +49,7 @@ task Package -depends Compile {
 
 	Write-Host "Packaging"
 
-	$projects = ls "$solutionDir\src" | ? { -not ($_.Name -like "*Tests") }
+	$projects = ls "$solutionDir\src\**\*.csproj" | ? { -not ($_.Name -like "*Tests*") }
 
 	foreach($project in $projects) {
 

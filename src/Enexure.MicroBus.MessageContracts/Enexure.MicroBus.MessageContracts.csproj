@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Contains the core message contracts for MicroBus which includes the command, query and event interfaces</Description>
+    <VersionPrefix>3.1.0</VersionPrefix>
+    <Authors>Daniel Little</Authors>
+    <TargetFrameworks>net40;netstandard1.1</TargetFrameworks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AssemblyName>Enexure.MicroBus.MessageContracts</AssemblyName>
+    <PackageId>Enexure.MicroBus.MessageContracts</PackageId>
+    <PackageTags>MicroBus;Mediator;Contracts;Bus</PackageTags>
+    <PackageIconUrl>https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Lavinski/Enexure.MicroBus/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
+    <PackageReference Include="System.Runtime" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>
