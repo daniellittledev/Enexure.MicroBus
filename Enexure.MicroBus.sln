@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.12
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Autofac", "Autofac", "{D6BA7654-EB91-459C-A729-801AE7B88174}"
 EndProject
@@ -32,6 +32,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MicroBus.Sagas", "MicroBus.Sagas", "{9A654177-EDEE-4868-803C-7A083AC3C11A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Autofac", "Autofac", "{9F35F09A-284D-4280-8213-8E36682D138C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MicrosoftDependencyInjection", "MicrosoftDependencyInjection", "{ADB75E2F-8AC6-4FDD-B9BE-6AFBDE52EE02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.MicrosoftDependencyInjection", "src\Enexure.MicroBus.MicrosoftDependencyInjection\Enexure.MicroBus.MicrosoftDependencyInjection.csproj", "{7CA1464D-7BC4-416F-A2F2-00CC93946730}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.MicrosoftDependencyInjection.Tests", "src\Enexure.MicroBus.MicrosoftDependencyInjection.Tests\Enexure.MicroBus.MicrosoftDependencyInjection.Tests.csproj", "{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +85,14 @@ Global
 		{69B08C80-01A4-4ED7-B319-61C476D25F24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69B08C80-01A4-4ED7-B319-61C476D25F24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69B08C80-01A4-4ED7-B319-61C476D25F24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CA1464D-7BC4-416F-A2F2-00CC93946730}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CA1464D-7BC4-416F-A2F2-00CC93946730}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CA1464D-7BC4-416F-A2F2-00CC93946730}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CA1464D-7BC4-416F-A2F2-00CC93946730}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,5 +110,8 @@ Global
 		{0E8FB702-2652-46B2-BCC4-4D7D3FE72B17} = {9F35F09A-284D-4280-8213-8E36682D138C}
 		{69B08C80-01A4-4ED7-B319-61C476D25F24} = {9A654177-EDEE-4868-803C-7A083AC3C11A}
 		{9F35F09A-284D-4280-8213-8E36682D138C} = {9A654177-EDEE-4868-803C-7A083AC3C11A}
+		{ADB75E2F-8AC6-4FDD-B9BE-6AFBDE52EE02} = {2C0191A8-8BF9-486E-A837-0B23F44A7BE0}
+		{7CA1464D-7BC4-416F-A2F2-00CC93946730} = {ADB75E2F-8AC6-4FDD-B9BE-6AFBDE52EE02}
+		{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC} = {ADB75E2F-8AC6-4FDD-B9BE-6AFBDE52EE02}
 	EndGlobalSection
 EndGlobal
