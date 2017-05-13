@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Contains the Autofac verion of MicroBus</Description>
-    <VersionPrefix>3.5.1</VersionPrefix>
+    <Description>Autofac support for MicroBus</Description>
+    <VersionPrefix>3.5.2</VersionPrefix>
     <Authors>Daniel Little</Authors>
     <TargetFrameworks>net451;netstandard1.1</TargetFrameworks>
     <AssemblyName>Enexure.MicroBus.Autofac</AssemblyName>
