@@ -41,9 +41,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.MicrosoftD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StructureMap", "StructureMap", "{E502052E-C030-4051-A902-1A3E1C4D3B4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.StructureMap", "Enexure.MicroBus.StructureMap\Enexure.MicroBus.StructureMap.csproj", "{20C41CB5-57A7-4BA9-85B1-994238B458D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.StructureMap", "src\Enexure.MicroBus.StructureMap\Enexure.MicroBus.StructureMap.csproj", "{20C41CB5-57A7-4BA9-85B1-994238B458D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.StructureMap.Tests", "Enexure.MicroBus.StructureMap.Tests\Enexure.MicroBus.StructureMap.Tests.csproj", "{F33FE1C9-147F-46D2-8820-99BFB1A11347}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.StructureMap.Tests", "src\Enexure.MicroBus.StructureMap.Tests\Enexure.MicroBus.StructureMap.Tests.csproj", "{F33FE1C9-147F-46D2-8820-99BFB1A11347}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
