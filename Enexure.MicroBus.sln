@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Autofac", "Autofac", "{D6BA7654-EB91-459C-A729-801AE7B88174}"
 EndProject
@@ -35,9 +35,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Autofac", "Autofac", "{9F35
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MicrosoftDependencyInjection", "MicrosoftDependencyInjection", "{ADB75E2F-8AC6-4FDD-B9BE-6AFBDE52EE02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.MicrosoftDependencyInjection", "src\Enexure.MicroBus.MicrosoftDependencyInjection\Enexure.MicroBus.MicrosoftDependencyInjection.csproj", "{7CA1464D-7BC4-416F-A2F2-00CC93946730}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.MicrosoftDependencyInjection", "src\Enexure.MicroBus.MicrosoftDependencyInjection\Enexure.MicroBus.MicrosoftDependencyInjection.csproj", "{7CA1464D-7BC4-416F-A2F2-00CC93946730}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.MicrosoftDependencyInjection.Tests", "src\Enexure.MicroBus.MicrosoftDependencyInjection.Tests\Enexure.MicroBus.MicrosoftDependencyInjection.Tests.csproj", "{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enexure.MicroBus.MicrosoftDependencyInjection.Tests", "src\Enexure.MicroBus.MicrosoftDependencyInjection.Tests\Enexure.MicroBus.MicrosoftDependencyInjection.Tests.csproj", "{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StructureMap", "StructureMap", "{E502052E-C030-4051-A902-1A3E1C4D3B4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.StructureMap", "Enexure.MicroBus.StructureMap\Enexure.MicroBus.StructureMap.csproj", "{20C41CB5-57A7-4BA9-85B1-994238B458D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enexure.MicroBus.StructureMap.Tests", "Enexure.MicroBus.StructureMap.Tests\Enexure.MicroBus.StructureMap.Tests.csproj", "{F33FE1C9-147F-46D2-8820-99BFB1A11347}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +99,14 @@ Global
 		{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20C41CB5-57A7-4BA9-85B1-994238B458D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C41CB5-57A7-4BA9-85B1-994238B458D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C41CB5-57A7-4BA9-85B1-994238B458D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C41CB5-57A7-4BA9-85B1-994238B458D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F33FE1C9-147F-46D2-8820-99BFB1A11347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33FE1C9-147F-46D2-8820-99BFB1A11347}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F33FE1C9-147F-46D2-8820-99BFB1A11347}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F33FE1C9-147F-46D2-8820-99BFB1A11347}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,5 +127,8 @@ Global
 		{ADB75E2F-8AC6-4FDD-B9BE-6AFBDE52EE02} = {2C0191A8-8BF9-486E-A837-0B23F44A7BE0}
 		{7CA1464D-7BC4-416F-A2F2-00CC93946730} = {ADB75E2F-8AC6-4FDD-B9BE-6AFBDE52EE02}
 		{9C9FB5A2-BA03-4EFF-8D0F-E53E48D107BC} = {ADB75E2F-8AC6-4FDD-B9BE-6AFBDE52EE02}
+		{E502052E-C030-4051-A902-1A3E1C4D3B4D} = {2C0191A8-8BF9-486E-A837-0B23F44A7BE0}
+		{20C41CB5-57A7-4BA9-85B1-994238B458D6} = {E502052E-C030-4051-A902-1A3E1C4D3B4D}
+		{F33FE1C9-147F-46D2-8820-99BFB1A11347} = {E502052E-C030-4051-A902-1A3E1C4D3B4D}
 	EndGlobalSection
 EndGlobal
