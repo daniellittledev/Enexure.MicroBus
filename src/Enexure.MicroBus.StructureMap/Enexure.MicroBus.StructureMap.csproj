@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Enexure.MicroBus\Enexure.MicroBus.csproj" />
+    <ProjectReference Include="..\Enexure.MicroBus\Enexure.MicroBus.csproj" />
   </ItemGroup>
 
 </Project>

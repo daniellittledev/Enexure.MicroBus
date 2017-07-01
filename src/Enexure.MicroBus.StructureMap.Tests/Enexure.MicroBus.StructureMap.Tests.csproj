@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Enexure.MicroBus.StructureMap\Enexure.MicroBus.StructureMap.csproj" />
-    <ProjectReference Include="..\src\Enexure.MicroBus\Enexure.MicroBus.csproj" />
+    <ProjectReference Include="..\Enexure.MicroBus\Enexure.MicroBus.csproj" />
   </ItemGroup>
 
   <ItemGroup>
