@@ -5,11 +5,11 @@ using StructureMap;
 
 namespace Enexure.MicroBus.StructureMap
 {
-    internal class MicrosoftDependencyInjectionDependencyScope : MicrosoftDependencyInjectionDependencyResolver, IDependencyScope
+    internal class StructureMapDependencyScope : StructureMapDependencyResolver, IDependencyScope
     {
         private readonly IContainer container;
 
-        public MicrosoftDependencyInjectionDependencyScope(IContainer container, IMarker marker)
+        public StructureMapDependencyScope(IContainer container, IMarker marker)
             : base(container, marker)
         {
             this.container = container;

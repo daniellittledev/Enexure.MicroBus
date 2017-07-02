@@ -29,9 +29,9 @@ namespace Enexure.MicroBus.StructureMap
 
             configuration.For<IPipelineRunBuilder>().Use<PipelineRunBuilder>().Transient();
 
-            configuration.For<MicrosoftDependencyInjectionDependencyScope>().Use<MicrosoftDependencyInjectionDependencyScope>().ContainerScoped();
-            configuration.Forward<MicrosoftDependencyInjectionDependencyScope, IDependencyResolver>();
-            configuration.Forward<MicrosoftDependencyInjectionDependencyScope, IDependencyScope>();
+            configuration.For<StructureMapDependencyScope>().Use<StructureMapDependencyScope>().ContainerScoped();
+            configuration.Forward<StructureMapDependencyScope, IDependencyResolver>();
+            configuration.Forward<StructureMapDependencyScope, IDependencyScope>();
 
             configuration.For<IMicroBus>().Use<MicroBus>().Transient();
             configuration.For<IMicroMediator>().Use<MicroMediator>().Transient();

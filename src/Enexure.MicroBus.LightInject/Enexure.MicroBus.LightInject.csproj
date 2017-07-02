@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>LightInject support for of MicroBus</Description>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <Authors>Daniel Little</Authors>
+    <AssemblyName>Enexure.MicroBus.LightInject</AssemblyName>
+    <PackageId>Enexure.MicroBus.LightInject</PackageId>
+    <PackageTags>MicroBus;Mediator;Microsoft;DependencyInjection;Bus;LightInject</PackageTags>
+    <PackageIconUrl>https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Lavinski/Enexure.MicroBus/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LightInject" Version="5.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Enexure.MicroBus\Enexure.MicroBus.csproj" />
+  </ItemGroup>
+
+</Project>
