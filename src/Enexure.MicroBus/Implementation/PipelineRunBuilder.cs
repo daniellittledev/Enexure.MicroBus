@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Enexure.MicroBus.Annotations;
 using Enexure.MicroBus.Messages;
@@ -119,8 +120,13 @@ namespace Enexure.MicroBus
 
             var taskList = await RunTasks(tasks, busSettings.HandlerSynchronization);
 
-            if (taskList.Count == 1) {
-                return taskList.Select(ReflectionExtensions.GetTaskResult).Single();
+            if (taskList.Count == 1)
+            {
+                var task = taskList.Single();
+                // Auto registered commands and events may return a Task with no result
+                if (task.GetType().GetTypeInfo().IsGenericType) {
+                    return ReflectionExtensions.GetTaskResult(task);
+                }
             }
 
             return Unit.Unit;

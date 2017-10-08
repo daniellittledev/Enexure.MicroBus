@@ -121,9 +121,16 @@ namespace Enexure.MicroBus
 
         public BusBuilder RegisterHandlers(Func<Type, bool> predicate, IEnumerable<Assembly> assemblies)
         {
-            var handlerRegistrations = assemblies
+            var possibleTypes = assemblies
                 .SelectMany(AllTheTypes)
-                .Where(x => predicate(x.AsType()))
+                .Where(x => predicate(x.AsType()));
+
+            return RegisterHandlers(possibleTypes);
+        }
+
+        public BusBuilder RegisterHandlers(IEnumerable<TypeInfo> types)
+        {
+            var handlerRegistrations = types
                 .SelectMany(HandlersOnTheTypes)
                 .Select(HandlersAsRegistrations);
 

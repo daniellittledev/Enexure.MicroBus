@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>LightInject support for of MicroBus</Description>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <Authors>Daniel Little</Authors>
     <AssemblyName>Enexure.MicroBus.LightInject</AssemblyName>
     <PackageId>Enexure.MicroBus.LightInject</PackageId>

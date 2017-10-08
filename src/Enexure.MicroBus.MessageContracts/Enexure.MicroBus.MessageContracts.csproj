@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Contains the core message contracts for MicroBus which includes the command, query and event interfaces</Description>
-    <VersionPrefix>3.1.0</VersionPrefix>
+    <VersionPrefix>3.2.0</VersionPrefix>
     <Authors>Daniel Little</Authors>
     <TargetFrameworks>net40;netstandard1.1</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

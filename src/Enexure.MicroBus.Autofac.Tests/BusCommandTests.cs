@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Enexure.MicroBus.Annotations;
@@ -18,6 +21,22 @@ namespace Enexure.MicroBus.Autofac.Tests
             {
                 return Task.CompletedTask;
             }
+        }
+
+        [Fact]
+        public async Task TestCommandWithAutoRegister()
+        {
+            var handlerTypes =
+                new[] {typeof(CommandHandler)}
+                    .Select(x => x.GetTypeInfo());
+
+            var busBuilder = new BusBuilder()
+                .RegisterHandlers(handlerTypes);
+
+            var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
+
+            var bus = container.Resolve<IMicroBus>();
+            await bus.SendAsync(new Command());
         }
 
         [Fact]

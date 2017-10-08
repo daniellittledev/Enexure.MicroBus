@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Autofac support for MicroBus</Description>
-    <VersionPrefix>3.5.2</VersionPrefix>
+    <VersionPrefix>3.6.0</VersionPrefix>
     <Authors>Daniel Little</Authors>
     <TargetFrameworks>net451;netstandard1.1</TargetFrameworks>
     <AssemblyName>Enexure.MicroBus.Autofac</AssemblyName>

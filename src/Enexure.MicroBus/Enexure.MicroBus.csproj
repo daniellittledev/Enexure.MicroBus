@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Contains the core implementation of MicroBus</Description>
-    <VersionPrefix>3.5.0</VersionPrefix>
+    <VersionPrefix>3.6.0</VersionPrefix>
     <Authors>Daniel Little</Authors>
     <TargetFrameworks>net451;netstandard1.1</TargetFrameworks>
     <AssemblyName>Enexure.MicroBus</AssemblyName>
