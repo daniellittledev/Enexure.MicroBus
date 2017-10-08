@@ -2,14 +2,14 @@
 
 namespace Enexure.MicroBus
 {
-	public class BusSettings
-	{
-		public Synchronization HandlerSynchronization { get; set; }
-	}
+    public class BusSettings
+    {
+        public Synchronization HandlerSynchronization { get; set; }
+    }
 
-	public enum Synchronization
-	{
-		Syncronous,
-		Asyncronous
-	}
+    public enum Synchronization
+    {
+        Syncronous,
+        Asyncronous
+    }
 }

@@ -5,40 +5,40 @@ using Xunit;
 
 namespace Enexure.MicroBus.Autofac.Tests
 {
-	public class AutofacTypeScannerTests
-	{
-		class Event : IEvent { }
+    public class AutofacTypeScannerTests
+    {
+        class Event : IEvent { }
 
-		class EventHandler : IEventHandler<Event>
-		{
-			public Task Handle(Event @event) { return Task.FromResult(0); }
-		}
+        class EventHandler : IEventHandler<Event>
+        {
+            public Task Handle(Event @event) { return Task.FromResult(0); }
+        }
 
-		class Command : ICommand { }
+        class Command : ICommand { }
 
-		class CommandHandler : ICommandHandler<Command>
-		{
-			public Task Handle(Command @event) { return Task.FromResult(0); }
-		}
+        class CommandHandler : ICommandHandler<Command>
+        {
+            public Task Handle(Command @event) { return Task.FromResult(0); }
+        }
 
-		class Result { }
+        class Result { }
 
-		class QueryAsync : IQuery<QueryAsync, Result> { }
+        class QueryAsync : IQuery<QueryAsync, Result> { }
 
-		class QueryHandler : IQueryHandler<QueryAsync, Result>
-		{
-			public Task<Result> Handle(QueryAsync @QueryAsync) { return Task.FromResult(new Result()); }
-		}
+        class QueryHandler : IQueryHandler<QueryAsync, Result>
+        {
+            public Task<Result> Handle(QueryAsync @QueryAsync) { return Task.FromResult(new Result()); }
+        }
 
-		[Fact]
-		public void ScanAnAssemblyForHandlersTest()
-		{
-			var register = new BusBuilder().RegisterHandlers(
-				x => x.FullName.Contains("AutofacTypeScannerTests"),
-				typeof(AutofacTypeScannerTests).GetTypeInfo().Assembly);
+        [Fact]
+        public void ScanAnAssemblyForHandlersTest()
+        {
+            var register = new BusBuilder().RegisterHandlers(
+                x => x.FullName.Contains("AutofacTypeScannerTests"),
+                typeof(AutofacTypeScannerTests).GetTypeInfo().Assembly);
 
-			register.MessageHandlerRegistrations.Count.Should().Be(3);
+            register.MessageHandlerRegistrations.Count.Should().Be(3);
 
-		}
-	}
+        }
+    }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Enexure.MicroBus
 {
-	public interface IOuterPipelineDetector
-	{
-		bool IsOuterPipeline { get; }
-	}
+    public interface IOuterPipelineDetector
+    {
+        bool IsOuterPipeline { get; }
+    }
 }

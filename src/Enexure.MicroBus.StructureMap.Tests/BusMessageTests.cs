@@ -6,76 +6,76 @@ using System.Collections.Generic;
 
 namespace Enexure.MicroBus.StructureMap.Tests
 {
-	public class BusMessageTests
-	{
-		[Fact]
-		public async Task FullSystemTest()
-		{
-			var assembly = GetType().GetTypeInfo().Assembly;
-		    var busBuilder = new BusBuilder()
-		        .RegisterGlobalHandler<OuterHandler>()
-		        .RegisterGlobalHandler<InnerHandler>()
-		        .RegisterHandlers(x => x.FullName.Contains("BusMessageTests"), assembly);
+    public class BusMessageTests
+    {
+        [Fact]
+        public async Task FullSystemTest()
+        {
+            var assembly = GetType().GetTypeInfo().Assembly;
+            var busBuilder = new BusBuilder()
+                .RegisterGlobalHandler<OuterHandler>()
+                .RegisterGlobalHandler<InnerHandler>()
+                .RegisterHandlers(x => x.FullName.Contains("BusMessageTests"), assembly);
 
-		    var container = new Container(b => b.RegisterMicroBus(busBuilder));
+            var container = new Container(b => b.RegisterMicroBus(busBuilder));
 
-			var mediator = container.GetInstance<IMicroMediator>();
+            var mediator = container.GetInstance<IMicroMediator>();
 
-			await mediator.SendAsync(new Message());
-		}
+            await mediator.SendAsync(new Message());
+        }
 
-		class Message
-		{
-			Queue<string> queue = new Queue<string>(new[] {
-				"Outer-In",
-				"Inner-In",
-				"Handler",
-				"Inner-Out",
-				"Outer-Out",
-			});
+        class Message
+        {
+            Queue<string> queue = new Queue<string>(new[] {
+                "Outer-In",
+                "Inner-In",
+                "Handler",
+                "Inner-Out",
+                "Outer-Out",
+            });
 
-			public void AssertStage(string stageName)
-			{
-				Assert.Equal(queue.Dequeue(), stageName);
-			}
-		}
+            public void AssertStage(string stageName)
+            {
+                Assert.Equal(queue.Dequeue(), stageName);
+            }
+        }
 
-		class Handler : IMessageHandler<Message, Unit>
-		{
-			public Task<Unit> Handle(Message message)
-			{
-				message.AssertStage("Handler");
+        class Handler : IMessageHandler<Message, Unit>
+        {
+            public Task<Unit> Handle(Message message)
+            {
+                message.AssertStage("Handler");
 
-				return Task.FromResult(Unit.Unit);
-			}
-		}
+                return Task.FromResult(Unit.Unit);
+            }
+        }
 
-		class OuterHandler : IDelegatingHandler
-		{
-			public async Task<object> Handle(INextHandler next, object message)
-			{
-				(message as Message).AssertStage("Outer-In");
+        class OuterHandler : IDelegatingHandler
+        {
+            public async Task<object> Handle(INextHandler next, object message)
+            {
+                (message as Message).AssertStage("Outer-In");
 
-				var result = await next.Handle(message);
+                var result = await next.Handle(message);
 
-				(message as Message).AssertStage("Outer-Out");
+                (message as Message).AssertStage("Outer-Out");
 
-				return result;
-			}
-		}
+                return result;
+            }
+        }
 
-		class InnerHandler : IDelegatingHandler
-		{
-			public async Task<object> Handle(INextHandler next, object message)
-			{
-				(message as Message).AssertStage("Inner-In");
+        class InnerHandler : IDelegatingHandler
+        {
+            public async Task<object> Handle(INextHandler next, object message)
+            {
+                (message as Message).AssertStage("Inner-In");
 
-				var result = await next.Handle(message);
+                var result = await next.Handle(message);
 
-				(message as Message).AssertStage("Inner-Out");
+                (message as Message).AssertStage("Inner-Out");
 
-				return result;
-			}
-		}
-	}
+                return result;
+            }
+        }
+    }
 }

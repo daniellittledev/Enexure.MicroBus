@@ -2,8 +2,8 @@
 
 namespace Enexure.MicroBus.Sagas
 {
-	public interface ISaga
-	{
-		bool IsCompleted { get; }
-	}
+    public interface ISaga
+    {
+        bool IsCompleted { get; }
+    }
 }

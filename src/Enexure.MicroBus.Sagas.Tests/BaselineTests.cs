@@ -2,11 +2,11 @@
 
 namespace Enexure.MicroBus.Tests
 {
-	public class BaselineTests
-	{
-		[Fact]
-		public void ThisTestShouldAlwaysPass()
-		{
-		}
-	}
+    public class BaselineTests
+    {
+        [Fact]
+        public void ThisTestShouldAlwaysPass()
+        {
+        }
+    }
 }

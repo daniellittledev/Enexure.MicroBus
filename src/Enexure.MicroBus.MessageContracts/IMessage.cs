@@ -1,6 +1,6 @@
 ﻿namespace Enexure.MicroBus
 {
-	public interface IMessage
-	{
-	}
+    public interface IMessage
+    {
+    }
 }

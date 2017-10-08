@@ -2,8 +2,8 @@
 
 namespace Enexure.MicroBus
 {
-	public interface IPipelineBuilder
-	{
-		Pipeline GetPipeline(Type messageType);
-	}
+    public interface IPipelineBuilder
+    {
+        Pipeline GetPipeline(Type messageType);
+    }
 }

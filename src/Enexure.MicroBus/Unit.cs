@@ -1,7 +1,7 @@
 ﻿namespace Enexure.MicroBus
 {
-	public enum Unit
-	{
-		Unit
-	}
+    public enum Unit
+    {
+        Unit
+    }
 }

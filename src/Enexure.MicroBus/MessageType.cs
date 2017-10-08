@@ -1,9 +1,9 @@
 ﻿namespace Enexure.MicroBus
 {
-	public enum MessageType
-	{
-		Command,
-		Event,
-		QueryAsync
-	}
+    public enum MessageType
+    {
+        Command,
+        Event,
+        QueryAsync
+    }
 }

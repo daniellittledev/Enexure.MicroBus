@@ -1,7 +1,7 @@
 ﻿namespace Enexure.MicroBus
 {
-	public interface IDependencyResolver
-	{
-		IDependencyScope BeginScope();
-	}
+    public interface IDependencyResolver
+    {
+        IDependencyScope BeginScope();
+    }
 }

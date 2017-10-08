@@ -2,8 +2,8 @@
 
 namespace Enexure.MicroBus
 {
-	[Obsolete]
-	public interface IResult
-	{
-	}
+    [Obsolete]
+    public interface IResult
+    {
+    }
 }
