@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/Lavinski/Enexure.MicroBus/</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md</PackageLicenseUrl>
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.4;portable-net451+win8</PackageTargetFallback>
+    <PackageTargetFallback>dotnet5.4;portable-net451+win8</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
