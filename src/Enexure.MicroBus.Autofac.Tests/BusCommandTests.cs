@@ -16,7 +16,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 		{
 			public Task Handle(Command command)
 			{
-				return Task.FromResult(0);
+				return Task.CompletedTask;
 			}
 		}
 

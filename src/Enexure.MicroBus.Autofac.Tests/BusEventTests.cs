@@ -18,7 +18,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 			{
 				@event.Tally += 1;
 
-				return Task.FromResult(0);
+				return Task.CompletedTask;
 			}
 		}
 

@@ -23,8 +23,6 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
-    <PackageReference Include="System.Runtime" Version="4.1.0" />
-    <PackageReference Include="System.Threading" Version="4.0.11" />
   </ItemGroup>
 
 </Project>
