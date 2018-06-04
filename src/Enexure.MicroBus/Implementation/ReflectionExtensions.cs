@@ -53,8 +53,7 @@ namespace Enexure.MicroBus
             {
                 throw new SomehowRecievedTaskWithoutResultException();
             }
-
-            var resultProperty = typeInfo.GetDeclaredProperty("Result").GetMethod;
+            var resultProperty = taskType.GetRuntimeProperty("Result").GetMethod;
             return resultProperty.Invoke(task, new object[] { });
         }
 
