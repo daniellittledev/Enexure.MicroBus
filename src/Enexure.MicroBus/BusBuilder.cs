@@ -214,7 +214,12 @@ namespace Enexure.MicroBus
 
         public async Task<Unit> Handle(TCommand message)
         {
-            await handler.Handle(message);
+            var task = handler.Handle(message);
+            if (task == null) {
+                throw new NullReferenceException($"The command handler {typeof(TCommandHandler).ToString()} returned null, expected a Task");
+            } else {
+                await task;
+            }
             return Unit.Unit;
         }
     }
@@ -232,7 +237,13 @@ namespace Enexure.MicroBus
 
         public async Task<Unit> Handle(TEvent message)
         {
-            await handler.Handle(message);
+            var task = handler.Handle(message);
+            if (task == null) {
+                throw new NullReferenceException($"The event handler {typeof(TEventHandler).ToString()} returned null, expected a Task");
+            } else {
+                await task;
+            }
+
             return Unit.Unit;
         }
     }
@@ -250,7 +261,12 @@ namespace Enexure.MicroBus
 
         public async Task<TResult> Handle(TQuery query)
         {
-            return await handler.Handle(query);
+            var task = handler.Handle(query);
+            if (task == null) {
+                throw new NullReferenceException($"The query handler {typeof(TQueryHandler).ToString()} returned null, expected a Task");
+            } else {
+                return await task;
+            }
         }
     }
 
@@ -267,7 +283,12 @@ namespace Enexure.MicroBus
 
         public async Task<Unit> Handle(TCommand message, CancellationToken cancellation)
         {
-            await handler.Handle(message, cancellation);
+            var task = handler.Handle(message, cancellation);
+            if (task == null) {
+                throw new NullReferenceException($"The command handler {typeof(TCommandHandler).ToString()} returned null, expected a Task");
+            } else {
+                await task;
+            }
             return Unit.Unit;
         }
     }
@@ -285,7 +306,12 @@ namespace Enexure.MicroBus
 
         public async Task<Unit> Handle(TEvent message, CancellationToken cancellation)
         {
-            await handler.Handle(message, cancellation);
+            var task = handler.Handle(message, cancellation);
+            if (task == null) {
+                throw new NullReferenceException($"The event handler {typeof(TEventHandler).ToString()} returned null, expected a Task");
+            } else {
+                await task;
+            }
             return Unit.Unit;
         }
     }
@@ -303,7 +329,12 @@ namespace Enexure.MicroBus
 
         public async Task<TResult> Handle(TQuery query, CancellationToken cancellation)
         {
-            return await handler.Handle(query, cancellation);
+            var task = handler.Handle(query, cancellation);
+            if (task == null) {
+                throw new NullReferenceException($"The query handler {typeof(TQueryHandler).ToString()} returned null, expected a Task");
+            } else {
+                return await task;
+            }
         }
     }
 }

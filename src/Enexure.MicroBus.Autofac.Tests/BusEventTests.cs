@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
 using Xunit;
@@ -29,6 +30,16 @@ namespace Enexure.MicroBus.Autofac.Tests
                 @event.Tally += 1;
 
                 return Task.FromResult(0);
+            }
+        }
+
+        class NullEventHandler : IEventHandler<Event>
+        {
+            public Task Handle(Event @event)
+            {
+                @event.Tally += 1;
+
+                return null;
             }
         }
 
@@ -63,6 +74,23 @@ namespace Enexure.MicroBus.Autofac.Tests
             await bus.PublishAsync(@event);
 
             @event.Tally.Should().Be(2);
+        }
+
+        [Fact]
+        public async Task TestEventHandlerReturningNull()
+        {
+            var busBuilder = new BusBuilder()
+                .RegisterEventHandler<Event, NullEventHandler>();
+
+            var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
+
+            var bus = container.Resolve<IMicroBus>();
+
+            var @event = new Event();
+
+            await Assert.ThrowsAsync<NullReferenceException>(async () => {
+                await bus.PublishAsync(@event);
+            });
         }
     }
 }
