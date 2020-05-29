@@ -12,7 +12,7 @@ namespace Enexure.MicroBus.Autofac
         private readonly ILifetimeScope lifetimeScope;
 
         public AutofacDependencyScope(ILifetimeScope lifetimeScope)
-                    : base(lifetimeScope)
+            : base(lifetimeScope)
         {
             this.ownsLifetimeScope = false;
             this.lifetimeScope = lifetimeScope;
@@ -44,7 +44,6 @@ namespace Enexure.MicroBus.Autofac
         {
             return (IEnumerable<T>)GetService(typeof(IEnumerable<T>));
         }
-
         public void Dispose()
         {
             if (this.ownsLifetimeScope)

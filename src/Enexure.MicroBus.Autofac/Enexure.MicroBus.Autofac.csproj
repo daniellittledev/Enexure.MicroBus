@@ -2,15 +2,21 @@
 
   <PropertyGroup>
     <Description>Autofac support for MicroBus</Description>
-    <VersionPrefix>3.6.0</VersionPrefix>
+    <VersionPrefix>3.7.0</VersionPrefix>
     <Authors>Daniel Little</Authors>
-    <TargetFrameworks>net451;netstandard1.1</TargetFrameworks>
     <AssemblyName>Enexure.MicroBus.Autofac</AssemblyName>
     <PackageId>Enexure.MicroBus.Autofac</PackageId>
     <PackageTags>MicroBus;Mediator;Autofac;Bus</PackageTags>
     <PackageIconUrl>https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Lavinski/Enexure.MicroBus/</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>net451;netstandard1.1</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
+    <WarningsAsErrors>true</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

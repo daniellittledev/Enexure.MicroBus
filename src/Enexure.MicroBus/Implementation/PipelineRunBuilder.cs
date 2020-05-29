@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Enexure.MicroBus.Annotations;
 using Enexure.MicroBus.Messages;
 
 namespace Enexure.MicroBus
@@ -18,20 +17,15 @@ namespace Enexure.MicroBus
         private readonly BusSettings busSettings;
 
         public PipelineRunBuilder(
-            [NotNull]BusSettings busSettings,
-            [NotNull]IPipelineBuilder pipelineBuilder,
-            [NotNull]IOuterPipelineDetertorUpdater updater,
-            [NotNull]IDependencyScope dependencyScope)
+            BusSettings busSettings,
+            IPipelineBuilder pipelineBuilder,
+            IOuterPipelineDetertorUpdater updater,
+            IDependencyScope dependencyScope)
         {
-            if (pipelineBuilder == null) throw new ArgumentNullException(nameof(pipelineBuilder));
-            if (updater == null) throw new ArgumentNullException(nameof(updater));
-            if (dependencyScope == null) throw new ArgumentNullException(nameof(dependencyScope));
-            if (busSettings == null) throw new ArgumentNullException(nameof(busSettings));
-
-            this.pipelineBuilder = pipelineBuilder;
-            this.updater = updater;
-            this.dependencyScope = dependencyScope;
-            this.busSettings = busSettings;
+            this.pipelineBuilder = pipelineBuilder ?? throw new ArgumentNullException(nameof(pipelineBuilder));
+            this.updater = updater ?? throw new ArgumentNullException(nameof(updater));
+            this.dependencyScope = dependencyScope ?? throw new ArgumentNullException(nameof(dependencyScope));
+            this.busSettings = busSettings ?? throw new ArgumentNullException(nameof(busSettings));
         }
 
         public INextHandler GetRunnerForPipeline(Type messageType, CancellationToken cancellation)
@@ -92,15 +86,13 @@ namespace Enexure.MicroBus
                 var nextFunction = BuildNextHandler(tail, handlerTypes, cancellation);
 
                 var pipelineHanlder = dependencyScope.GetService(head);
-                if (pipelineHanlder is IDelegatingHandler) {
+                if (pipelineHanlder is IDelegatingHandler nextDelegatingHandler) {
 
-                    var nextHandler = pipelineHanlder as IDelegatingHandler;
-                    return await nextHandler.Handle(nextFunction, message);
+                    return await nextDelegatingHandler.Handle(nextFunction, message);
 
-                } else if (pipelineHanlder is ICancelableDelegatingHandler) {
+                } else if (pipelineHanlder is ICancelableDelegatingHandler nextCancelableDelegatingHandler) {
 
-                    var nextHandler = pipelineHanlder as ICancelableDelegatingHandler;
-                    return await nextHandler.Handle(nextFunction, message, cancellation);
+                    return await nextCancelableDelegatingHandler.Handle(nextFunction, message, cancellation);
 
                 } else {
                     

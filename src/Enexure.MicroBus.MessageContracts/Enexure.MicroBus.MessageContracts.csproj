@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <Description>Contains the core message contracts for MicroBus which includes the command, query and event interfaces</Description>
-    <VersionPrefix>3.2.0</VersionPrefix>
+    <VersionPrefix>3.7.0</VersionPrefix>
     <Authors>Daniel Little</Authors>
-    <TargetFrameworks>net40;netstandard1.1</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AssemblyName>Enexure.MicroBus.MessageContracts</AssemblyName>
     <PackageId>Enexure.MicroBus.MessageContracts</PackageId>
@@ -12,6 +11,12 @@
     <PackageIconUrl>https://raw.github.com/Lavinski/Enexure.MicroBus/master/Logo.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Lavinski/Enexure.MicroBus/</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/Lavinski/Enexure.MicroBus/blob/master/License.md</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;netstandard1.1</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">

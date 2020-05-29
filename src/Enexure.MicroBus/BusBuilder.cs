@@ -185,6 +185,7 @@ namespace Enexure.MicroBus
         }
     }
 
+    [Obsolete]
     internal class PipelineHandlerToDelegatingHandlerConverter<T> : IDelegatingHandler
         where T : IPipelineHandler
     {
@@ -197,7 +198,7 @@ namespace Enexure.MicroBus
 
         public Task<object> Handle(INextHandler next, object message)
         {
-            return handler.Handle(async x => await next.Handle(x), message as IMessage);
+            return handler.Handle(async x => await next.Handle(x), (IMessage)message);
         }
     }
 
@@ -216,7 +217,7 @@ namespace Enexure.MicroBus
         {
             var task = handler.Handle(message);
             if (task == null) {
-                throw new NullReferenceException($"The command handler {typeof(TCommandHandler).ToString()} returned null, expected a Task");
+                throw new NullReferenceException($"The command handler {typeof(TCommandHandler)} returned null, expected a Task");
             } else {
                 await task;
             }
@@ -239,7 +240,7 @@ namespace Enexure.MicroBus
         {
             var task = handler.Handle(message);
             if (task == null) {
-                throw new NullReferenceException($"The event handler {typeof(TEventHandler).ToString()} returned null, expected a Task");
+                throw new NullReferenceException($"The event handler {typeof(TEventHandler)} returned null, expected a Task");
             } else {
                 await task;
             }
@@ -263,7 +264,7 @@ namespace Enexure.MicroBus
         {
             var task = handler.Handle(query);
             if (task == null) {
-                throw new NullReferenceException($"The query handler {typeof(TQueryHandler).ToString()} returned null, expected a Task");
+                throw new NullReferenceException($"The query handler {typeof(TQueryHandler)} returned null, expected a Task");
             } else {
                 return await task;
             }
@@ -285,7 +286,7 @@ namespace Enexure.MicroBus
         {
             var task = handler.Handle(message, cancellation);
             if (task == null) {
-                throw new NullReferenceException($"The command handler {typeof(TCommandHandler).ToString()} returned null, expected a Task");
+                throw new NullReferenceException($"The command handler {typeof(TCommandHandler)} returned null, expected a Task");
             } else {
                 await task;
             }
@@ -308,7 +309,7 @@ namespace Enexure.MicroBus
         {
             var task = handler.Handle(message, cancellation);
             if (task == null) {
-                throw new NullReferenceException($"The event handler {typeof(TEventHandler).ToString()} returned null, expected a Task");
+                throw new NullReferenceException($"The event handler {typeof(TEventHandler)} returned null, expected a Task");
             } else {
                 await task;
             }
@@ -331,7 +332,7 @@ namespace Enexure.MicroBus
         {
             var task = handler.Handle(query, cancellation);
             if (task == null) {
-                throw new NullReferenceException($"The query handler {typeof(TQueryHandler).ToString()} returned null, expected a Task");
+                throw new NullReferenceException($"The query handler {typeof(TQueryHandler)} returned null, expected a Task");
             } else {
                 return await task;
             }

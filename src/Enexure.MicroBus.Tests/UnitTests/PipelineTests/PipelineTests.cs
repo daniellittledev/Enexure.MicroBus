@@ -25,16 +25,16 @@ namespace Enexure.MicroBus.Tests.UnitTests.PipelineTests
             }
         }
 
-        private class PipelineHandlerA : IPipelineHandler
+        private class PipelineHandlerA : IDelegatingHandler
         {
-            public async Task<object> Handle(Func<IMessage, Task<object>> next, IMessage message)
+            public async Task<object> Handle(INextHandler next, object message)
             {
                 var command = (Command)message;
 
                 command.CallerId.Should().Be(0);
                 command.CallerId += 1;
 
-                var result = await next(message);
+                var result = await next.Handle(message);
 
                 command.CallerId.Should().Be(1);
                 command.CallerId -= 1;
@@ -43,16 +43,16 @@ namespace Enexure.MicroBus.Tests.UnitTests.PipelineTests
             }
         }
 
-        private class PipelineHandlerB : IPipelineHandler
+        private class PipelineHandlerB : IDelegatingHandler
         {
-            public async Task<object> Handle(Func<IMessage, Task<object>> next, IMessage message)
+            public async Task<object> Handle(INextHandler next, object message)
             {
                 var command = (Command)message;
 
                 command.CallerId.Should().Be(1);
                 command.CallerId += 1;
 
-                var result = await next(message);
+                var result = await next.Handle(message);
 
                 command.CallerId.Should().Be(2);
                 command.CallerId -= 1;

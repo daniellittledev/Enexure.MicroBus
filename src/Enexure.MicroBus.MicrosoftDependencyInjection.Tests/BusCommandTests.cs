@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Enexure.MicroBus.Annotations;
 using FluentAssertions;
 using Xunit;
 
@@ -11,7 +10,6 @@ namespace Enexure.MicroBus.MicrosoftDependencyInjection.Tests
     {
         class Command : ICommand { }
 
-        [UsedImplicitly]
         class CommandHandler : ICommandHandler<Command>
         {
             public Task Handle(Command command)

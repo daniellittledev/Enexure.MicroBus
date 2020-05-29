@@ -29,7 +29,7 @@ namespace Enexure.MicroBus.Autofac.Tests
 
         class Message
         {
-            Queue<string> queue = new Queue<string>(new[] {
+            readonly Queue<string> queue = new Queue<string>(new[] {
                 "Outer-In",
                 "Inner-In",
                 "Handler",
@@ -57,11 +57,11 @@ namespace Enexure.MicroBus.Autofac.Tests
         {
             public async Task<object> Handle(INextHandler next, object message)
             {
-                (message as Message).AssertStage("Outer-In");
+                ((Message)message).AssertStage("Outer-In");
 
                 var result = await next.Handle(message);
 
-                (message as Message).AssertStage("Outer-Out");
+                ((Message)message).AssertStage("Outer-Out");
 
                 return result;
             }
@@ -71,11 +71,11 @@ namespace Enexure.MicroBus.Autofac.Tests
         {
             public async Task<object> Handle(INextHandler next, object message)
             {
-                (message as Message).AssertStage("Inner-In");
+                ((Message)message).AssertStage("Inner-In");
 
                 var result = await next.Handle(message);
 
-                (message as Message).AssertStage("Inner-Out");
+                ((Message)message).AssertStage("Inner-Out");
 
                 return result;
             }
