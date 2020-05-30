@@ -1,5 +1,4 @@
-﻿using Enexure.MicroBus.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,11 +11,9 @@ namespace Enexure.MicroBus
     {
         private readonly IDependencyResolver dependencyResolver;
 
-        public MicroMediator([NotNull]IDependencyResolver dependencyResolver)
+        public MicroMediator(IDependencyResolver dependencyResolver)
         {
-            if (dependencyResolver == null) throw new ArgumentNullException(nameof(dependencyResolver));
-
-            this.dependencyResolver = dependencyResolver;
+            this.dependencyResolver = dependencyResolver ?? throw new ArgumentNullException(nameof(dependencyResolver));
         }
 
         public Task SendAsync(object message)
@@ -51,16 +48,14 @@ namespace Enexure.MicroBus
 
         private async Task<object> RunPipelineAsync(
             object message,
-            CancellationToken cancellation = default(CancellationToken))
+            CancellationToken cancellation = default)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
 
-            using (var scope = dependencyResolver.BeginScope())
-            {
-                var builder = scope.GetService<IPipelineRunBuilder>();
-                var messageProcessor = builder.GetRunnerForPipeline(message.GetType(), cancellation);
-                return await messageProcessor.Handle(message);
-            }
+            using var scope = dependencyResolver.BeginScope();
+            var builder = scope.GetService<IPipelineRunBuilder>();
+            var messageProcessor = builder.GetRunnerForPipeline(message.GetType(), cancellation);
+            return await messageProcessor.Handle(message);
         }
     }
 }

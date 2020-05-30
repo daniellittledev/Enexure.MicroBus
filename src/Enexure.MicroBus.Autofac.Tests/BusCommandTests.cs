@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
-using Enexure.MicroBus.Annotations;
 using FluentAssertions;
 using Xunit;
 
@@ -14,7 +12,6 @@ namespace Enexure.MicroBus.Autofac.Tests
     {
         class Command : ICommand { }
 
-        [UsedImplicitly]
         class CommandHandler : ICommandHandler<Command>
         {
             public Task Handle(Command command)

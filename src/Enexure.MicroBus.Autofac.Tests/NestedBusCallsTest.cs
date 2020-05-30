@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Enexure.MicroBus.Annotations;
 using FluentAssertions;
 using Xunit;
 
@@ -29,29 +28,26 @@ namespace Enexure.MicroBus.Autofac.Tests
 
         }
 
-        [UsedImplicitly]
-        class PipelineHandler : IPipelineHandler
+        class DelegatingHandler : IDelegatingHandler
         {
             private readonly Guid id;
 
-            public PipelineHandler()
+            public DelegatingHandler()
             {
                 id = Guid.NewGuid();
             }
 
-            public Task<object> Handle(Func<IMessage, Task<object>> next, IMessage message)
+            public Task<object> Handle(INextHandler next, object message)
             {
-                var pipeMessage = message as IPipeTestMessage;
-                if (pipeMessage != null)
+                if (message is IPipeTestMessage pipeMessage)
                 {
                     pipeMessage.HandlerIds.Add(id);
                 }
 
-                return next(message);
+                return next.Handle(message);
             }
         }
 
-        [UsedImplicitly]
         class CommandHandler : ICommandHandler<Command>
         {
             private readonly IMicroBus bus;
@@ -84,7 +80,6 @@ namespace Enexure.MicroBus.Autofac.Tests
 
         }
 
-        [UsedImplicitly]
         class EventHandler : IEventHandler<Event>
         {
             public Task Handle(Event @event)
@@ -111,39 +106,35 @@ namespace Enexure.MicroBus.Autofac.Tests
             command.Run.Should().Be(true);
         }
 
-        [UsedImplicitly]
-        class GlobalPipelineHandler : IPipelineHandler
+        class GlobalDelegatingHandler : IDelegatingHandler
         {
             readonly IOuterPipelineDetector detector;
 
-            public GlobalPipelineHandler(IOuterPipelineDetector detector)
+            public GlobalDelegatingHandler(IOuterPipelineDetector detector)
             {
                 this.detector = detector;
             }
 
-            public Task<object> Handle(Func<IMessage, Task<object>> next, IMessage message)
+            public Task<object> Handle(INextHandler next, object message)
             {
                 if (detector.IsOuterPipeline)
                 {
-                    var pipeMessage = message as IPipeTestMessage;
-                    if (pipeMessage != null)
+                    if (message is IPipeTestMessage pipeMessage)
                     {
                         pipeMessage.HandlerIds.Add(Guid.NewGuid());
                     }
                 }
-                return next(message);
+                return next.Handle(message);
             }
         }
 
         [Fact]
-        public async Task GlobalPipelineHandlerShouldOnlyBeRunOnce()
+        public async Task GlobalDelegatingHandlerShouldOnlyBeRunOnce()
         {
-#pragma warning disable CS0618 // Type or member is obsolete
             var busBuilder = new BusBuilder()
                 .RegisterCommandHandler<Command, CommandHandler>()
                 .RegisterEventHandler<Event, EventHandler>()
-                .RegisterPipelineHandler<GlobalPipelineHandler>();
-#pragma warning restore CS0618 // Type or member is obsolete
+                .RegisterGlobalHandler<GlobalDelegatingHandler>();
 
             var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
 
@@ -158,13 +149,11 @@ namespace Enexure.MicroBus.Autofac.Tests
         }
 
         [Fact]
-        public async Task GlobalPipelineHandlerShouldBeRunOnce()
+        public async Task GlobalDelegatingHandlerShouldBeRunOnce()
         {
-#pragma warning disable CS0618 // Type or member is obsolete
             var busBuilder = new BusBuilder()
                 .RegisterEventHandler<Event, EventHandler>()
-                .RegisterPipelineHandler<GlobalPipelineHandler>();
-#pragma warning restore CS0618 // Type or member is obsolete
+                .RegisterGlobalHandler<GlobalDelegatingHandler>();
 
             var container = new ContainerBuilder().RegisterMicroBus(busBuilder).Build();
 

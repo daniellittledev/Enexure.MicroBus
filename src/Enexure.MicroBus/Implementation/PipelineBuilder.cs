@@ -15,15 +15,8 @@ namespace Enexure.MicroBus
             delegatingHandlerTypes = busBuilder.GlobalHandlerRegistrations.Select(x => x.HandlerType).ToArray();
             handlerLookup = busBuilder.MessageHandlerRegistrations
                 .ToLookup(x => x.MessageType, x => x.HandlerType)
-                .Select(x => new { Key = x.Key, Handlers = x.Distinct() })
+                .Select(x => new { x.Key, Handlers = x.Distinct() })
                 .ToDictionary(x => x.Key, x => (IReadOnlyCollection<Type>)x.Handlers.ToArray());
-        }
-
-        private IEnumerable<HandlerRegistration> ExpandInheritedHandlers(HandlerRegistration registration)
-        {
-            return ReflectionExtensions
-                .ExpandType(registration.MessageType)
-                .Select(x => new HandlerRegistration(x, registration.HandlerType));
         }
 
         public Pipeline GetPipeline(Type messageType)

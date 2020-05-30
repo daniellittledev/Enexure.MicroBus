@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LightInject;
-using Enexure.MicroBus.Annotations;
 using FluentAssertions;
 using Xunit;
 
@@ -11,7 +10,6 @@ namespace Enexure.MicroBus.LightInject.Tests
     {
         class Command : ICommand { }
 
-        [UsedImplicitly]
         class CommandHandler : ICommandHandler<Command>
         {
             public Task Handle(Command command)

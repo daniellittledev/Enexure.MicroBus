@@ -13,8 +13,8 @@ namespace Enexure.MicroBus
 
     public interface ICancelableMicroMediator
     {
-        Task SendAsync(object message, CancellationToken cancellation = default(CancellationToken));
-        Task PublishAsync(object message, CancellationToken cancellation = default(CancellationToken));
-        Task<TResult> QueryAsync<TResult>(object message, CancellationToken cancellation = default(CancellationToken));
+        Task SendAsync(object message, CancellationToken cancellation = default);
+        Task PublishAsync(object message, CancellationToken cancellation = default);
+        Task<TResult> QueryAsync<TResult>(object message, CancellationToken cancellation = default);
     }
 }

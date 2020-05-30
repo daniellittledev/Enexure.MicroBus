@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>StructureMap support for of MicroBus</Description>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>3.7.0</VersionPrefix>
     <Authors>Daniel Little</Authors>
     <AssemblyName>Enexure.MicroBus.StructureMap</AssemblyName>
     <PackageId>Enexure.MicroBus.StructureMap</PackageId>
@@ -14,6 +14,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

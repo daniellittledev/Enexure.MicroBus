@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Enexure.MicroBus.Annotations;
 using FluentAssertions;
 using Xunit;
 
@@ -9,7 +8,6 @@ namespace Enexure.MicroBus.MicrosoftDependencyInjection.Tests
 {
     public class ScopesAndDisposeTests
     {
-        [UsedImplicitly]
         private class DisposableObject : IDisposable
         {
             public bool IsDisposed { get; set; }
@@ -22,7 +20,6 @@ namespace Enexure.MicroBus.MicrosoftDependencyInjection.Tests
 
         class Command : ICommand { }
 
-        [UsedImplicitly]
         private class CommandHandler : ICommandHandler<Command>
         {
             private readonly DisposableObject disposable;
@@ -42,7 +39,6 @@ namespace Enexure.MicroBus.MicrosoftDependencyInjection.Tests
 
         class Event : IEvent { }
 
-        [UsedImplicitly]
         private class EventHandler : IEventHandler<Event>
         {
             private readonly DisposableObject disposable;
@@ -64,7 +60,6 @@ namespace Enexure.MicroBus.MicrosoftDependencyInjection.Tests
 
         private class Result { }
 
-        [UsedImplicitly]
         private class QueryHandler : IQueryHandler<QueryAsync, Result>
         {
             private readonly DisposableObject disposable;

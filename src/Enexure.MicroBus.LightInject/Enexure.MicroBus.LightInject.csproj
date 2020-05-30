@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>LightInject support for of MicroBus</Description>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>3.7.0</VersionPrefix>
     <Authors>Daniel Little</Authors>
     <AssemblyName>Enexure.MicroBus.LightInject</AssemblyName>
     <PackageId>Enexure.MicroBus.LightInject</PackageId>
@@ -14,6 +14,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

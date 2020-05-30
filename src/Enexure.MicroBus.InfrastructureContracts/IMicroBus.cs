@@ -16,11 +16,11 @@ namespace Enexure.MicroBus
 
     public interface ICancelableMicroBus
     {
-        Task SendAsync(ICommand busCommand, CancellationToken cancellation = default(CancellationToken));
+        Task SendAsync(ICommand busCommand, CancellationToken cancellation = default);
 
-        Task PublishAsync(IEvent busEvent, CancellationToken cancellation = default(CancellationToken));
+        Task PublishAsync(IEvent busEvent, CancellationToken cancellation = default);
 
-        Task<TResult> QueryAsync<TQuery, TResult>(IQuery<TQuery, TResult> query, CancellationToken cancellation = default(CancellationToken))
+        Task<TResult> QueryAsync<TQuery, TResult>(IQuery<TQuery, TResult> query, CancellationToken cancellation = default)
             where TQuery : IQuery<TQuery, TResult>;
     }
 }
